@@ -1,0 +1,35 @@
+syntax = "v1"
+
+type (
+	// 分页请求
+	PageRequest {
+		Current  int `form:"page,default=1" validate:"required,gte=1"` // 当前页
+		PageSize int `form:"page_size,default=10" validate:"required,gte=1,lte=100"` // 每页大小
+	}
+	// 分页请求
+	PageJsonRequest {
+		Current  int `json:"current"`   // 当前页
+		PageSize int `json:"page_size"` // 每页大小
+	}
+	// 分页响应
+	PageResponse {
+		Total           int `json:"total"`             // 总数
+		PageSize        int `json:"page_size"`         // 当前页大小
+		RequestPageSize int `json:"request_page_size"` // 请求页大小
+		Current         int `json:"current"`           // 当前页
+	}
+	// 时间起始范围
+	TimeRange {
+		StartTime string `form:"start_time,optional"` // 开始时间
+		EndTime   string `form:"end_time,optional"`   // 结束时间
+	}
+)
+
+type IDRequest {
+	ID int `json:"id"` // ID
+}
+
+type StatusRequest {
+	ID     int `json:"id"`     // ID
+	Status int `json:"status"` // 状态
+}

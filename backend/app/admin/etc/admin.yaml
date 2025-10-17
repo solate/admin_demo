@@ -1,0 +1,35 @@
+Name: admin
+Host: 0.0.0.0
+Port: 8888
+Env: staging  # 环境: staging 或 prod
+
+# HTTP服务器配置
+Timeout: 60000       # 请求超时时间(毫秒)，1分钟
+
+
+# logx配置
+Logx:
+  Mode: console
+  Encoding: json
+  Level: debug
+  Stat: false
+
+# DB 配置
+DataSource: postgres://root:root@localhost:5432/testdb?sslmode=disable
+ShowSQL: true
+
+
+# 缓存
+Redis:
+  Host: localhost
+  Port: 6379
+  Type: node  # 可以是 node 或 cluster，取决于Redis部署类型
+  Pass: "123456" # 如果Redis设置了密码，请填写这里
+
+
+# JWT认证配置
+JwtAuth:
+  AccessSecret: "ngV/yUNRUCUpAzN2MUBgaYQhKNiYH1wudhWVdN/3yT4=" # access token密钥 (建议生产环境使用环境变量)
+  AccessExpire: 3600         # 1小时 (3600秒)
+  RefreshSecret: "vO58bdcDhf8s7LqvFGStwJ70GfBnSgrc6fTsfESYhAo=" # refresh token密钥 (建议生产环境使用环境变量)
+  RefreshExpire: 2592000     # 30天 (30*24*3600=2592000秒) - refresh token过期时间，防止丢失后还可以用30天

@@ -1,0 +1,110 @@
+# macOS 系统文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE 和编辑器文件
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 日志文件
+*.log
+logs/
+
+# 临时文件
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# 依赖目录
+node_modules/
+vendor/
+
+# 构建输出
+dist/
+build/
+target/
+bin/
+obj/
+
+# 环境配置文件
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 数据库文件
+*.db
+*.sqlite
+*.sqlite3
+
+# 缓存文件
+.cache/
+.parcel-cache/
+
+# 覆盖率报告
+coverage/
+.nyc_output/
+
+# Go 相关
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+
+# 其他
+*.pid
+*.seed
+*.pid.lock
+.npm
+.eslintcache
+.yarn-integrity
+
+# 部署相关 - 数据库数据文件（运行时生成，不应提交）
+deploy/postgres/data/
+deploy/redis/redis/data/
+
+# 部署相关 - 数据库运行时文件
+deploy/postgres/postmaster.opts
+deploy/postgres/postmaster.pid
+deploy/postgres/postgresql.auto.conf
+
+# 部署相关 - 数据库临时和缓存文件
+deploy/postgres/pg_*/
+deploy/postgres/global/
+deploy/postgres/base/
+deploy/postgres/pg_commit_ts/
+deploy/postgres/pg_dynshmem/
+deploy/postgres/pg_logical/
+deploy/postgres/pg_multixact/
+deploy/postgres/pg_notify/
+deploy/postgres/pg_replslot/
+deploy/postgres/pg_serial/
+deploy/postgres/pg_snapshots/
+deploy/postgres/pg_stat/
+deploy/postgres/pg_stat_tmp/
+deploy/postgres/pg_subtrans/
+deploy/postgres/pg_tblspc/
+deploy/postgres/pg_twophase/
+deploy/postgres/pg_wal/
+deploy/postgres/pg_xact/
+
+# 部署相关 - Redis 数据文件
+deploy/redis/redis/data/*.rdb
+
+# 部署相关 - 日志文件
+deploy/*.log
+deploy/logs/

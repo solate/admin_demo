@@ -1,0 +1,102 @@
+syntax = "v1"
+
+import (
+	"../base.api"
+)
+
+info (
+	title:   "租户管理接口"
+	desc:    "提供租户的CRUD操作和配置管理功能"
+	author:  "solate"
+	version: "v1.0"
+)
+
+type (
+	// 创建租户请求
+	CreateTenantReq {
+		Name        string `json:"name" validate:"required"`
+		Code        string `json:"code" validate:"required"`
+		Description string `json:"description,optional" validate:"omitempty"`
+		Status      int    `json:"status,optional" validate:"omitempty"`
+	}
+	// 创建租户响应
+	CreateTenantResp {
+		TenantID string `json:"tenant_id"`
+	}
+	// 更新租户请求
+	UpdateTenantReq {
+		TenantID    string `path:"tenant_id"`
+		Name        string `json:"name"`
+		Description string `json:"description"`
+		Status      int    `json:"status"`
+	}
+	// 删除租户请求
+	DeleteTenantReq {
+		TenantID string `path:"tenant_id"`
+	}
+
+	// 获取租户详情请求
+	GetTenantReq {
+		TenantID string `path:"tenant_id"`
+	}
+	// 获取租户详情响应
+	GetTenantResp {
+		TenantInfo
+	}
+	
+	// 租户列表请求
+	ListTenantReq {
+		PageRequest
+		Status   int `form:"status" validate:"omitempty"` // 状态
+	}
+	// 租户列表响应
+	ListTenantResp {
+		Page *PageResponse `json:"page"` // 分页
+		List []*TenantInfo `json:"list"` // 租户列表
+	}
+		// 租户基本信息
+	TenantInfo {
+		TenantID    string `json:"tenant_id"`
+		Name        string `json:"name"`
+		Code        string `json:"code"`
+		Description string `json:"description"`
+		Status      int    `json:"status"`
+	// Domain      string `json:"domain"`
+	// Logo        string `json:"logo"`
+	// Theme       string `json:"theme"`
+	// Config      string `json:"config"`
+	// UserLimit   int    `json:"userLimit"`
+	// StorageLimit int   `json:"storageLimit"`
+	// ApiRateLimit int   `json:"apiRateLimit"`
+	// PackageType string `json:"packageType"`
+	// ExpireTime  string `json:"expireTime"`
+	}
+)
+
+@server (
+	middleware: AuthMiddleware
+    prefix: /api/admin/v1
+	group:      tenant
+)
+service admin {
+	@doc "创建租户"
+	@handler CreateTenant
+	post /tenants (CreateTenantReq) returns (CreateTenantResp)
+
+	@doc "更新租户"
+	@handler UpdateTenant
+	put /tenants/:tenant_id (UpdateTenantReq) returns (bool)
+
+	@doc "获取租户详情"
+	@handler GetTenant
+	get /tenants/:tenant_id (GetTenantReq) returns (GetTenantResp)
+
+	@doc "删除租户"
+	@handler DeleteTenant
+	delete /tenants/:tenant_id (DeleteTenantReq) returns (bool)
+
+	@doc "获取租户列表"
+	@handler ListTenant
+	get /tenants (ListTenantReq) returns (ListTenantResp)
+}
+

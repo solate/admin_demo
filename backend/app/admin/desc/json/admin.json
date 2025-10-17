@@ -1,0 +1,5521 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "",
+    "version": ""
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/admin/v1/auth/captcha": {
+      "get": {
+        "summary": "获取验证码",
+        "operationId": "GetCaptcha",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CaptchaResp"
+            }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/admin/v1/auth/change-password": {
+      "post": {
+        "summary": "修改密码",
+        "operationId": "ChangePassword",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 修改密码请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ChangePasswordReq"
+            }
+          }
+        ],
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/admin/v1/auth/login": {
+      "post": {
+        "summary": "用户登录",
+        "operationId": "Login",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/LoginResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginReq"
+            }
+          }
+        ],
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/admin/v1/auth/logout": {
+      "post": {
+        "summary": "用户登出",
+        "operationId": "Logout",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/admin/v1/auth/register": {
+      "post": {
+        "summary": "用户注册",
+        "operationId": "Register",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/RegisterResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RegisterReq"
+            }
+          }
+        ],
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/admin/v1/auth/reset-password": {
+      "post": {
+        "summary": "重置密码",
+        "operationId": "ResetPassword",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 重置密码请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ResetPasswordReq"
+            }
+          }
+        ],
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/admin/v1/departments": {
+      "get": {
+        "summary": "获取部门列表",
+        "operationId": "ListDepartment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/DepartmentListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": " 当前页",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "1"
+          },
+          {
+            "name": "page_size",
+            "description": " 每页大小",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "10"
+          },
+          {
+            "name": "name",
+            "description": " 部门名称",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "parent_id",
+            "description": " 父部门ID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "organization"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      },
+      "post": {
+        "summary": "创建部门",
+        "operationId": "CreateDepartment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateDepartmentResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 部门相关数据结构",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateDepartmentReq"
+            }
+          }
+        ],
+        "tags": [
+          "organization"
+        ]
+      }
+    },
+    "/api/admin/v1/departments/{department_id}": {
+      "get": {
+        "summary": "获取部门详情",
+        "operationId": "GetDepartment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/DepartmentInfo"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "department_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "organization"
+        ]
+      },
+      "delete": {
+        "summary": "删除部门",
+        "operationId": "DeleteDepartment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "department_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteDepartmentReq"
+            }
+          }
+        ],
+        "tags": [
+          "organization"
+        ]
+      },
+      "put": {
+        "summary": "更新部门",
+        "operationId": "UpdateDepartment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "department_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateDepartmentReq"
+            }
+          }
+        ],
+        "tags": [
+          "organization"
+        ]
+      }
+    },
+    "/api/admin/v1/dict-types": {
+      "get": {
+        "summary": "获取字典类型列表",
+        "operationId": "ListDictType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/DictTypeListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": " 当前页",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "1"
+          },
+          {
+            "name": "page_size",
+            "description": " 每页大小",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "10"
+          },
+          {
+            "name": "name",
+            "description": " 字典类型名称",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "code",
+            "description": " 字典类型编码",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "description": " 状态",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "dict"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      },
+      "post": {
+        "summary": "创建字典类型",
+        "operationId": "CreateDictType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateDictTypeResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 创建字典类型请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateDictTypeReq"
+            }
+          }
+        ],
+        "tags": [
+          "dict"
+        ]
+      }
+    },
+    "/api/admin/v1/dict-types/{type_code}/items": {
+      "get": {
+        "summary": "获取字典数据列表",
+        "operationId": "ListDictItem",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/DictItemListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "type_code",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "description": " 当前页",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "1"
+          },
+          {
+            "name": "page_size",
+            "description": " 每页大小",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "10"
+          },
+          {
+            "name": "label",
+            "description": " 字典标签",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "description": " 状态",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "dict"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      },
+      "post": {
+        "summary": "创建字典数据",
+        "operationId": "CreateDictItem",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateDictItemResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "type_code",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 创建字典数据请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateDictItemReq"
+            }
+          }
+        ],
+        "tags": [
+          "dict"
+        ]
+      }
+    },
+    "/api/admin/v1/dict-types/{type_code}/items/{item_id}": {
+      "get": {
+        "summary": "获取字典数据详情",
+        "operationId": "GetDictItem",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/DictItemInfo"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "type_code",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "dict"
+        ]
+      },
+      "delete": {
+        "summary": "删除字典数据",
+        "operationId": "DeleteDictItem",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "type_code",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 删除字典数据请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteDictItemReq"
+            }
+          }
+        ],
+        "tags": [
+          "dict"
+        ]
+      },
+      "put": {
+        "summary": "更新字典数据",
+        "operationId": "UpdateDictItem",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "type_code",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 更新字典数据请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateDictItemReq"
+            }
+          }
+        ],
+        "tags": [
+          "dict"
+        ]
+      }
+    },
+    "/api/admin/v1/dict-types/{type_id}": {
+      "get": {
+        "summary": "获取字典类型详情",
+        "operationId": "GetDictType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/DictTypeInfo"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "type_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "dict"
+        ]
+      },
+      "delete": {
+        "summary": "删除字典类型",
+        "operationId": "DeleteDictType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "type_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 删除字典类型请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteDictTypeReq"
+            }
+          }
+        ],
+        "tags": [
+          "dict"
+        ]
+      },
+      "put": {
+        "summary": "更新字典类型",
+        "operationId": "UpdateDictType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "type_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 更新字典类型请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateDictTypeReq"
+            }
+          }
+        ],
+        "tags": [
+          "dict"
+        ]
+      }
+    },
+    "/api/admin/v1/items/all": {
+      "get": {
+        "summary": "获取字典项选项列表",
+        "operationId": "GetDictItemAll",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/DictItemAllResp"
+            }
+          }
+        },
+        "tags": [
+          "dict"
+        ]
+      }
+    },
+    "/api/admin/v1/login-logs": {
+      "get": {
+        "summary": "查询登录记录",
+        "operationId": "ListLoginLog",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/LoginLogListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": " 当前页",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "1"
+          },
+          {
+            "name": "page_size",
+            "description": " 每页大小",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "10"
+          },
+          {
+            "name": "user_name",
+            "description": " 用户名",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "ip",
+            "description": " 登录IP",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "description": " 登录状态",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "start_time",
+            "description": " 开始时间",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "end_time",
+            "description": " 结束时间",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "user"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      }
+    },
+    "/api/admin/v1/menus": {
+      "get": {
+        "summary": "获取菜单列表",
+        "operationId": "ListMenu",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/MenuListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": " 当前页",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "1"
+          },
+          {
+            "name": "page_size",
+            "description": " 每页大小",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "10"
+          },
+          {
+            "name": "name",
+            "description": " 菜单名称",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "description": " 菜单类型",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "description": " 状态",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "menu"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      },
+      "post": {
+        "summary": "创建菜单",
+        "operationId": "CreateMenu",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateMenuResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 创建菜单请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateMenuReq"
+            }
+          }
+        ],
+        "tags": [
+          "menu"
+        ]
+      }
+    },
+    "/api/admin/v1/menus/all": {
+      "get": {
+        "summary": "获取所有菜单",
+        "operationId": "GetAllMenu",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/MenuTreeResp"
+            }
+          }
+        },
+        "tags": [
+          "menu"
+        ]
+      }
+    },
+    "/api/admin/v1/menus/tree": {
+      "get": {
+        "summary": "获取菜单树",
+        "operationId": "GetMenuTree",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/MenuTreeResp"
+            }
+          }
+        },
+        "tags": [
+          "menu"
+        ]
+      }
+    },
+    "/api/admin/v1/menus/{menu_id}": {
+      "get": {
+        "summary": "获取菜单详情",
+        "operationId": "GetMenu",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/MenuInfo"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "menu_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "menu"
+        ]
+      },
+      "delete": {
+        "summary": "删除菜单",
+        "operationId": "DeleteMenu",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "menu_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteMenuReq"
+            }
+          }
+        ],
+        "tags": [
+          "menu"
+        ]
+      },
+      "put": {
+        "summary": "更新菜单",
+        "operationId": "UpdateMenu",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "menu_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 更新菜单请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateMenuReq"
+            }
+          }
+        ],
+        "tags": [
+          "menu"
+        ]
+      }
+    },
+    "/api/admin/v1/org-tree": {
+      "get": {
+        "summary": "获取组织架构树",
+        "operationId": "GetOrgTree",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetOrgTreeResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tenant_id",
+            "description": " 租户ID，可选参数",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "organization"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      }
+    },
+    "/api/admin/v1/plans": {
+      "get": {
+        "summary": "获取计划列表",
+        "operationId": "ListPlan",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/PlanListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": " 当前页",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "1"
+          },
+          {
+            "name": "page_size",
+            "description": " 每页大小",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "10"
+          },
+          {
+            "name": "name",
+            "description": " 计划名称",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "group",
+            "description": " 任务分组",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "description": " 状态",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "plan_type",
+            "description": " 计划类型",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "task"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      },
+      "post": {
+        "summary": "创建计划",
+        "operationId": "CreatePlan",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreatePlanResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 创建计划请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreatePlanReq"
+            }
+          }
+        ],
+        "tags": [
+          "task"
+        ]
+      }
+    },
+    "/api/admin/v1/plans/{plan_id}": {
+      "get": {
+        "summary": "获取计划详情",
+        "operationId": "GetPlan",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/PlanInfo"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "task"
+        ]
+      },
+      "delete": {
+        "summary": "删除计划",
+        "operationId": "DeletePlan",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 删除计划请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeletePlanReq"
+            }
+          }
+        ],
+        "tags": [
+          "task"
+        ]
+      },
+      "put": {
+        "summary": "更新计划",
+        "operationId": "UpdatePlan",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 更新计划请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdatePlanReq"
+            }
+          }
+        ],
+        "tags": [
+          "task"
+        ]
+      }
+    },
+    "/api/admin/v1/positions": {
+      "get": {
+        "summary": "获取岗位列表",
+        "operationId": "ListPosition",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/PositionListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": " 当前页",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "1"
+          },
+          {
+            "name": "page_size",
+            "description": " 每页大小",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "10"
+          },
+          {
+            "name": "name",
+            "description": " 岗位名称",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "department_id",
+            "description": " 部门ID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "organization"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      },
+      "post": {
+        "summary": "创建岗位",
+        "operationId": "CreatePosition",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreatePositionResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 岗位相关数据结构",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreatePositionReq"
+            }
+          }
+        ],
+        "tags": [
+          "organization"
+        ]
+      }
+    },
+    "/api/admin/v1/positions/{position_id}": {
+      "get": {
+        "summary": "获取岗位详情",
+        "operationId": "GetPosition",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/PositionInfo"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "position_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "organization"
+        ]
+      },
+      "delete": {
+        "summary": "删除岗位",
+        "operationId": "DeletePosition",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "position_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeletePositionReq"
+            }
+          }
+        ],
+        "tags": [
+          "organization"
+        ]
+      },
+      "put": {
+        "summary": "更新岗位",
+        "operationId": "UpdatePosition",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "position_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdatePositionReq"
+            }
+          }
+        ],
+        "tags": [
+          "organization"
+        ]
+      }
+    },
+    "/api/admin/v1/positions/{position_id}/users": {
+      "get": {
+        "summary": "获取岗位下的用户列表",
+        "operationId": "GetPositionUsers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetPositionUsersResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "position_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "organization"
+        ]
+      }
+    },
+    "/api/admin/v1/roles": {
+      "get": {
+        "summary": "获取角色列表",
+        "operationId": "ListRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/RoleListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": " 当前页",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "1"
+          },
+          {
+            "name": "page_size",
+            "description": " 每页大小",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "10"
+          },
+          {
+            "name": "name",
+            "description": " 角色名",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "code",
+            "description": " 角色编码",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "description": " 状态",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "role"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      },
+      "post": {
+        "summary": "创建角色",
+        "operationId": "CreateRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateRoleResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 创建角色请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateRoleReq"
+            }
+          }
+        ],
+        "tags": [
+          "role"
+        ]
+      }
+    },
+    "/api/admin/v1/roles/all": {
+      "get": {
+        "summary": "获取所有角色列表",
+        "operationId": "GetAllRoles",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetAllRolesResp"
+            }
+          }
+        },
+        "tags": [
+          "role"
+        ]
+      }
+    },
+    "/api/admin/v1/roles/{role_code}/permissions": {
+      "get": {
+        "summary": "获取角色权限列表",
+        "operationId": "GetRolePermissions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetRolePermissionsResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "role_code",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "permission"
+        ]
+      },
+      "post": {
+        "summary": "设置角色权限",
+        "operationId": "SetRolePermissions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "role_code",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 分配角色权限请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SetRolePermissionsReq"
+            }
+          }
+        ],
+        "tags": [
+          "permission"
+        ]
+      }
+    },
+    "/api/admin/v1/roles/{role_id}": {
+      "get": {
+        "summary": "获取角色详情",
+        "operationId": "GetRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/RoleInfo"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "role_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "role"
+        ]
+      },
+      "delete": {
+        "summary": "删除角色",
+        "operationId": "DeleteRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "role_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 删除角色请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteRoleReq"
+            }
+          }
+        ],
+        "tags": [
+          "role"
+        ]
+      },
+      "put": {
+        "summary": "更新角色",
+        "operationId": "UpdateRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "role_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 更新角色请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateRoleReq"
+            }
+          }
+        ],
+        "tags": [
+          "role"
+        ]
+      }
+    },
+    "/api/admin/v1/rules/resource-types": {
+      "get": {
+        "summary": "获取资源类型列表",
+        "operationId": "GetResourceTypes",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetResourceTypesResp"
+            }
+          }
+        },
+        "tags": [
+          "permission"
+        ]
+      }
+    },
+    "/api/admin/v1/tasks": {
+      "get": {
+        "summary": "获取任务列表",
+        "operationId": "ListTask",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/TaskListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": " 当前页",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "1"
+          },
+          {
+            "name": "page_size",
+            "description": " 每页大小",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "10"
+          },
+          {
+            "name": "plan_id",
+            "description": " 计划ID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "description": " 任务名称",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "group",
+            "description": " 任务分组",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "description": " 任务状态",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start_time",
+            "description": " 开始时间",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "end_time",
+            "description": " 结束时间",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "task"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      }
+    },
+    "/api/admin/v1/tasks/trigger": {
+      "post": {
+        "summary": "手动触发任务",
+        "operationId": "TriggerTask",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/TriggerTaskResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 手动触发任务请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TriggerTaskReq"
+            }
+          }
+        ],
+        "tags": [
+          "task"
+        ]
+      }
+    },
+    "/api/admin/v1/tasks/{task_id}": {
+      "delete": {
+        "summary": "删除任务",
+        "operationId": "DeleteTask",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 删除任务请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteTaskReq"
+            }
+          }
+        ],
+        "tags": [
+          "task"
+        ]
+      }
+    },
+    "/api/admin/v1/tasks/{task_id}/stop": {
+      "post": {
+        "summary": "停止任务",
+        "operationId": "StopTask",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 停止任务请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/StopTaskReq"
+            }
+          }
+        ],
+        "tags": [
+          "task"
+        ]
+      }
+    },
+    "/api/admin/v1/tenants": {
+      "get": {
+        "summary": "获取租户列表",
+        "operationId": "ListTenant",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ListTenantResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": " 当前页",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "1"
+          },
+          {
+            "name": "page_size",
+            "description": " 每页大小",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "10"
+          },
+          {
+            "name": "status",
+            "description": " 状态",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "tenant"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      },
+      "post": {
+        "summary": "创建租户",
+        "operationId": "CreateTenant",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateTenantResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 创建租户请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateTenantReq"
+            }
+          }
+        ],
+        "tags": [
+          "tenant"
+        ]
+      }
+    },
+    "/api/admin/v1/tenants/{tenant_id}": {
+      "get": {
+        "summary": "获取租户详情",
+        "operationId": "GetTenant",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetTenantResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tenant_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "tenant"
+        ]
+      },
+      "delete": {
+        "summary": "删除租户",
+        "operationId": "DeleteTenant",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tenant_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 删除租户请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteTenantReq"
+            }
+          }
+        ],
+        "tags": [
+          "tenant"
+        ]
+      },
+      "put": {
+        "summary": "更新租户",
+        "operationId": "UpdateTenant",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tenant_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 更新租户请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateTenantReq"
+            }
+          }
+        ],
+        "tags": [
+          "tenant"
+        ]
+      }
+    },
+    "/api/admin/v1/user-positions": {
+      "delete": {
+        "summary": "移除用户岗位",
+        "operationId": "RemoveUserPosition",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RemoveUserPositionReq"
+            }
+          }
+        ],
+        "tags": [
+          "organization"
+        ]
+      },
+      "post": {
+        "summary": "分配用户岗位",
+        "operationId": "AssignUserPosition",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 用户-岗位关联相关数据结构",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AssignUserPositionReq"
+            }
+          }
+        ],
+        "tags": [
+          "organization"
+        ]
+      }
+    },
+    "/api/admin/v1/users": {
+      "get": {
+        "summary": "获取用户列表",
+        "operationId": "ListUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UserListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": " 当前页",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "1"
+          },
+          {
+            "name": "page_size",
+            "description": " 每页大小",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "10"
+          },
+          {
+            "name": "name",
+            "description": " 姓名",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "phone",
+            "description": " 手机号",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "description": " 状态",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "user"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      },
+      "post": {
+        "summary": "创建用户",
+        "operationId": "CreateUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateUserResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 创建用户请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateUserReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/api/admin/v1/users/me": {
+      "get": {
+        "summary": "获取当前用户信息",
+        "operationId": "GetCurrentUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UserInfo"
+            }
+          }
+        },
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/api/admin/v1/users/{user_id}": {
+      "get": {
+        "summary": "获取用户详情",
+        "operationId": "GetUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UserInfo"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      },
+      "delete": {
+        "summary": "删除用户",
+        "operationId": "DeleteUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteUserReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      },
+      "put": {
+        "summary": "更新用户",
+        "operationId": "UpdateUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 更新用户请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateUserReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/api/admin/v1/users/{user_id}/positions": {
+      "get": {
+        "summary": "获取用户的岗位列表",
+        "operationId": "GetUserPositions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetUserPositionsResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "organization"
+        ]
+      }
+    },
+    "/api/admin/v1/users/{user_id}/roles": {
+      "get": {
+        "summary": "获取用户角色列表",
+        "operationId": "GetUserRoles",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetUserRolesResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "role"
+        ]
+      },
+      "post": {
+        "summary": "设置用户角色",
+        "operationId": "SetUserRoles",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 分配用户角色请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SetUserRolesReq"
+            }
+          }
+        ],
+        "tags": [
+          "role"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "AssignUserPositionReq": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "description": " 用户ID"
+        },
+        "position_id": {
+          "type": "string",
+          "description": " 岗位ID"
+        }
+      },
+      "title": "AssignUserPositionReq",
+      "required": [
+        "user_id",
+        "position_id"
+      ]
+    },
+    "CaptchaResp": {
+      "type": "object",
+      "properties": {
+        "captcha_id": {
+          "type": "string",
+          "description": " 验证码ID"
+        },
+        "captcha_url": {
+          "type": "string",
+          "description": " 验证码图片（base64）"
+        }
+      },
+      "title": "CaptchaResp",
+      "required": [
+        "captcha_id",
+        "captcha_url"
+      ]
+    },
+    "CasbinRuleInfo": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": " 权限类型"
+        },
+        "resource": {
+          "type": "string",
+          "description": " 资源路径"
+        },
+        "action": {
+          "type": "string",
+          "description": " 操作类型"
+        }
+      },
+      "title": "CasbinRuleInfo",
+      "required": [
+        "type",
+        "resource",
+        "action"
+      ]
+    },
+    "ChangePasswordReq": {
+      "type": "object",
+      "properties": {
+        "old_password": {
+          "type": "string",
+          "description": " 原密码"
+        },
+        "new_password": {
+          "type": "string",
+          "description": " 新密码"
+        }
+      },
+      "title": "ChangePasswordReq",
+      "required": [
+        "old_password",
+        "new_password"
+      ]
+    },
+    "CreateDepartmentReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": " 部门名称"
+        },
+        "parent_id": {
+          "type": "string",
+          "description": " 父部门ID"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 排序"
+        }
+      },
+      "title": "CreateDepartmentReq",
+      "required": [
+        "name"
+      ]
+    },
+    "CreateDepartmentResp": {
+      "type": "object",
+      "properties": {
+        "department_id": {
+          "type": "string",
+          "description": " 部门ID"
+        }
+      },
+      "title": "CreateDepartmentResp",
+      "required": [
+        "department_id"
+      ]
+    },
+    "CreateDictItemReq": {
+      "type": "object",
+      "properties": {
+        "type_code": {
+          "type": "string",
+          "description": " 字典类型编码"
+        },
+        "label": {
+          "type": "string",
+          "description": " 字典标签"
+        },
+        "value": {
+          "type": "string",
+          "description": " 字典键值"
+        },
+        "description": {
+          "type": "string",
+          "description": " 字典项描述"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 排序"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态: 1:启用, 2:禁用"
+        }
+      },
+      "title": "CreateDictItemReq",
+      "required": [
+        "type_code",
+        "label",
+        "value",
+        "status"
+      ]
+    },
+    "CreateDictItemResp": {
+      "type": "object",
+      "properties": {
+        "item_id": {
+          "type": "string",
+          "description": " 字典项ID"
+        }
+      },
+      "title": "CreateDictItemResp",
+      "required": [
+        "item_id"
+      ]
+    },
+    "CreateDictTypeReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": " 字典类型名称"
+        },
+        "code": {
+          "type": "string",
+          "description": " 字典类型编码"
+        },
+        "description": {
+          "type": "string",
+          "description": " 字典类型描述"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态: 1:启用, 2:禁用"
+        }
+      },
+      "title": "CreateDictTypeReq",
+      "required": [
+        "name",
+        "code",
+        "status"
+      ]
+    },
+    "CreateDictTypeResp": {
+      "type": "object",
+      "properties": {
+        "type_id": {
+          "type": "string",
+          "description": " 字典类型ID"
+        }
+      },
+      "title": "CreateDictTypeResp",
+      "required": [
+        "type_id"
+      ]
+    },
+    "CreateMenuReq": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": " 菜单code"
+        },
+        "action": {
+          "type": "string",
+          "description": " 权限标识"
+        },
+        "type": {
+          "type": "string",
+          "description": " 菜单类型"
+        },
+        "parent_id": {
+          "type": "string",
+          "description": " 父菜单ID"
+        },
+        "name": {
+          "type": "string",
+          "description": " 菜单名称"
+        },
+        "path": {
+          "type": "string",
+          "description": " 路由路径"
+        },
+        "component": {
+          "type": "string",
+          "description": " 前端组件路径"
+        },
+        "redirect": {
+          "type": "string",
+          "description": " 重定向路径"
+        },
+        "icon": {
+          "type": "string",
+          "description": " 菜单图标"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 排序号"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态 1:启用 2:禁用"
+        }
+      },
+      "title": "CreateMenuReq",
+      "required": [
+        "code",
+        "action",
+        "type",
+        "parent_id",
+        "name"
+      ]
+    },
+    "CreateMenuResp": {
+      "type": "object",
+      "properties": {
+        "menu_id": {
+          "type": "string",
+          "description": " 菜单ID"
+        }
+      },
+      "title": "CreateMenuResp",
+      "required": [
+        "menu_id"
+      ]
+    },
+    "CreatePermissionReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": " 权限名称"
+        },
+        "code": {
+          "type": "string",
+          "description": " 权限编码"
+        },
+        "type": {
+          "type": "string",
+          "description": " 权限类型(1:菜单menu 2:页面page 3:按钮button 4:接口api 5:数据data)"
+        },
+        "resource": {
+          "type": "string",
+          "description": " 资源路径"
+        },
+        "action": {
+          "type": "string",
+          "description": " 操作类型"
+        },
+        "parent_id": {
+          "type": "string",
+          "description": " 父级ID"
+        },
+        "description": {
+          "type": "string",
+          "description": " 描述"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态(1:启用 2:禁用)"
+        },
+        "menu_id": {
+          "type": "string",
+          "description": " 菜单ID"
+        }
+      },
+      "title": "CreatePermissionReq",
+      "required": [
+        "name",
+        "code",
+        "type",
+        "resource",
+        "action"
+      ]
+    },
+    "CreatePermissionResp": {
+      "type": "object",
+      "properties": {
+        "permission_id": {
+          "type": "string",
+          "description": " 权限规则ID"
+        }
+      },
+      "title": "CreatePermissionResp",
+      "required": [
+        "permission_id"
+      ]
+    },
+    "CreatePlanReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": " 计划名称"
+        },
+        "description": {
+          "type": "string",
+          "description": " 计划描述"
+        },
+        "group": {
+          "type": "string",
+          "description": " 任务分组"
+        },
+        "cron_spec": {
+          "type": "string",
+          "description": " cron表达式"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态: 1:启用, 2:禁用"
+        },
+        "plan_type": {
+          "type": "string",
+          "description": " 计划类型: routine/special"
+        },
+        "priority": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 任务优先级"
+        },
+        "timeout": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 任务超时时间(秒)"
+        },
+        "retry_times": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 重试次数"
+        },
+        "retry_interval": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 重试间隔(秒)"
+        },
+        "start_time": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 生效开始时间"
+        },
+        "end_time": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 生效结束时间"
+        },
+        "command": {
+          "type": "string",
+          "description": " 要执行的命令或方法"
+        },
+        "params": {
+          "type": "string",
+          "description": " 执行参数，支持JSON格式"
+        }
+      },
+      "title": "CreatePlanReq",
+      "required": [
+        "name",
+        "cron_spec",
+        "status",
+        "command"
+      ]
+    },
+    "CreatePlanResp": {
+      "type": "object",
+      "properties": {
+        "plan_id": {
+          "type": "string",
+          "description": " 计划ID"
+        }
+      },
+      "title": "CreatePlanResp",
+      "required": [
+        "plan_id"
+      ]
+    },
+    "CreatePositionReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": " 岗位名称"
+        },
+        "department_id": {
+          "type": "string",
+          "description": " 部门ID"
+        },
+        "description": {
+          "type": "string",
+          "description": " 岗位描述"
+        }
+      },
+      "title": "CreatePositionReq",
+      "required": [
+        "name",
+        "department_id"
+      ]
+    },
+    "CreatePositionResp": {
+      "type": "object",
+      "properties": {
+        "position_id": {
+          "type": "string",
+          "description": " 岗位ID"
+        }
+      },
+      "title": "CreatePositionResp",
+      "required": [
+        "position_id"
+      ]
+    },
+    "CreateRoleReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": " 角色名"
+        },
+        "code": {
+          "type": "string",
+          "description": " 角色编码"
+        },
+        "description": {
+          "type": "string",
+          "description": " 角色描述"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态: 1:启用, 2:禁用"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 排序"
+        }
+      },
+      "title": "CreateRoleReq",
+      "required": [
+        "name",
+        "code",
+        "status"
+      ]
+    },
+    "CreateRoleResp": {
+      "type": "object",
+      "properties": {
+        "role_id": {
+          "type": "string",
+          "description": " 角色ID"
+        }
+      },
+      "title": "CreateRoleResp",
+      "required": [
+        "role_id"
+      ]
+    },
+    "CreateTenantReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "CreateTenantReq",
+      "required": [
+        "name",
+        "code"
+      ]
+    },
+    "CreateTenantResp": {
+      "type": "object",
+      "properties": {
+        "tenant_id": {
+          "type": "string"
+        }
+      },
+      "title": "CreateTenantResp",
+      "required": [
+        "tenant_id"
+      ]
+    },
+    "CreateUserReq": {
+      "type": "object",
+      "properties": {
+        "user_name": {
+          "type": "string",
+          "description": " 用户名"
+        },
+        "name": {
+          "type": "string",
+          "description": " 姓名"
+        },
+        "password": {
+          "type": "string",
+          "description": " 密码"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        },
+        "phone": {
+          "type": "string",
+          "description": " 手机号"
+        },
+        "email": {
+          "type": "string",
+          "description": " 邮箱"
+        },
+        "sex": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 性别"
+        },
+        "avatar": {
+          "type": "string",
+          "description": " 头像"
+        },
+        "role_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": " 角色ID列表"
+        }
+      },
+      "title": "CreateUserReq",
+      "required": [
+        "user_name",
+        "name",
+        "password",
+        "status",
+        "phone"
+      ]
+    },
+    "CreateUserResp": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "description": " 用户ID"
+        }
+      },
+      "title": "CreateUserResp",
+      "required": [
+        "user_id"
+      ]
+    },
+    "DeleteDepartmentReq": {
+      "type": "object",
+      "title": "DeleteDepartmentReq"
+    },
+    "DeleteDictItemReq": {
+      "type": "object",
+      "title": "DeleteDictItemReq"
+    },
+    "DeleteDictTypeReq": {
+      "type": "object",
+      "title": "DeleteDictTypeReq"
+    },
+    "DeleteMenuReq": {
+      "type": "object",
+      "title": "DeleteMenuReq"
+    },
+    "DeletePermissionReq": {
+      "type": "object",
+      "title": "DeletePermissionReq"
+    },
+    "DeletePlanReq": {
+      "type": "object",
+      "title": "DeletePlanReq"
+    },
+    "DeletePositionReq": {
+      "type": "object",
+      "title": "DeletePositionReq"
+    },
+    "DeleteRoleReq": {
+      "type": "object",
+      "title": "DeleteRoleReq"
+    },
+    "DeleteTaskReq": {
+      "type": "object",
+      "title": "DeleteTaskReq"
+    },
+    "DeleteTenantReq": {
+      "type": "object",
+      "title": "DeleteTenantReq"
+    },
+    "DeleteUserReq": {
+      "type": "object",
+      "title": "DeleteUserReq"
+    },
+    "DepartmentInfo": {
+      "type": "object",
+      "properties": {
+        "department_id": {
+          "type": "string",
+          "description": " 部门ID"
+        },
+        "name": {
+          "type": "string",
+          "description": " 部门名称"
+        },
+        "parent_id": {
+          "type": "string",
+          "description": " 父部门ID"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 排序"
+        },
+        "created_at": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 创建时间"
+        },
+        "updated_at": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 更新时间"
+        }
+      },
+      "title": "DepartmentInfo",
+      "required": [
+        "department_id",
+        "name",
+        "parent_id",
+        "sort",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    "DepartmentListReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int32",
+          "default": "1",
+          "description": " 当前页"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int32",
+          "default": "10",
+          "description": " 每页大小"
+        },
+        "name": {
+          "type": "string",
+          "description": " 部门名称"
+        },
+        "parent_id": {
+          "type": "string",
+          "description": " 父部门ID"
+        }
+      },
+      "title": "DepartmentListReq"
+    },
+    "DepartmentListResp": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/PageResponse",
+          "description": " 分页"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DepartmentInfo"
+          },
+          "description": " 部门列表"
+        }
+      },
+      "title": "DepartmentListResp",
+      "required": [
+        "page",
+        "list"
+      ]
+    },
+    "DictItemAllResp": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DictItemInfo"
+          },
+          "description": " 字典项选项列表"
+        }
+      },
+      "title": "DictItemAllResp",
+      "required": [
+        "list"
+      ]
+    },
+    "DictItemInfo": {
+      "type": "object",
+      "properties": {
+        "item_id": {
+          "type": "string",
+          "description": " 字典项ID"
+        },
+        "type_code": {
+          "type": "string",
+          "description": " 字典类型编码"
+        },
+        "label": {
+          "type": "string",
+          "description": " 字典标签"
+        },
+        "value": {
+          "type": "string",
+          "description": " 字典键值"
+        },
+        "description": {
+          "type": "string",
+          "description": " 字典项描述"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 排序"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        },
+        "created_at": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 创建时间"
+        }
+      },
+      "title": "DictItemInfo",
+      "required": [
+        "item_id",
+        "type_code",
+        "label",
+        "value",
+        "description",
+        "sort",
+        "status",
+        "created_at"
+      ]
+    },
+    "DictItemListReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int32",
+          "default": "1",
+          "description": " 当前页"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int32",
+          "default": "10",
+          "description": " 每页大小"
+        },
+        "label": {
+          "type": "string",
+          "description": " 字典标签"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        }
+      },
+      "title": "DictItemListReq"
+    },
+    "DictItemListResp": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/PageResponse",
+          "description": " 分页"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DictItemInfo"
+          },
+          "description": " 字典数据列表"
+        }
+      },
+      "title": "DictItemListResp",
+      "required": [
+        "page",
+        "list"
+      ]
+    },
+    "DictTypeInfo": {
+      "type": "object",
+      "properties": {
+        "type_id": {
+          "type": "string",
+          "description": " 字典类型ID"
+        },
+        "name": {
+          "type": "string",
+          "description": " 字典类型名称"
+        },
+        "code": {
+          "type": "string",
+          "description": " 字典类型编码"
+        },
+        "description": {
+          "type": "string",
+          "description": " 字典类型描述"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        },
+        "created_at": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 创建时间"
+        }
+      },
+      "title": "DictTypeInfo",
+      "required": [
+        "type_id",
+        "name",
+        "code",
+        "description",
+        "status",
+        "created_at"
+      ]
+    },
+    "DictTypeListReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int32",
+          "default": "1",
+          "description": " 当前页"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int32",
+          "default": "10",
+          "description": " 每页大小"
+        },
+        "name": {
+          "type": "string",
+          "description": " 字典类型名称"
+        },
+        "code": {
+          "type": "string",
+          "description": " 字典类型编码"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        }
+      },
+      "title": "DictTypeListReq"
+    },
+    "DictTypeListResp": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/PageResponse",
+          "description": " 分页"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DictTypeInfo"
+          },
+          "description": " 字典类型列表"
+        }
+      },
+      "title": "DictTypeListResp",
+      "required": [
+        "page",
+        "list"
+      ]
+    },
+    "GetAllRolesResp": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RoleInfo"
+          },
+          "description": " 角色列表"
+        }
+      },
+      "title": "GetAllRolesResp",
+      "required": [
+        "list"
+      ]
+    },
+    "GetDepartmentReq": {
+      "type": "object",
+      "title": "GetDepartmentReq"
+    },
+    "GetDictItemAllReq": {
+      "type": "object",
+      "title": "GetDictItemAllReq"
+    },
+    "GetDictItemReq": {
+      "type": "object",
+      "title": "GetDictItemReq"
+    },
+    "GetDictTypeReq": {
+      "type": "object",
+      "title": "GetDictTypeReq"
+    },
+    "GetMenuReq": {
+      "type": "object",
+      "title": "GetMenuReq"
+    },
+    "GetOrgTreeReq": {
+      "type": "object",
+      "properties": {
+        "tenant_id": {
+          "type": "string",
+          "description": " 租户ID，可选参数"
+        }
+      },
+      "title": "GetOrgTreeReq"
+    },
+    "GetOrgTreeResp": {
+      "type": "object",
+      "properties": {
+        "tree": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrgTreeNode"
+          },
+          "description": " 组织树"
+        }
+      },
+      "title": "GetOrgTreeResp",
+      "required": [
+        "tree"
+      ]
+    },
+    "GetPermissionReq": {
+      "type": "object",
+      "title": "GetPermissionReq"
+    },
+    "GetPermissionResp": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": " 权限规则ID"
+        },
+        "tenant_code": {
+          "type": "string",
+          "description": " 租户编码"
+        },
+        "permission_id": {
+          "type": "string",
+          "description": " 权限规则ID"
+        },
+        "name": {
+          "type": "string",
+          "description": " 权限名称"
+        },
+        "code": {
+          "type": "string",
+          "description": " 权限编码"
+        },
+        "type": {
+          "type": "string",
+          "description": " 权限类型"
+        },
+        "resource": {
+          "type": "string",
+          "description": " 资源路径"
+        },
+        "action": {
+          "type": "string",
+          "description": " 操作类型"
+        },
+        "parent_id": {
+          "type": "string",
+          "description": " 父级ID"
+        },
+        "description": {
+          "type": "string",
+          "description": " 描述"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        },
+        "menu_id": {
+          "type": "string",
+          "description": " 菜单ID"
+        },
+        "created_at": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 创建时间"
+        }
+      },
+      "title": "GetPermissionResp"
+    },
+    "GetPlanReq": {
+      "type": "object",
+      "title": "GetPlanReq"
+    },
+    "GetPositionReq": {
+      "type": "object",
+      "title": "GetPositionReq"
+    },
+    "GetPositionUsersReq": {
+      "type": "object",
+      "title": "GetPositionUsersReq"
+    },
+    "GetPositionUsersResp": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserPositionInfo"
+          },
+          "description": " 用户列表"
+        }
+      },
+      "title": "GetPositionUsersResp",
+      "required": [
+        "list"
+      ]
+    },
+    "GetResourceTypesResp": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceTypeInfo"
+          },
+          "description": " 资源类型列表"
+        }
+      },
+      "title": "GetResourceTypesResp",
+      "required": [
+        "list"
+      ]
+    },
+    "GetRolePermissionsReq": {
+      "type": "object",
+      "title": "GetRolePermissionsReq"
+    },
+    "GetRolePermissionsResp": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Permission"
+          },
+          "description": " 权限列表"
+        }
+      },
+      "title": "GetRolePermissionsResp",
+      "required": [
+        "list"
+      ]
+    },
+    "GetRoleReq": {
+      "type": "object",
+      "title": "GetRoleReq"
+    },
+    "GetTenantReq": {
+      "type": "object",
+      "title": "GetTenantReq"
+    },
+    "GetTenantResp": {
+      "type": "object",
+      "properties": {
+        "tenant_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "GetTenantResp"
+    },
+    "GetUserPositionsReq": {
+      "type": "object",
+      "title": "GetUserPositionsReq"
+    },
+    "GetUserPositionsResp": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PositionInfo"
+          },
+          "description": " 岗位列表"
+        }
+      },
+      "title": "GetUserPositionsResp",
+      "required": [
+        "list"
+      ]
+    },
+    "GetUserReq": {
+      "type": "object",
+      "title": "GetUserReq"
+    },
+    "GetUserRolesReq": {
+      "type": "object",
+      "title": "GetUserRolesReq"
+    },
+    "GetUserRolesResp": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RoleInfo"
+          },
+          "description": " 角色列表"
+        }
+      },
+      "title": "GetUserRolesResp",
+      "required": [
+        "list"
+      ]
+    },
+    "IDRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32",
+          "description": " ID"
+        }
+      },
+      "title": "IDRequest",
+      "required": [
+        "id"
+      ]
+    },
+    "ListPermissionReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int32",
+          "default": "1",
+          "description": " 当前页"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int32",
+          "default": "10",
+          "description": " 每页大小"
+        },
+        "name": {
+          "type": "string",
+          "description": " 权限名称"
+        },
+        "code": {
+          "type": "string",
+          "description": " 权限编码"
+        },
+        "type": {
+          "type": "string",
+          "description": " 权限类型"
+        },
+        "resource": {
+          "type": "string",
+          "description": " 资源路径"
+        },
+        "action": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 操作类型"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        }
+      },
+      "title": "ListPermissionReq"
+    },
+    "ListPermissionResp": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/PageResponse",
+          "description": " 分页信息"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PermissionInfo"
+          },
+          "description": " 权限规则列表"
+        }
+      },
+      "title": "ListPermissionResp",
+      "required": [
+        "page",
+        "list"
+      ]
+    },
+    "ListTenantReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int32",
+          "default": "1",
+          "description": " 当前页"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int32",
+          "default": "10",
+          "description": " 每页大小"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        }
+      },
+      "title": "ListTenantReq",
+      "required": [
+        "status"
+      ]
+    },
+    "ListTenantResp": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/PageResponse",
+          "description": " 分页"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TenantInfo"
+          },
+          "description": " 租户列表"
+        }
+      },
+      "title": "ListTenantResp",
+      "required": [
+        "page",
+        "list"
+      ]
+    },
+    "LoginLogInfo": {
+      "type": "object",
+      "properties": {
+        "log_id": {
+          "type": "string",
+          "description": " 记录ID"
+        },
+        "user_id": {
+          "type": "string",
+          "description": " 用户ID"
+        },
+        "user_name": {
+          "type": "string",
+          "description": " 用户名"
+        },
+        "ip": {
+          "type": "string",
+          "description": " 登录IP"
+        },
+        "user_agent": {
+          "type": "string",
+          "description": " 用户代理"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 登录状态"
+        },
+        "message": {
+          "type": "string",
+          "description": " 状态信息"
+        },
+        "created_at": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 创建时间"
+        }
+      },
+      "title": "LoginLogInfo",
+      "required": [
+        "log_id",
+        "user_id",
+        "user_name",
+        "ip",
+        "user_agent",
+        "status",
+        "message",
+        "created_at"
+      ]
+    },
+    "LoginLogListReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int32",
+          "default": "1",
+          "description": " 当前页"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int32",
+          "default": "10",
+          "description": " 每页大小"
+        },
+        "user_name": {
+          "type": "string",
+          "description": " 用户名"
+        },
+        "ip": {
+          "type": "string",
+          "description": " 登录IP"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 登录状态"
+        },
+        "start_time": {
+          "type": "string",
+          "description": " 开始时间"
+        },
+        "end_time": {
+          "type": "string",
+          "description": " 结束时间"
+        }
+      },
+      "title": "LoginLogListReq"
+    },
+    "LoginLogListResp": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/PageResponse",
+          "description": " 分页信息"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LoginLogInfo"
+          },
+          "description": " 登录记录列表"
+        }
+      },
+      "title": "LoginLogListResp",
+      "required": [
+        "page",
+        "list"
+      ]
+    },
+    "LoginReq": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "description": " 用户名"
+        },
+        "password": {
+          "type": "string",
+          "description": " 密码"
+        },
+        "captcha_id": {
+          "type": "string",
+          "description": " 验证码ID"
+        },
+        "captcha": {
+          "type": "string",
+          "description": " 验证码"
+        }
+      },
+      "title": "LoginReq",
+      "required": [
+        "username",
+        "password",
+        "captcha_id",
+        "captcha"
+      ]
+    },
+    "LoginResp": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "user_name": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        }
+      },
+      "title": "LoginResp",
+      "required": [
+        "token",
+        "user_id",
+        "user_name",
+        "phone",
+        "email"
+      ]
+    },
+    "MenuInfo": {
+      "type": "object",
+      "properties": {
+        "menu_id": {
+          "type": "string",
+          "description": " 菜单ID"
+        },
+        "code": {
+          "type": "string",
+          "description": " 菜单code"
+        },
+        "parent_id": {
+          "type": "string",
+          "description": " 父菜单ID"
+        },
+        "name": {
+          "type": "string",
+          "description": " 菜单名称"
+        },
+        "path": {
+          "type": "string",
+          "description": " 路由路径"
+        },
+        "component": {
+          "type": "string",
+          "description": " 前端组件路径"
+        },
+        "redirect": {
+          "type": "string",
+          "description": " 重定向路径"
+        },
+        "icon": {
+          "type": "string",
+          "description": " 菜单图标"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 排序号"
+        },
+        "type": {
+          "type": "string",
+          "description": " 菜单类型"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        },
+        "created_at": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 创建时间"
+        }
+      },
+      "title": "MenuInfo",
+      "required": [
+        "menu_id",
+        "code",
+        "parent_id",
+        "name",
+        "path",
+        "component",
+        "redirect",
+        "icon",
+        "sort",
+        "type",
+        "status",
+        "created_at"
+      ]
+    },
+    "MenuListReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int32",
+          "default": "1",
+          "description": " 当前页"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int32",
+          "default": "10",
+          "description": " 每页大小"
+        },
+        "name": {
+          "type": "string",
+          "description": " 菜单名称"
+        },
+        "type": {
+          "type": "string",
+          "description": " 菜单类型"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        }
+      },
+      "title": "MenuListReq"
+    },
+    "MenuListResp": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/PageResponse",
+          "description": " 分页"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MenuInfo"
+          },
+          "description": " 菜单列表"
+        }
+      },
+      "title": "MenuListResp",
+      "required": [
+        "page",
+        "list"
+      ]
+    },
+    "MenuTree": {
+      "type": "object",
+      "properties": {
+        "menu_id": {
+          "type": "string",
+          "description": " 菜单ID"
+        },
+        "code": {
+          "type": "string",
+          "description": " 菜单code"
+        },
+        "parent_id": {
+          "type": "string",
+          "description": " 父菜单ID"
+        },
+        "name": {
+          "type": "string",
+          "description": " 菜单名称"
+        },
+        "path": {
+          "type": "string",
+          "description": " 路由路径"
+        },
+        "component": {
+          "type": "string",
+          "description": " 前端组件路径"
+        },
+        "redirect": {
+          "type": "string",
+          "description": " 重定向路径"
+        },
+        "icon": {
+          "type": "string",
+          "description": " 菜单图标"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 排序号"
+        },
+        "type": {
+          "type": "string",
+          "description": " 菜单类型"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MenuTree"
+          },
+          "description": " 子菜单"
+        },
+        "rule": {
+          "$ref": "#/definitions/CasbinRuleInfo",
+          "description": " 权限规则信息"
+        }
+      },
+      "title": "MenuTree",
+      "required": [
+        "menu_id",
+        "code",
+        "parent_id",
+        "name",
+        "path",
+        "component",
+        "redirect",
+        "icon",
+        "sort",
+        "type",
+        "status",
+        "children",
+        "rule"
+      ]
+    },
+    "MenuTreeResp": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MenuTree"
+          },
+          "description": " 菜单树列表"
+        }
+      },
+      "title": "MenuTreeResp",
+      "required": [
+        "list"
+      ]
+    },
+    "OrgTreeNode": {
+      "type": "object",
+      "properties": {
+        "department_id": {
+          "type": "string",
+          "description": " 部门ID"
+        },
+        "name": {
+          "type": "string",
+          "description": " 部门名称"
+        },
+        "parent_id": {
+          "type": "string",
+          "description": " 父部门ID"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 排序"
+        },
+        "positions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PositionInfo"
+          },
+          "description": " 部门下的岗位列表"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrgTreeNode"
+          },
+          "description": " 子部门列表"
+        }
+      },
+      "title": "OrgTreeNode",
+      "required": [
+        "department_id",
+        "name",
+        "parent_id",
+        "sort",
+        "positions",
+        "children"
+      ]
+    },
+    "PageJsonRequest": {
+      "type": "object",
+      "properties": {
+        "current": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 当前页"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 每页大小"
+        }
+      },
+      "title": "PageJsonRequest",
+      "required": [
+        "current",
+        "page_size"
+      ]
+    },
+    "PageRequest": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int32",
+          "default": "1",
+          "description": " 当前页"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int32",
+          "default": "10",
+          "description": " 每页大小"
+        }
+      },
+      "title": "PageRequest",
+      "required": [
+        "page",
+        "page_size"
+      ]
+    },
+    "PageResponse": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 总数"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 当前页大小"
+        },
+        "request_page_size": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 请求页大小"
+        },
+        "current": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 当前页"
+        }
+      },
+      "title": "PageResponse",
+      "required": [
+        "total",
+        "page_size",
+        "request_page_size",
+        "current"
+      ]
+    },
+    "Permission": {
+      "type": "object",
+      "properties": {
+        "resource": {
+          "type": "string",
+          "description": " 资源"
+        },
+        "action": {
+          "type": "string",
+          "description": " 操作类型"
+        },
+        "type": {
+          "type": "string",
+          "description": " 权限类型"
+        }
+      },
+      "title": "Permission",
+      "required": [
+        "resource",
+        "action",
+        "type"
+      ]
+    },
+    "PermissionInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": " 权限规则ID"
+        },
+        "tenant_code": {
+          "type": "string",
+          "description": " 租户编码"
+        },
+        "permission_id": {
+          "type": "string",
+          "description": " 权限规则ID"
+        },
+        "name": {
+          "type": "string",
+          "description": " 权限名称"
+        },
+        "code": {
+          "type": "string",
+          "description": " 权限编码"
+        },
+        "type": {
+          "type": "string",
+          "description": " 权限类型"
+        },
+        "resource": {
+          "type": "string",
+          "description": " 资源路径"
+        },
+        "action": {
+          "type": "string",
+          "description": " 操作类型"
+        },
+        "parent_id": {
+          "type": "string",
+          "description": " 父级ID"
+        },
+        "description": {
+          "type": "string",
+          "description": " 描述"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        },
+        "menu_id": {
+          "type": "string",
+          "description": " 菜单ID"
+        },
+        "created_at": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 创建时间"
+        }
+      },
+      "title": "PermissionInfo",
+      "required": [
+        "id",
+        "tenant_code",
+        "permission_id",
+        "name",
+        "code",
+        "type",
+        "resource",
+        "action",
+        "parent_id",
+        "description",
+        "status",
+        "menu_id",
+        "created_at"
+      ]
+    },
+    "PlanInfo": {
+      "type": "object",
+      "properties": {
+        "plan_id": {
+          "type": "string",
+          "description": " 计划ID"
+        },
+        "name": {
+          "type": "string",
+          "description": " 计划名称"
+        },
+        "description": {
+          "type": "string",
+          "description": " 计划描述"
+        },
+        "group": {
+          "type": "string",
+          "description": " 任务分组"
+        },
+        "cron_spec": {
+          "type": "string",
+          "description": " cron表达式"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        },
+        "plan_type": {
+          "type": "string",
+          "description": " 计划类型"
+        },
+        "priority": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 任务优先级"
+        },
+        "timeout": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 任务超时时间(秒)"
+        },
+        "retry_times": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 重试次数"
+        },
+        "retry_interval": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 重试间隔(秒)"
+        },
+        "start_time": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 生效开始时间"
+        },
+        "end_time": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 生效结束时间"
+        },
+        "command": {
+          "type": "string",
+          "description": " 要执行的命令或方法"
+        },
+        "params": {
+          "type": "string",
+          "description": " 执行参数，支持JSON格式"
+        },
+        "created_at": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 创建时间"
+        }
+      },
+      "title": "PlanInfo",
+      "required": [
+        "plan_id",
+        "name",
+        "description",
+        "group",
+        "cron_spec",
+        "status",
+        "plan_type",
+        "priority",
+        "timeout",
+        "retry_times",
+        "retry_interval",
+        "start_time",
+        "end_time",
+        "command",
+        "params",
+        "created_at"
+      ]
+    },
+    "PlanListReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int32",
+          "default": "1",
+          "description": " 当前页"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int32",
+          "default": "10",
+          "description": " 每页大小"
+        },
+        "name": {
+          "type": "string",
+          "description": " 计划名称"
+        },
+        "group": {
+          "type": "string",
+          "description": " 任务分组"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        },
+        "plan_type": {
+          "type": "string",
+          "description": " 计划类型"
+        }
+      },
+      "title": "PlanListReq"
+    },
+    "PlanListResp": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/PageResponse",
+          "description": " 分页信息"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PlanInfo"
+          },
+          "description": " 计划列表"
+        }
+      },
+      "title": "PlanListResp",
+      "required": [
+        "page",
+        "list"
+      ]
+    },
+    "PositionInfo": {
+      "type": "object",
+      "properties": {
+        "position_id": {
+          "type": "string",
+          "description": " 岗位ID"
+        },
+        "name": {
+          "type": "string",
+          "description": " 岗位名称"
+        },
+        "department_id": {
+          "type": "string",
+          "description": " 部门ID"
+        },
+        "description": {
+          "type": "string",
+          "description": " 岗位描述"
+        },
+        "created_at": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 创建时间"
+        },
+        "updated_at": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 更新时间"
+        }
+      },
+      "title": "PositionInfo",
+      "required": [
+        "position_id",
+        "name",
+        "department_id",
+        "description",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    "PositionListReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int32",
+          "default": "1",
+          "description": " 当前页"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int32",
+          "default": "10",
+          "description": " 每页大小"
+        },
+        "name": {
+          "type": "string",
+          "description": " 岗位名称"
+        },
+        "department_id": {
+          "type": "string",
+          "description": " 部门ID"
+        }
+      },
+      "title": "PositionListReq"
+    },
+    "PositionListResp": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/PageResponse",
+          "description": " 分页"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PositionInfo"
+          },
+          "description": " 岗位列表"
+        }
+      },
+      "title": "PositionListResp",
+      "required": [
+        "page",
+        "list"
+      ]
+    },
+    "RegisterReq": {
+      "type": "object",
+      "properties": {
+        "user_name": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "nick_name": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "sex": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "RegisterReq",
+      "required": [
+        "user_name",
+        "password",
+        "nick_name",
+        "phone"
+      ]
+    },
+    "RegisterResp": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string"
+        }
+      },
+      "title": "RegisterResp",
+      "required": [
+        "user_id"
+      ]
+    },
+    "RemoveUserPositionReq": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "description": " 用户ID"
+        },
+        "position_id": {
+          "type": "string",
+          "description": " 岗位ID"
+        }
+      },
+      "title": "RemoveUserPositionReq",
+      "required": [
+        "user_id",
+        "position_id"
+      ]
+    },
+    "ResetPasswordReq": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "description": " 用户ID"
+        },
+        "new_password": {
+          "type": "string",
+          "description": " 新密码"
+        }
+      },
+      "title": "ResetPasswordReq",
+      "required": [
+        "user_id",
+        "new_password"
+      ]
+    },
+    "ResourceTypeInfo": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": " 资源类型"
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": " 可用操作"
+        },
+        "data_rules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": " 数据规则（仅对数据权限类型有效）"
+        }
+      },
+      "title": "ResourceTypeInfo",
+      "required": [
+        "type",
+        "actions",
+        "data_rules"
+      ]
+    },
+    "RoleInfo": {
+      "type": "object",
+      "properties": {
+        "role_id": {
+          "type": "string",
+          "description": " 角色ID"
+        },
+        "name": {
+          "type": "string",
+          "description": " 角色名"
+        },
+        "code": {
+          "type": "string",
+          "description": " 角色编码"
+        },
+        "description": {
+          "type": "string",
+          "description": " 角色描述"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 排序"
+        },
+        "created_at": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 创建时间"
+        }
+      },
+      "title": "RoleInfo",
+      "required": [
+        "role_id",
+        "name",
+        "code",
+        "description",
+        "status",
+        "sort",
+        "created_at"
+      ]
+    },
+    "RoleListInfo": {
+      "type": "object",
+      "properties": {
+        "role_id": {
+          "type": "string",
+          "description": " 角色ID"
+        },
+        "name": {
+          "type": "string",
+          "description": " 角色名"
+        },
+        "code": {
+          "type": "string",
+          "description": " 角色编码"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 排序"
+        }
+      },
+      "title": "RoleListInfo",
+      "required": [
+        "role_id",
+        "name",
+        "code",
+        "sort"
+      ]
+    },
+    "RoleListReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int32",
+          "default": "1",
+          "description": " 当前页"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int32",
+          "default": "10",
+          "description": " 每页大小"
+        },
+        "name": {
+          "type": "string",
+          "description": " 角色名"
+        },
+        "code": {
+          "type": "string",
+          "description": " 角色编码"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        }
+      },
+      "title": "RoleListReq"
+    },
+    "RoleListResp": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/PageResponse",
+          "description": " 分页"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RoleInfo"
+          },
+          "description": " 角色列表"
+        }
+      },
+      "title": "RoleListResp",
+      "required": [
+        "page",
+        "list"
+      ]
+    },
+    "SetRolePermissionsReq": {
+      "type": "object",
+      "properties": {
+        "permission_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Permission"
+          },
+          "description": " 权限列表"
+        }
+      },
+      "title": "SetRolePermissionsReq",
+      "required": [
+        "permission_list"
+      ]
+    },
+    "SetUserRolesReq": {
+      "type": "object",
+      "properties": {
+        "role_code_list": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": " 角色Code列表"
+        }
+      },
+      "title": "SetUserRolesReq",
+      "required": [
+        "role_code_list"
+      ]
+    },
+    "StatusRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32",
+          "description": " ID"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        }
+      },
+      "title": "StatusRequest",
+      "required": [
+        "id",
+        "status"
+      ]
+    },
+    "StopTaskReq": {
+      "type": "object",
+      "title": "StopTaskReq"
+    },
+    "TaskInfo": {
+      "type": "object",
+      "properties": {
+        "task_id": {
+          "type": "string",
+          "description": " 任务ID"
+        },
+        "name": {
+          "type": "string",
+          "description": " 任务名称"
+        },
+        "plan_id": {
+          "type": "string",
+          "description": " 计划ID"
+        },
+        "plan_type": {
+          "type": "string",
+          "description": " 计划类型"
+        },
+        "group": {
+          "type": "string",
+          "description": " 任务分组"
+        },
+        "priority": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 任务优先级"
+        },
+        "status": {
+          "type": "string",
+          "description": " 任务状态"
+        },
+        "planned_time": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 计划执行时间"
+        },
+        "start_time": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 实际开始时间"
+        },
+        "end_time": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 实际结束时间"
+        },
+        "duration": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 执行时长(ms)"
+        },
+        "result": {
+          "type": "string",
+          "description": " 执行结果"
+        },
+        "error": {
+          "type": "string",
+          "description": " 错误信息"
+        },
+        "retry_count": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 已重试次数"
+        },
+        "next_retry_time": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 下次重试时间"
+        },
+        "created_at": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 创建时间"
+        }
+      },
+      "title": "TaskInfo",
+      "required": [
+        "task_id",
+        "name",
+        "plan_id",
+        "plan_type",
+        "group",
+        "priority",
+        "status",
+        "planned_time",
+        "start_time",
+        "end_time",
+        "duration",
+        "result",
+        "error",
+        "retry_count",
+        "next_retry_time",
+        "created_at"
+      ]
+    },
+    "TaskListReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int32",
+          "default": "1",
+          "description": " 当前页"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int32",
+          "default": "10",
+          "description": " 每页大小"
+        },
+        "plan_id": {
+          "type": "string",
+          "description": " 计划ID"
+        },
+        "name": {
+          "type": "string",
+          "description": " 任务名称"
+        },
+        "group": {
+          "type": "string",
+          "description": " 任务分组"
+        },
+        "status": {
+          "type": "string",
+          "description": " 任务状态"
+        },
+        "start_time": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 开始时间"
+        },
+        "end_time": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 结束时间"
+        }
+      },
+      "title": "TaskListReq"
+    },
+    "TaskListResp": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/PageResponse",
+          "description": " 分页信息"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaskInfo"
+          },
+          "description": " 任务列表"
+        }
+      },
+      "title": "TaskListResp",
+      "required": [
+        "page",
+        "list"
+      ]
+    },
+    "TenantInfo": {
+      "type": "object",
+      "properties": {
+        "tenant_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "TenantInfo",
+      "required": [
+        "tenant_id",
+        "name",
+        "code",
+        "description",
+        "status"
+      ]
+    },
+    "TimeRange": {
+      "type": "object",
+      "properties": {
+        "start_time": {
+          "type": "string",
+          "description": " 开始时间"
+        },
+        "end_time": {
+          "type": "string",
+          "description": " 结束时间"
+        }
+      },
+      "title": "TimeRange"
+    },
+    "TriggerTaskReq": {
+      "type": "object",
+      "properties": {
+        "plan_id": {
+          "type": "string",
+          "description": " 计划ID"
+        }
+      },
+      "title": "TriggerTaskReq",
+      "required": [
+        "plan_id"
+      ]
+    },
+    "TriggerTaskResp": {
+      "type": "object",
+      "properties": {
+        "task_id": {
+          "type": "string",
+          "description": " 任务ID"
+        }
+      },
+      "title": "TriggerTaskResp",
+      "required": [
+        "task_id"
+      ]
+    },
+    "UpdateDepartmentReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": " 部门名称"
+        },
+        "parent_id": {
+          "type": "string",
+          "description": " 父部门ID"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 排序"
+        }
+      },
+      "title": "UpdateDepartmentReq"
+    },
+    "UpdateDictItemReq": {
+      "type": "object",
+      "properties": {
+        "type_code": {
+          "type": "string",
+          "description": " 字典类型编码"
+        },
+        "label": {
+          "type": "string",
+          "description": " 字典标签"
+        },
+        "value": {
+          "type": "string",
+          "description": " 字典键值"
+        },
+        "description": {
+          "type": "string",
+          "description": " 字典项描述"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 排序"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        }
+      },
+      "title": "UpdateDictItemReq",
+      "required": [
+        "type_code"
+      ]
+    },
+    "UpdateDictTypeReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": " 字典类型名称"
+        },
+        "description": {
+          "type": "string",
+          "description": " 字典类型描述"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        }
+      },
+      "title": "UpdateDictTypeReq"
+    },
+    "UpdateMenuReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": " 菜单名称"
+        },
+        "path": {
+          "type": "string",
+          "description": " 路由路径"
+        },
+        "component": {
+          "type": "string",
+          "description": " 前端组件路径"
+        },
+        "redirect": {
+          "type": "string",
+          "description": " 重定向路径"
+        },
+        "icon": {
+          "type": "string",
+          "description": " 菜单图标"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 排序号"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        },
+        "parent_id": {
+          "type": "string",
+          "description": " 父菜单ID"
+        }
+      },
+      "title": "UpdateMenuReq",
+      "required": [
+        "parent_id"
+      ]
+    },
+    "UpdatePermissionReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": " 权限名称"
+        },
+        "type": {
+          "type": "string",
+          "description": " 权限类型"
+        },
+        "resource": {
+          "type": "string",
+          "description": " 资源路径"
+        },
+        "action": {
+          "type": "string",
+          "description": " 操作类型"
+        },
+        "parent_id": {
+          "type": "string",
+          "description": " 父级ID"
+        },
+        "description": {
+          "type": "string",
+          "description": " 描述"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        },
+        "menu_id": {
+          "type": "string",
+          "description": " 菜单ID"
+        }
+      },
+      "title": "UpdatePermissionReq"
+    },
+    "UpdatePlanReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": " 计划名称"
+        },
+        "description": {
+          "type": "string",
+          "description": " 计划描述"
+        },
+        "group": {
+          "type": "string",
+          "description": " 任务分组"
+        },
+        "cron_spec": {
+          "type": "string",
+          "description": " cron表达式"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        },
+        "priority": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 任务优先级"
+        },
+        "timeout": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 任务超时时间(秒)"
+        },
+        "retry_times": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 重试次数"
+        },
+        "retry_interval": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 重试间隔(秒)"
+        },
+        "start_time": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 生效开始时间"
+        },
+        "end_time": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 生效结束时间"
+        },
+        "command": {
+          "type": "string",
+          "description": " 要执行的命令或方法"
+        },
+        "params": {
+          "type": "string",
+          "description": " 执行参数，支持JSON格式"
+        }
+      },
+      "title": "UpdatePlanReq"
+    },
+    "UpdatePositionReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": " 岗位名称"
+        },
+        "department_id": {
+          "type": "string",
+          "description": " 部门ID"
+        },
+        "description": {
+          "type": "string",
+          "description": " 岗位描述"
+        }
+      },
+      "title": "UpdatePositionReq"
+    },
+    "UpdateRoleReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": " 角色名"
+        },
+        "description": {
+          "type": "string",
+          "description": " 角色描述"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        },
+        "sort": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 排序"
+        }
+      },
+      "title": "UpdateRoleReq"
+    },
+    "UpdateTenantReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "UpdateTenantReq",
+      "required": [
+        "name",
+        "description",
+        "status"
+      ]
+    },
+    "UpdateUserReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "sex": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "avatar": {
+          "type": "string"
+        },
+        "role_code_list": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "UpdateUserReq"
+    },
+    "UserInfo": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "description": " 用户ID"
+        },
+        "user_name": {
+          "type": "string",
+          "description": " 用户名"
+        },
+        "name": {
+          "type": "string",
+          "description": " 姓名"
+        },
+        "phone": {
+          "type": "string",
+          "description": " 手机号"
+        },
+        "email": {
+          "type": "string",
+          "description": " 邮箱"
+        },
+        "avatar": {
+          "type": "string",
+          "description": " 头像"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        },
+        "created_at": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 创建时间"
+        },
+        "role_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RoleListInfo"
+          },
+          "description": " 角色列表"
+        }
+      },
+      "title": "UserInfo",
+      "required": [
+        "user_id",
+        "user_name",
+        "name",
+        "phone",
+        "email",
+        "avatar",
+        "status",
+        "created_at",
+        "role_list"
+      ]
+    },
+    "UserListReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int32",
+          "default": "1",
+          "description": " 当前页"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int32",
+          "default": "10",
+          "description": " 每页大小"
+        },
+        "name": {
+          "type": "string",
+          "description": " 姓名"
+        },
+        "phone": {
+          "type": "string",
+          "description": " 手机号"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        }
+      },
+      "title": "UserListReq"
+    },
+    "UserListResp": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/PageResponse",
+          "description": " 分页"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserInfo"
+          },
+          "description": " 用户列表"
+        }
+      },
+      "title": "UserListResp",
+      "required": [
+        "page",
+        "list"
+      ]
+    },
+    "UserPositionInfo": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "description": " 用户ID"
+        },
+        "name": {
+          "type": "string",
+          "description": " 用户姓名"
+        },
+        "user_name": {
+          "type": "string",
+          "description": " 用户名"
+        },
+        "avatar": {
+          "type": "string",
+          "description": " 头像"
+        },
+        "position_id": {
+          "type": "string",
+          "description": " 岗位ID"
+        }
+      },
+      "title": "UserPositionInfo",
+      "required": [
+        "user_id",
+        "name",
+        "user_name",
+        "avatar",
+        "position_id"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "description": "Enter JWT Bearer token **_only_**",
+      "name": "Authorization",
+      "in": "header"
+    }
+  }
+}

@@ -1,0 +1,136 @@
+syntax = "v1"
+
+import (
+    "../base.api"
+)
+
+info (
+    title   : "角色服务接口"
+    desc    : "角色管理相关接口定义"
+    author  : "solate"
+    version : "v1.0"
+)
+
+type (
+    // 创建角色请求
+    CreateRoleReq {
+        Name        string `json:"name"`                  // 角色名
+        Code        string `json:"code"`                  // 角色编码
+        Description string `json:"description,optional"` // 角色描述
+        Status      int    `json:"status"`               // 状态: 1:启用, 2:禁用
+        Sort        int    `json:"sort,optional"`        // 排序
+    }
+
+    // 创建角色响应
+    CreateRoleResp {
+        RoleID string `json:"role_id"` // 角色ID
+    }
+
+    // 更新角色请求
+    UpdateRoleReq {
+        RoleID      string `path:"role_id"`
+        Name        string `json:"name,optional"`        // 角色名
+        Description string `json:"description,optional"` // 角色描述
+        Status      int    `json:"status,optional"`      // 状态
+        Sort        int    `json:"sort,optional"`        // 排序
+    }
+
+    // 删除角色请求
+    DeleteRoleReq {
+        RoleID string `path:"role_id"`
+    }
+
+    // 获取角色请求
+    GetRoleReq {
+        RoleID string `path:"role_id"`
+    }
+
+  
+
+    // 角色列表请求
+    RoleListReq {
+        PageRequest
+        Name   string `form:"name,optional"`   // 角色名
+        Code   string `form:"code,optional"`   // 角色编码
+        Status int    `form:"status,optional"` // 状态
+    }
+
+    // 角色列表响应
+    RoleListResp {
+        Page *PageResponse `json:"page"` // 分页
+        List []*RoleInfo   `json:"list"` // 角色列表
+    }
+
+    // 获取所有角色列表响应
+    GetAllRolesResp {
+        List []*RoleInfo `json:"list"` // 角色列表
+    }
+
+    // 角色信息
+    RoleInfo {
+        RoleID      string `json:"role_id"`    // 角色ID
+        Name        string `json:"name"`        // 角色名
+        Code        string `json:"code"`        // 角色编码
+        Description string `json:"description"` // 角色描述
+        Status      int    `json:"status"`      // 状态
+        Sort        int    `json:"sort"`        // 排序
+        CreatedAt   int64  `json:"created_at"` // 创建时间
+    }
+
+    // 分配用户角色请求
+    SetUserRolesReq {
+        UserID  string   `path:"user_id"`                    // 用户ID
+        RoleCodeList []string `json:"role_code_list" validate:"required"` // 角色Code列表
+    }
+
+    // 获取用户角色请求
+    GetUserRolesReq {
+        UserID string `path:"user_id"` // 用户ID
+    }
+
+    // 获取用户角色响应
+    GetUserRolesResp {
+        List []*RoleInfo `json:"list"` // 角色列表
+    }
+
+   
+)
+
+@server (
+    prefix: /api/admin/v1
+    group: role
+    middleware: AuthMiddleware
+)
+service admin {
+    @doc "创建角色"
+    @handler CreateRole
+    post /roles (CreateRoleReq) returns (CreateRoleResp)
+
+    @doc "更新角色"
+    @handler UpdateRole
+    put /roles/:role_id (UpdateRoleReq) returns (bool)
+
+    @doc "删除角色"
+    @handler DeleteRole
+    delete /roles/:role_id (DeleteRoleReq) returns (bool)
+
+    @doc "获取角色列表"
+    @handler ListRole
+    get /roles (RoleListReq) returns (RoleListResp)
+
+    @doc "获取角色详情"
+    @handler GetRole
+    get /roles/:role_id (GetRoleReq) returns (RoleInfo)
+
+    @doc "设置用户角色"
+    @handler SetUserRoles
+    post /users/:user_id/roles (SetUserRolesReq) returns (bool)
+
+    @doc "获取用户角色列表"
+    @handler GetUserRoles
+    get /users/:user_id/roles (GetUserRolesReq) returns (GetUserRolesResp)
+
+    @doc "获取所有角色列表"
+    @handler GetAllRoles
+    get /roles/all returns (GetAllRolesResp)
+}

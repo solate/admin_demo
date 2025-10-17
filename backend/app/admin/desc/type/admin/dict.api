@@ -1,0 +1,195 @@
+syntax = "v1"
+
+import (
+    "../base.api"
+)
+
+info (
+    title   : "字典管理服务接口"
+    desc    : "字典类型和字典数据管理相关接口定义"
+    author  : "solate"
+    version : "v1.0"
+)
+
+type (
+    // 创建字典类型请求
+    CreateDictTypeReq {
+        Name        string `json:"name"`         // 字典类型名称
+        Code        string `json:"code"`         // 字典类型编码
+        Description string `json:"description,optional"` // 字典类型描述
+        Status      int    `json:"status"`      // 状态: 1:启用, 2:禁用
+    }
+
+    // 创建字典类型响应
+    CreateDictTypeResp {
+        TypeID string `json:"type_id"` // 字典类型ID
+    }
+
+    // 更新字典类型请求
+    UpdateDictTypeReq {
+        TypeID      string `path:"type_id"`
+        Name        string `json:"name,optional"`        // 字典类型名称
+        Description string `json:"description,optional"` // 字典类型描述
+        Status      int    `json:"status,optional"`      // 状态
+    }
+
+    // 删除字典类型请求
+    DeleteDictTypeReq {
+        TypeID string `path:"type_id"`
+    }
+
+    // 获取字典类型请求
+    GetDictTypeReq {
+        TypeID string `path:"type_id"`
+    }
+
+    // 字典类型列表请求
+    DictTypeListReq {
+        PageRequest
+        Name   string `form:"name,optional"`   // 字典类型名称
+        Code   string `form:"code,optional"`   // 字典类型编码
+        Status int    `form:"status,optional"` // 状态
+    }
+
+    // 字典类型列表响应
+    DictTypeListResp {
+        Page *PageResponse   `json:"page"` // 分页
+        List []*DictTypeInfo `json:"list"` // 字典类型列表
+    }
+
+    // 字典类型信息
+    DictTypeInfo {
+        TypeID      string `json:"type_id"`      // 字典类型ID
+        Name        string `json:"name"`         // 字典类型名称
+        Code        string `json:"code"`         // 字典类型编码
+        Description string `json:"description"`  // 字典类型描述
+        Status      int    `json:"status"`       // 状态
+        CreatedAt   int64  `json:"created_at"`  // 创建时间
+    }
+
+    // 创建字典数据请求
+    CreateDictItemReq {
+        TypeCode    string `json:"type_code"`    // 字典类型编码
+        Label       string `json:"label"`        // 字典标签
+        Value       string `json:"value"`        // 字典键值
+        Description string `json:"description,optional"` // 字典项描述
+        Sort        int    `json:"sort,optional"`        // 排序
+        Status      int    `json:"status"`       // 状态: 1:启用, 2:禁用
+    }
+
+    // 创建字典数据响应
+    CreateDictItemResp {
+        ItemID string `json:"item_id"` // 字典项ID
+    }
+
+    // 更新字典数据请求
+    UpdateDictItemReq {
+        TypeCode    string `json:"type_code"`    // 字典类型编码
+        ItemID      string `path:"item_id"`
+        Label       string `json:"label,optional"`        // 字典标签
+        Value       string `json:"value,optional"`        // 字典键值
+        Description string `json:"description,optional"` // 字典项描述
+        Sort        int    `json:"sort,optional"`        // 排序
+        Status      int    `json:"status,optional"`      // 状态
+    }
+
+    // 删除字典数据请求
+    DeleteDictItemReq {
+        ItemID string `path:"item_id"`
+        TypeCode    string `path:"type_code"`    // 字典类型编码
+    }
+
+    // 获取字典数据请求
+    GetDictItemReq {
+        ItemID string `path:"item_id"`
+        TypeCode    string `path:"type_code"`    // 字典类型编码
+    }
+
+    // 字典数据列表请求
+    DictItemListReq {
+        PageRequest
+        TypeCode string `path:"type_code"` // 字典类型编码
+        Label    string `form:"label,optional"`     // 字典标签
+        Status   int    `form:"status,optional"`    // 状态
+    }
+
+    // 字典数据列表响应
+    DictItemListResp {
+        Page *PageResponse   `json:"page"` // 分页
+        List []*DictItemInfo `json:"list"` // 字典数据列表
+    }
+
+    // 获取字典项选项请求
+    GetDictItemAllReq {
+        TypeCode string `path:"type_code"` // 字典类型编码
+    }
+
+    // 字典项选项响应
+    DictItemAllResp {
+        List []*DictItemInfo `json:"list"` // 字典项选项列表
+    }
+
+    // 字典数据信息
+    DictItemInfo {
+        ItemID      string `json:"item_id"`      // 字典项ID
+        TypeCode    string `json:"type_code"`    // 字典类型编码
+        Label       string `json:"label"`        // 字典标签
+        Value       string `json:"value"`        // 字典键值
+        Description string `json:"description"`  // 字典项描述
+        Sort        int    `json:"sort"`         // 排序
+        Status      int    `json:"status"`       // 状态
+        CreatedAt   int64  `json:"created_at"`  // 创建时间
+    }
+
+)
+
+@server (
+    prefix: /api/admin/v1
+    group: dict
+    middleware: AuthMiddleware
+)
+service admin {
+    @doc "创建字典类型"
+    @handler CreateDictType
+    post /dict-types (CreateDictTypeReq) returns (CreateDictTypeResp)
+
+    @doc "更新字典类型"
+    @handler UpdateDictType
+    put /dict-types/:type_id (UpdateDictTypeReq) returns (bool)
+
+    @doc "删除字典类型"
+    @handler DeleteDictType
+    delete /dict-types/:type_id (DeleteDictTypeReq) returns (bool)
+
+    @doc "获取字典类型详情"
+    @handler GetDictType
+    get /dict-types/:type_id (GetDictTypeReq) returns (DictTypeInfo)
+
+    @doc "获取字典类型列表"
+    @handler ListDictType
+    get /dict-types (DictTypeListReq) returns (DictTypeListResp)
+
+    @doc "创建字典数据"
+    @handler CreateDictItem
+    post /dict-types/:type_code/items (CreateDictItemReq) returns (CreateDictItemResp)
+
+    @doc "更新字典数据"
+    @handler UpdateDictItem
+    put /dict-types/:type_code/items/:item_id (UpdateDictItemReq) returns (bool)
+
+    @doc "删除字典数据"
+    @handler DeleteDictItem
+    delete /dict-types/:type_code/items/:item_id (DeleteDictItemReq) returns (bool)
+
+    @doc "获取字典数据详情"
+    @handler GetDictItem
+    get /dict-types/:type_code/items/:item_id (GetDictItemReq) returns (DictItemInfo)
+
+    @doc "获取字典数据列表"
+    @handler ListDictItem
+    get /dict-types/:type_code/items (DictItemListReq) returns (DictItemListResp)
+
+    @doc "获取字典项选项列表"
+    @handler GetDictItemAll
+    get /items/all (GetDictItemAllReq) returns (DictItemAllResp)
+}

@@ -1,0 +1,128 @@
+syntax = "v1"
+
+import (
+    "../base.api"
+)
+
+info (
+	title   : "Auth服务接口"
+	desc    : "用户登录注册相关接口定义"
+	author  : "solate"
+	version : "v1.0"
+)
+
+
+type (
+    // 修改密码请求
+    ChangePasswordReq {
+        OldPassword string `json:"old_password" validate:"required"` // 原密码
+        NewPassword string `json:"new_password" validate:"required"` // 新密码
+    }
+
+    // 重置密码请求
+    ResetPasswordReq {
+        UserID      string `json:"user_id" validate:"required"`      // 用户ID
+        NewPassword string `json:"new_password" validate:"required"` // 新密码
+    }
+
+    RegisterReq {
+        UserName string `json:"user_name"`
+        Password string `json:"password"`
+        Name string `json:"nick_name"`
+        Avatar   string `json:"avatar,optional"`
+        Phone    string `json:"phone"`
+        Email    string `json:"email,optional"`
+        Sex      int    `json:"sex,optional"`
+    }
+
+    RegisterResp {
+        UserID string  `json:"user_id"`
+    }
+
+    LoginReq {
+		UserName string `json:"username" validate:"required"` // 用户名
+		Password string `json:"password" validate:"required"` // 密码
+		CaptchaId string `json:"captcha_id" validate:"required"` // 验证码ID
+		Captcha string `json:"captcha" validate:"required"` // 验证码
+	}
+
+    LoginResp {
+        AccessToken  string `json:"access_token"`
+        RefreshToken string `json:"refresh_token"`
+        UserID       string `json:"user_id"`
+        UserName     string `json:"user_name"`
+        Phone        string `json:"phone"`
+        Email        string `json:"email"`
+    }
+
+    RefreshTokenReq {
+        RefreshToken string `json:"refresh_token" validate:"required"` // 刷新令牌
+    }
+
+    RefreshTokenResp {
+        AccessToken  string `json:"access_token"`
+        RefreshToken string `json:"refresh_token,omitempty"` // 可选：可以返回新的refresh token
+    }
+
+    // 获取活跃设备数量响应
+    GetActiveDevicesResp {
+        ActiveDevices int `json:"active_devices"` // 当前活跃设备数量
+    }
+
+    CaptchaResp {
+        CaptchaId  string `json:"captcha_id"`  // 验证码ID
+        CaptchaUrl string `json:"captcha_url"` // 验证码图片（base64）
+    }
+)
+
+
+@server (
+    prefix: /api/admin/v1/auth
+    group: auth
+)
+service admin {
+    @doc "用户注册"
+    @handler Register
+    post /register (RegisterReq) returns (RegisterResp)
+
+    @doc "用户登录"
+    @handler Login
+    post /login (LoginReq) returns (LoginResp)
+
+    @doc "刷新访问令牌"
+    @handler RefreshToken
+    post /refresh-token (RefreshTokenReq) returns (RefreshTokenResp)
+
+    @doc "获取验证码"
+    @handler GetCaptcha
+    get /captcha returns (CaptchaResp)
+}
+
+
+@server (
+    prefix: /api/admin/v1/auth
+    group: auth
+    middleware: AuthMiddleware
+)
+service admin {
+
+    @doc "用户登出（当前设备）"
+    @handler Logout
+    post /logout returns (bool)
+
+    @doc "用户登出（所有设备）"
+    @handler LogoutAll
+    post /logout-all returns (bool)
+
+    @doc "获取当前用户活跃设备数量"
+    @handler GetActiveDevices
+    get /devices/active returns (GetActiveDevicesResp)
+
+    @doc "修改密码"
+    @handler ChangePassword
+    post /change-password (ChangePasswordReq) returns (bool)
+
+    @doc "重置密码"
+    @handler ResetPassword
+    post /reset-password (ResetPasswordReq) returns (bool)
+}

@@ -1,0 +1,15 @@
+syntax = "v1"
+
+import (
+	"type/base.api"
+	"type/admin/user.api"
+	"type/admin/auth.api"
+	"type/admin/tenant.api"
+	"type/admin/role.api"
+	"type/admin/permission.api"
+	"type/admin/menu.api"
+	"type/admin/dict.api"
+	"type/admin/organization.api"
+	"type/admin/task.api"
+)
+

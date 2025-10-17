@@ -1,0 +1,12 @@
+p, admin, default, menuCode, view, menu
+p, admin, default, pageCode, view, page
+p, admin, default, resourceCode, action, button
+p, admin, hisense, apiPath, method, api
+p, admin, default, resourceCode, rule, data
+
+
+g, alice, admin, default
+g, bob, admin, domain2
+
+
+

@@ -1,0 +1,155 @@
+syntax = "v1"
+
+import (
+    "../base.api"
+)
+
+
+
+info (
+	title   : "用户服务接口"
+	desc    : "用户管理相关接口定义"
+	author  : "solate"
+	version : "v1.0"
+)
+   
+type (
+    
+       
+    // 创建用户请求
+    CreateUserReq { 
+        UserName      string   `json:"user_name"`   // 用户名
+        Name         string   `json:"name"`         // 姓名
+        Password    string   `json:"password"`     // 密码
+        Status       int      `json:"status"`       // 状态
+        Phone        string   `json:"phone"`   // 手机号
+        Email        string   `json:"email,optional"`   // 邮箱
+        Sex          int      `json:"sex,optional"`     // 性别
+        Avatar       string   `json:"avatar,optional"`  // 头像
+        RoleIDs      []string `json:"role_ids,optional"`// 角色ID列表
+    }
+
+    // 创建用户响应
+    CreateUserResp {
+        UserID string `json:"user_id"` // 用户ID
+    }
+
+    // 更新用户请求
+    UpdateUserReq {
+        UserID   string   `path:"user_id"`
+        Name     string   `json:"name,optional"`
+        // Phone    string   `json:"phone,optional"`
+        Email    string   `json:"email,optional"`
+        Status   int      `json:"status,optional"`
+        Sex      int      `json:"sex,optional"`
+        Avatar   string   `json:"avatar,optional"`
+        RoleCodeList  []string `json:"role_code_list,optional"`
+    }
+
+    DeleteUserReq {
+        UserID    string    `path:"user_id"`
+    }
+
+    GetUserReq {
+        UserID string `path:"user_id"`
+    }
+
+  
+    UserListReq {
+        PageRequest
+        Name   string `form:"name,optional"`   // 姓名
+        Phone  string `form:"phone,optional"`  // 手机号
+        Status int    `form:"status,optional"` // 状态
+    }
+
+    // 用户列表响应
+    UserListResp {
+        Page *PageResponse `json:"page"` // 分页
+        List []*UserInfo   `json:"list"` // 用户列表
+    }
+
+    // 用户基本信息
+    UserInfo {
+        UserID    string `json:"user_id"`      // 用户ID
+        UserName  string `json:"user_name"`      // 用户名
+        Name      string `json:"name"`          // 姓名
+        Phone     string `json:"phone"`         // 手机号
+        Email     string `json:"email"`         // 邮箱
+        Avatar    string `json:"avatar"`        // 头像
+        Status    int    `json:"status"`        // 状态
+        CreatedAt int64 `json:"created_at"`    // 创建时间
+        RoleList []*RoleListInfo `json:"role_list"` // 角色列表
+    }
+     // 角色信息
+    RoleListInfo {
+        RoleID      string `json:"role_id"`    // 角色ID
+        Name        string `json:"name"`        // 角色名
+        Code        string `json:"code"`        // 角色编码        
+        Sort        int    `json:"sort"`        // 排序
+    }
+
+
+    // 登录记录查询请求
+    LoginLogListReq {
+        PageRequest
+        UserName    string `form:"user_name,optional"`    // 用户名
+        IP         string `form:"ip,optional"`           // 登录IP
+        Status     int    `form:"status,optional"`       // 登录状态
+        StartTime  string `form:"start_time,optional"`   // 开始时间
+        EndTime    string `form:"end_time,optional"`     // 结束时间
+    }
+
+    // 登录记录查询响应
+    LoginLogListResp {
+        Page *PageResponse  `json:"page"`              // 分页信息
+        List []*LoginLogInfo `json:"list"`            // 登录记录列表
+    }
+
+    // 登录记录信息
+    LoginLogInfo {
+        LogID         string `json:"log_id"`                 // 记录ID
+        UserID     string `json:"user_id"`            // 用户ID
+        UserName   string `json:"user_name"`          // 用户名
+        IP         string `json:"ip"`                 // 登录IP
+        UserAgent  string `json:"user_agent"`         // 用户代理
+        Status     int    `json:"status"`             // 登录状态
+        Message    string `json:"message"`            // 状态信息
+        CreatedAt  int64 `json:"created_at"`         // 创建时间
+    }
+)
+
+@server (
+    prefix: /api/admin/v1
+    group: user
+    middleware: AuthMiddleware
+)
+service admin {
+    @doc "创建用户"
+    @handler CreateUser
+    post /users (CreateUserReq) returns (CreateUserResp)
+
+    @doc "更新用户"
+    @handler UpdateUser
+    put /users/:user_id (UpdateUserReq) returns (bool)
+
+    @doc "删除用户"
+    @handler DeleteUser
+    delete /users/:user_id (DeleteUserReq) returns (bool)
+
+    @doc "获取用户列表"
+    @handler ListUser
+    get /users (UserListReq) returns (UserListResp)
+
+    @doc "获取用户详情"
+    @handler GetUser
+    get /users/:user_id (GetUserReq) returns (UserInfo)
+
+    @doc "查询登录记录"
+    @handler ListLoginLog
+    get /login-logs (LoginLogListReq) returns (LoginLogListResp)
+
+    @doc "获取当前用户信息"
+    @handler GetCurrentUser
+    get /users/me returns (UserInfo)
+
+}
