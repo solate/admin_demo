@@ -56,6 +56,30 @@ func (f DictTypeFunc) Mutate(ctx context.Context, m generated.Mutation) (generat
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *generated.DictTypeMutation", m)
 }
 
+// The FactoryFunc type is an adapter to allow the use of ordinary
+// function as Factory mutator.
+type FactoryFunc func(context.Context, *generated.FactoryMutation) (generated.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f FactoryFunc) Mutate(ctx context.Context, m generated.Mutation) (generated.Value, error) {
+	if mv, ok := m.(*generated.FactoryMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *generated.FactoryMutation", m)
+}
+
+// The InventoryFunc type is an adapter to allow the use of ordinary
+// function as Inventory mutator.
+type InventoryFunc func(context.Context, *generated.InventoryMutation) (generated.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f InventoryFunc) Mutate(ctx context.Context, m generated.Mutation) (generated.Value, error) {
+	if mv, ok := m.(*generated.InventoryMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *generated.InventoryMutation", m)
+}
+
 // The LoginLogFunc type is an adapter to allow the use of ordinary
 // function as LoginLog mutator.
 type LoginLogFunc func(context.Context, *generated.LoginLogMutation) (generated.Value, error)
@@ -116,6 +140,30 @@ func (f PositionFunc) Mutate(ctx context.Context, m generated.Mutation) (generat
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *generated.PositionMutation", m)
 }
 
+// The ProductFunc type is an adapter to allow the use of ordinary
+// function as Product mutator.
+type ProductFunc func(context.Context, *generated.ProductMutation) (generated.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f ProductFunc) Mutate(ctx context.Context, m generated.Mutation) (generated.Value, error) {
+	if mv, ok := m.(*generated.ProductMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *generated.ProductMutation", m)
+}
+
+// The ProductStatisticsFunc type is an adapter to allow the use of ordinary
+// function as ProductStatistics mutator.
+type ProductStatisticsFunc func(context.Context, *generated.ProductStatisticsMutation) (generated.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f ProductStatisticsFunc) Mutate(ctx context.Context, m generated.Mutation) (generated.Value, error) {
+	if mv, ok := m.(*generated.ProductStatisticsMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *generated.ProductStatisticsMutation", m)
+}
+
 // The RoleFunc type is an adapter to allow the use of ordinary
 // function as Role mutator.
 type RoleFunc func(context.Context, *generated.RoleMutation) (generated.Value, error)
@@ -174,18 +222,6 @@ func (f TenantFunc) Mutate(ctx context.Context, m generated.Mutation) (generated
 		return f(ctx, mv)
 	}
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *generated.TenantMutation", m)
-}
-
-// The UserPositionFunc type is an adapter to allow the use of ordinary
-// function as UserPosition mutator.
-type UserPositionFunc func(context.Context, *generated.UserPositionMutation) (generated.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f UserPositionFunc) Mutate(ctx context.Context, m generated.Mutation) (generated.Value, error) {
-	if mv, ok := m.(*generated.UserPositionMutation); ok {
-		return f(ctx, mv)
-	}
-	return nil, fmt.Errorf("unexpected mutation type %T. expect *generated.UserPositionMutation", m)
 }
 
 // Condition is a hook condition function.

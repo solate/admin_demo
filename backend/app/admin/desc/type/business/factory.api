@@ -1,0 +1,97 @@
+syntax = "v1"
+
+import (
+    "../base.api"
+)
+
+info (
+	title   : "工厂管理接口"
+	desc    : "工厂管理相关接口定义"
+	author  : "solate"
+	version : "v1.0"
+)
+   
+type (
+    // 创建工厂请求
+    CreateFactoryReq { 
+        FactoryName   string `json:"factory_name" validate:"required"`   // 工厂名称
+        Address       string `json:"address"`                            // 工厂地址
+        ContactPhone  string `json:"contact_phone"`                      // 联系电话
+        Status        int    `json:"status,default=1"`                   // 状态
+    }
+
+    // 创建工厂响应
+    CreateFactoryResp {
+        FactoryID string `json:"factory_id"` // 工厂ID
+    }
+
+    // 更新工厂请求
+    UpdateFactoryReq {
+        FactoryID    string `path:"factory_id" validate:"required"`      // 工厂ID
+        FactoryName  string `json:"factory_name,optional"`               // 工厂名称
+        Address      string `json:"address,optional"`                    // 工厂地址
+        ContactPhone string `json:"contact_phone,optional"`              // 联系电话
+        Status       int    `json:"status,optional"`                     // 状态
+    }
+
+    // 删除工厂请求
+    DeleteFactoryReq {
+        FactoryID string `path:"factory_id" validate:"required"`         // 工厂ID
+    }
+
+    // 获取工厂详情请求
+    GetFactoryReq {
+        FactoryID string `path:"factory_id" validate:"required"`         // 工厂ID
+    }
+
+    // 工厂列表请求
+    FactoryListReq {
+        PageRequest
+        FactoryName string `form:"factory_name,optional"`                // 工厂名称
+        Status      int    `form:"status,optional"`                      // 状态
+    }
+
+    // 工厂列表响应
+    FactoryListResp {
+        Page *PageResponse `json:"page"`                                 // 分页
+        List []*FactoryInfo `json:"list"`                               // 工厂列表
+    }
+
+    // 工厂基本信息
+    FactoryInfo {
+        FactoryID   string `json:"factory_id"`                           // 工厂ID
+        FactoryName string `json:"factory_name"`                         // 工厂名称
+        Address     string `json:"address"`                              // 工厂地址
+        ContactPhone string `json:"contact_phone"`                       // 联系电话
+        Status      int    `json:"status"`                               // 状态
+        CreatedAt   int64  `json:"created_at"`                           // 创建时间
+        UpdatedAt   int64  `json:"updated_at"`                           // 更新时间
+    }
+)
+
+@server (
+    prefix: /api/business/v1
+    group: factory
+    middleware: AuthMiddleware
+)
+service admin {
+    @doc "创建工厂"
+    @handler CreateFactory
+    post /factories (CreateFactoryReq) returns (CreateFactoryResp)
+
+    @doc "更新工厂"
+    @handler UpdateFactory
+    put /factories/:factory_id (UpdateFactoryReq) returns (bool)
+
+    @doc "删除工厂"
+    @handler DeleteFactory
+    delete /factories/:factory_id (DeleteFactoryReq) returns (bool)
+
+    @doc "获取工厂列表"
+    @handler ListFactory
+    get /factories (FactoryListReq) returns (FactoryListResp)
+
+    @doc "获取工厂详情"
+    @handler GetFactory
+    get /factories/:factory_id (GetFactoryReq) returns (FactoryInfo)
+}

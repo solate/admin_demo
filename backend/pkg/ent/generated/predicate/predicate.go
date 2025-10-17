@@ -18,6 +18,12 @@ type DictItem func(*sql.Selector)
 // DictType is the predicate function for dicttype builders.
 type DictType func(*sql.Selector)
 
+// Factory is the predicate function for factory builders.
+type Factory func(*sql.Selector)
+
+// Inventory is the predicate function for inventory builders.
+type Inventory func(*sql.Selector)
+
 // LoginLog is the predicate function for loginlog builders.
 type LoginLog func(*sql.Selector)
 
@@ -33,6 +39,12 @@ type Plan func(*sql.Selector)
 // Position is the predicate function for position builders.
 type Position func(*sql.Selector)
 
+// Product is the predicate function for product builders.
+type Product func(*sql.Selector)
+
+// ProductStatistics is the predicate function for productstatistics builders.
+type ProductStatistics func(*sql.Selector)
+
 // Role is the predicate function for role builders.
 type Role func(*sql.Selector)
 
@@ -47,6 +59,3 @@ type Task func(*sql.Selector)
 
 // Tenant is the predicate function for tenant builders.
 type Tenant func(*sql.Selector)
-
-// UserPosition is the predicate function for userposition builders.
-type UserPosition func(*sql.Selector)

@@ -15,17 +15,20 @@ import (
 	"admin_backend/pkg/ent/generated/department"
 	"admin_backend/pkg/ent/generated/dictitem"
 	"admin_backend/pkg/ent/generated/dicttype"
+	"admin_backend/pkg/ent/generated/factory"
+	"admin_backend/pkg/ent/generated/inventory"
 	"admin_backend/pkg/ent/generated/loginlog"
 	"admin_backend/pkg/ent/generated/menu"
 	"admin_backend/pkg/ent/generated/permission"
 	"admin_backend/pkg/ent/generated/plan"
 	"admin_backend/pkg/ent/generated/position"
+	"admin_backend/pkg/ent/generated/product"
+	"admin_backend/pkg/ent/generated/productstatistics"
 	"admin_backend/pkg/ent/generated/role"
 	"admin_backend/pkg/ent/generated/systemlog"
 	"admin_backend/pkg/ent/generated/sysuser"
 	"admin_backend/pkg/ent/generated/task"
 	"admin_backend/pkg/ent/generated/tenant"
-	"admin_backend/pkg/ent/generated/userposition"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
@@ -45,6 +48,10 @@ type Client struct {
 	DictItem *DictItemClient
 	// DictType is the client for interacting with the DictType builders.
 	DictType *DictTypeClient
+	// Factory is the client for interacting with the Factory builders.
+	Factory *FactoryClient
+	// Inventory is the client for interacting with the Inventory builders.
+	Inventory *InventoryClient
 	// LoginLog is the client for interacting with the LoginLog builders.
 	LoginLog *LoginLogClient
 	// Menu is the client for interacting with the Menu builders.
@@ -55,6 +62,10 @@ type Client struct {
 	Plan *PlanClient
 	// Position is the client for interacting with the Position builders.
 	Position *PositionClient
+	// Product is the client for interacting with the Product builders.
+	Product *ProductClient
+	// ProductStatistics is the client for interacting with the ProductStatistics builders.
+	ProductStatistics *ProductStatisticsClient
 	// Role is the client for interacting with the Role builders.
 	Role *RoleClient
 	// SysUser is the client for interacting with the SysUser builders.
@@ -65,8 +76,6 @@ type Client struct {
 	Task *TaskClient
 	// Tenant is the client for interacting with the Tenant builders.
 	Tenant *TenantClient
-	// UserPosition is the client for interacting with the UserPosition builders.
-	UserPosition *UserPositionClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -82,17 +91,20 @@ func (c *Client) init() {
 	c.Department = NewDepartmentClient(c.config)
 	c.DictItem = NewDictItemClient(c.config)
 	c.DictType = NewDictTypeClient(c.config)
+	c.Factory = NewFactoryClient(c.config)
+	c.Inventory = NewInventoryClient(c.config)
 	c.LoginLog = NewLoginLogClient(c.config)
 	c.Menu = NewMenuClient(c.config)
 	c.Permission = NewPermissionClient(c.config)
 	c.Plan = NewPlanClient(c.config)
 	c.Position = NewPositionClient(c.config)
+	c.Product = NewProductClient(c.config)
+	c.ProductStatistics = NewProductStatisticsClient(c.config)
 	c.Role = NewRoleClient(c.config)
 	c.SysUser = NewSysUserClient(c.config)
 	c.SystemLog = NewSystemLogClient(c.config)
 	c.Task = NewTaskClient(c.config)
 	c.Tenant = NewTenantClient(c.config)
-	c.UserPosition = NewUserPositionClient(c.config)
 }
 
 type (
@@ -183,23 +195,26 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:          ctx,
-		config:       cfg,
-		CasbinRule:   NewCasbinRuleClient(cfg),
-		Department:   NewDepartmentClient(cfg),
-		DictItem:     NewDictItemClient(cfg),
-		DictType:     NewDictTypeClient(cfg),
-		LoginLog:     NewLoginLogClient(cfg),
-		Menu:         NewMenuClient(cfg),
-		Permission:   NewPermissionClient(cfg),
-		Plan:         NewPlanClient(cfg),
-		Position:     NewPositionClient(cfg),
-		Role:         NewRoleClient(cfg),
-		SysUser:      NewSysUserClient(cfg),
-		SystemLog:    NewSystemLogClient(cfg),
-		Task:         NewTaskClient(cfg),
-		Tenant:       NewTenantClient(cfg),
-		UserPosition: NewUserPositionClient(cfg),
+		ctx:               ctx,
+		config:            cfg,
+		CasbinRule:        NewCasbinRuleClient(cfg),
+		Department:        NewDepartmentClient(cfg),
+		DictItem:          NewDictItemClient(cfg),
+		DictType:          NewDictTypeClient(cfg),
+		Factory:           NewFactoryClient(cfg),
+		Inventory:         NewInventoryClient(cfg),
+		LoginLog:          NewLoginLogClient(cfg),
+		Menu:              NewMenuClient(cfg),
+		Permission:        NewPermissionClient(cfg),
+		Plan:              NewPlanClient(cfg),
+		Position:          NewPositionClient(cfg),
+		Product:           NewProductClient(cfg),
+		ProductStatistics: NewProductStatisticsClient(cfg),
+		Role:              NewRoleClient(cfg),
+		SysUser:           NewSysUserClient(cfg),
+		SystemLog:         NewSystemLogClient(cfg),
+		Task:              NewTaskClient(cfg),
+		Tenant:            NewTenantClient(cfg),
 	}, nil
 }
 
@@ -217,23 +232,26 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:          ctx,
-		config:       cfg,
-		CasbinRule:   NewCasbinRuleClient(cfg),
-		Department:   NewDepartmentClient(cfg),
-		DictItem:     NewDictItemClient(cfg),
-		DictType:     NewDictTypeClient(cfg),
-		LoginLog:     NewLoginLogClient(cfg),
-		Menu:         NewMenuClient(cfg),
-		Permission:   NewPermissionClient(cfg),
-		Plan:         NewPlanClient(cfg),
-		Position:     NewPositionClient(cfg),
-		Role:         NewRoleClient(cfg),
-		SysUser:      NewSysUserClient(cfg),
-		SystemLog:    NewSystemLogClient(cfg),
-		Task:         NewTaskClient(cfg),
-		Tenant:       NewTenantClient(cfg),
-		UserPosition: NewUserPositionClient(cfg),
+		ctx:               ctx,
+		config:            cfg,
+		CasbinRule:        NewCasbinRuleClient(cfg),
+		Department:        NewDepartmentClient(cfg),
+		DictItem:          NewDictItemClient(cfg),
+		DictType:          NewDictTypeClient(cfg),
+		Factory:           NewFactoryClient(cfg),
+		Inventory:         NewInventoryClient(cfg),
+		LoginLog:          NewLoginLogClient(cfg),
+		Menu:              NewMenuClient(cfg),
+		Permission:        NewPermissionClient(cfg),
+		Plan:              NewPlanClient(cfg),
+		Position:          NewPositionClient(cfg),
+		Product:           NewProductClient(cfg),
+		ProductStatistics: NewProductStatisticsClient(cfg),
+		Role:              NewRoleClient(cfg),
+		SysUser:           NewSysUserClient(cfg),
+		SystemLog:         NewSystemLogClient(cfg),
+		Task:              NewTaskClient(cfg),
+		Tenant:            NewTenantClient(cfg),
 	}, nil
 }
 
@@ -263,9 +281,9 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.CasbinRule, c.Department, c.DictItem, c.DictType, c.LoginLog, c.Menu,
-		c.Permission, c.Plan, c.Position, c.Role, c.SysUser, c.SystemLog, c.Task,
-		c.Tenant, c.UserPosition,
+		c.CasbinRule, c.Department, c.DictItem, c.DictType, c.Factory, c.Inventory,
+		c.LoginLog, c.Menu, c.Permission, c.Plan, c.Position, c.Product,
+		c.ProductStatistics, c.Role, c.SysUser, c.SystemLog, c.Task, c.Tenant,
 	} {
 		n.Use(hooks...)
 	}
@@ -275,9 +293,9 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.CasbinRule, c.Department, c.DictItem, c.DictType, c.LoginLog, c.Menu,
-		c.Permission, c.Plan, c.Position, c.Role, c.SysUser, c.SystemLog, c.Task,
-		c.Tenant, c.UserPosition,
+		c.CasbinRule, c.Department, c.DictItem, c.DictType, c.Factory, c.Inventory,
+		c.LoginLog, c.Menu, c.Permission, c.Plan, c.Position, c.Product,
+		c.ProductStatistics, c.Role, c.SysUser, c.SystemLog, c.Task, c.Tenant,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -294,6 +312,10 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.DictItem.mutate(ctx, m)
 	case *DictTypeMutation:
 		return c.DictType.mutate(ctx, m)
+	case *FactoryMutation:
+		return c.Factory.mutate(ctx, m)
+	case *InventoryMutation:
+		return c.Inventory.mutate(ctx, m)
 	case *LoginLogMutation:
 		return c.LoginLog.mutate(ctx, m)
 	case *MenuMutation:
@@ -304,6 +326,10 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Plan.mutate(ctx, m)
 	case *PositionMutation:
 		return c.Position.mutate(ctx, m)
+	case *ProductMutation:
+		return c.Product.mutate(ctx, m)
+	case *ProductStatisticsMutation:
+		return c.ProductStatistics.mutate(ctx, m)
 	case *RoleMutation:
 		return c.Role.mutate(ctx, m)
 	case *SysUserMutation:
@@ -314,8 +340,6 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Task.mutate(ctx, m)
 	case *TenantMutation:
 		return c.Tenant.mutate(ctx, m)
-	case *UserPositionMutation:
-		return c.UserPosition.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("generated: unknown mutation type %T", m)
 	}
@@ -850,6 +874,272 @@ func (c *DictTypeClient) mutate(ctx context.Context, m *DictTypeMutation) (Value
 		return (&DictTypeDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("generated: unknown DictType mutation op: %q", m.Op())
+	}
+}
+
+// FactoryClient is a client for the Factory schema.
+type FactoryClient struct {
+	config
+}
+
+// NewFactoryClient returns a client for the Factory from the given config.
+func NewFactoryClient(c config) *FactoryClient {
+	return &FactoryClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `factory.Hooks(f(g(h())))`.
+func (c *FactoryClient) Use(hooks ...Hook) {
+	c.hooks.Factory = append(c.hooks.Factory, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `factory.Intercept(f(g(h())))`.
+func (c *FactoryClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Factory = append(c.inters.Factory, interceptors...)
+}
+
+// Create returns a builder for creating a Factory entity.
+func (c *FactoryClient) Create() *FactoryCreate {
+	mutation := newFactoryMutation(c.config, OpCreate)
+	return &FactoryCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Factory entities.
+func (c *FactoryClient) CreateBulk(builders ...*FactoryCreate) *FactoryCreateBulk {
+	return &FactoryCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *FactoryClient) MapCreateBulk(slice any, setFunc func(*FactoryCreate, int)) *FactoryCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &FactoryCreateBulk{err: fmt.Errorf("calling to FactoryClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*FactoryCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &FactoryCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Factory.
+func (c *FactoryClient) Update() *FactoryUpdate {
+	mutation := newFactoryMutation(c.config, OpUpdate)
+	return &FactoryUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *FactoryClient) UpdateOne(f *Factory) *FactoryUpdateOne {
+	mutation := newFactoryMutation(c.config, OpUpdateOne, withFactory(f))
+	return &FactoryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *FactoryClient) UpdateOneID(id int) *FactoryUpdateOne {
+	mutation := newFactoryMutation(c.config, OpUpdateOne, withFactoryID(id))
+	return &FactoryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Factory.
+func (c *FactoryClient) Delete() *FactoryDelete {
+	mutation := newFactoryMutation(c.config, OpDelete)
+	return &FactoryDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *FactoryClient) DeleteOne(f *Factory) *FactoryDeleteOne {
+	return c.DeleteOneID(f.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *FactoryClient) DeleteOneID(id int) *FactoryDeleteOne {
+	builder := c.Delete().Where(factory.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &FactoryDeleteOne{builder}
+}
+
+// Query returns a query builder for Factory.
+func (c *FactoryClient) Query() *FactoryQuery {
+	return &FactoryQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeFactory},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a Factory entity by its id.
+func (c *FactoryClient) Get(ctx context.Context, id int) (*Factory, error) {
+	return c.Query().Where(factory.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *FactoryClient) GetX(ctx context.Context, id int) *Factory {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *FactoryClient) Hooks() []Hook {
+	return c.hooks.Factory
+}
+
+// Interceptors returns the client interceptors.
+func (c *FactoryClient) Interceptors() []Interceptor {
+	return c.inters.Factory
+}
+
+func (c *FactoryClient) mutate(ctx context.Context, m *FactoryMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&FactoryCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&FactoryUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&FactoryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&FactoryDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("generated: unknown Factory mutation op: %q", m.Op())
+	}
+}
+
+// InventoryClient is a client for the Inventory schema.
+type InventoryClient struct {
+	config
+}
+
+// NewInventoryClient returns a client for the Inventory from the given config.
+func NewInventoryClient(c config) *InventoryClient {
+	return &InventoryClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `inventory.Hooks(f(g(h())))`.
+func (c *InventoryClient) Use(hooks ...Hook) {
+	c.hooks.Inventory = append(c.hooks.Inventory, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `inventory.Intercept(f(g(h())))`.
+func (c *InventoryClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Inventory = append(c.inters.Inventory, interceptors...)
+}
+
+// Create returns a builder for creating a Inventory entity.
+func (c *InventoryClient) Create() *InventoryCreate {
+	mutation := newInventoryMutation(c.config, OpCreate)
+	return &InventoryCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Inventory entities.
+func (c *InventoryClient) CreateBulk(builders ...*InventoryCreate) *InventoryCreateBulk {
+	return &InventoryCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *InventoryClient) MapCreateBulk(slice any, setFunc func(*InventoryCreate, int)) *InventoryCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &InventoryCreateBulk{err: fmt.Errorf("calling to InventoryClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*InventoryCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &InventoryCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Inventory.
+func (c *InventoryClient) Update() *InventoryUpdate {
+	mutation := newInventoryMutation(c.config, OpUpdate)
+	return &InventoryUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *InventoryClient) UpdateOne(i *Inventory) *InventoryUpdateOne {
+	mutation := newInventoryMutation(c.config, OpUpdateOne, withInventory(i))
+	return &InventoryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *InventoryClient) UpdateOneID(id int) *InventoryUpdateOne {
+	mutation := newInventoryMutation(c.config, OpUpdateOne, withInventoryID(id))
+	return &InventoryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Inventory.
+func (c *InventoryClient) Delete() *InventoryDelete {
+	mutation := newInventoryMutation(c.config, OpDelete)
+	return &InventoryDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *InventoryClient) DeleteOne(i *Inventory) *InventoryDeleteOne {
+	return c.DeleteOneID(i.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *InventoryClient) DeleteOneID(id int) *InventoryDeleteOne {
+	builder := c.Delete().Where(inventory.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &InventoryDeleteOne{builder}
+}
+
+// Query returns a query builder for Inventory.
+func (c *InventoryClient) Query() *InventoryQuery {
+	return &InventoryQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeInventory},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a Inventory entity by its id.
+func (c *InventoryClient) Get(ctx context.Context, id int) (*Inventory, error) {
+	return c.Query().Where(inventory.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *InventoryClient) GetX(ctx context.Context, id int) *Inventory {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *InventoryClient) Hooks() []Hook {
+	return c.hooks.Inventory
+}
+
+// Interceptors returns the client interceptors.
+func (c *InventoryClient) Interceptors() []Interceptor {
+	return c.inters.Inventory
+}
+
+func (c *InventoryClient) mutate(ctx context.Context, m *InventoryMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&InventoryCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&InventoryUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&InventoryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&InventoryDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("generated: unknown Inventory mutation op: %q", m.Op())
 	}
 }
 
@@ -1518,6 +1808,272 @@ func (c *PositionClient) mutate(ctx context.Context, m *PositionMutation) (Value
 	}
 }
 
+// ProductClient is a client for the Product schema.
+type ProductClient struct {
+	config
+}
+
+// NewProductClient returns a client for the Product from the given config.
+func NewProductClient(c config) *ProductClient {
+	return &ProductClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `product.Hooks(f(g(h())))`.
+func (c *ProductClient) Use(hooks ...Hook) {
+	c.hooks.Product = append(c.hooks.Product, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `product.Intercept(f(g(h())))`.
+func (c *ProductClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Product = append(c.inters.Product, interceptors...)
+}
+
+// Create returns a builder for creating a Product entity.
+func (c *ProductClient) Create() *ProductCreate {
+	mutation := newProductMutation(c.config, OpCreate)
+	return &ProductCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Product entities.
+func (c *ProductClient) CreateBulk(builders ...*ProductCreate) *ProductCreateBulk {
+	return &ProductCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *ProductClient) MapCreateBulk(slice any, setFunc func(*ProductCreate, int)) *ProductCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &ProductCreateBulk{err: fmt.Errorf("calling to ProductClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*ProductCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &ProductCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Product.
+func (c *ProductClient) Update() *ProductUpdate {
+	mutation := newProductMutation(c.config, OpUpdate)
+	return &ProductUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ProductClient) UpdateOne(pr *Product) *ProductUpdateOne {
+	mutation := newProductMutation(c.config, OpUpdateOne, withProduct(pr))
+	return &ProductUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ProductClient) UpdateOneID(id int) *ProductUpdateOne {
+	mutation := newProductMutation(c.config, OpUpdateOne, withProductID(id))
+	return &ProductUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Product.
+func (c *ProductClient) Delete() *ProductDelete {
+	mutation := newProductMutation(c.config, OpDelete)
+	return &ProductDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *ProductClient) DeleteOne(pr *Product) *ProductDeleteOne {
+	return c.DeleteOneID(pr.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *ProductClient) DeleteOneID(id int) *ProductDeleteOne {
+	builder := c.Delete().Where(product.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &ProductDeleteOne{builder}
+}
+
+// Query returns a query builder for Product.
+func (c *ProductClient) Query() *ProductQuery {
+	return &ProductQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeProduct},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a Product entity by its id.
+func (c *ProductClient) Get(ctx context.Context, id int) (*Product, error) {
+	return c.Query().Where(product.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *ProductClient) GetX(ctx context.Context, id int) *Product {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *ProductClient) Hooks() []Hook {
+	return c.hooks.Product
+}
+
+// Interceptors returns the client interceptors.
+func (c *ProductClient) Interceptors() []Interceptor {
+	return c.inters.Product
+}
+
+func (c *ProductClient) mutate(ctx context.Context, m *ProductMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&ProductCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&ProductUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&ProductUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&ProductDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("generated: unknown Product mutation op: %q", m.Op())
+	}
+}
+
+// ProductStatisticsClient is a client for the ProductStatistics schema.
+type ProductStatisticsClient struct {
+	config
+}
+
+// NewProductStatisticsClient returns a client for the ProductStatistics from the given config.
+func NewProductStatisticsClient(c config) *ProductStatisticsClient {
+	return &ProductStatisticsClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `productstatistics.Hooks(f(g(h())))`.
+func (c *ProductStatisticsClient) Use(hooks ...Hook) {
+	c.hooks.ProductStatistics = append(c.hooks.ProductStatistics, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `productstatistics.Intercept(f(g(h())))`.
+func (c *ProductStatisticsClient) Intercept(interceptors ...Interceptor) {
+	c.inters.ProductStatistics = append(c.inters.ProductStatistics, interceptors...)
+}
+
+// Create returns a builder for creating a ProductStatistics entity.
+func (c *ProductStatisticsClient) Create() *ProductStatisticsCreate {
+	mutation := newProductStatisticsMutation(c.config, OpCreate)
+	return &ProductStatisticsCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of ProductStatistics entities.
+func (c *ProductStatisticsClient) CreateBulk(builders ...*ProductStatisticsCreate) *ProductStatisticsCreateBulk {
+	return &ProductStatisticsCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *ProductStatisticsClient) MapCreateBulk(slice any, setFunc func(*ProductStatisticsCreate, int)) *ProductStatisticsCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &ProductStatisticsCreateBulk{err: fmt.Errorf("calling to ProductStatisticsClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*ProductStatisticsCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &ProductStatisticsCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for ProductStatistics.
+func (c *ProductStatisticsClient) Update() *ProductStatisticsUpdate {
+	mutation := newProductStatisticsMutation(c.config, OpUpdate)
+	return &ProductStatisticsUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ProductStatisticsClient) UpdateOne(ps *ProductStatistics) *ProductStatisticsUpdateOne {
+	mutation := newProductStatisticsMutation(c.config, OpUpdateOne, withProductStatistics(ps))
+	return &ProductStatisticsUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ProductStatisticsClient) UpdateOneID(id int) *ProductStatisticsUpdateOne {
+	mutation := newProductStatisticsMutation(c.config, OpUpdateOne, withProductStatisticsID(id))
+	return &ProductStatisticsUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for ProductStatistics.
+func (c *ProductStatisticsClient) Delete() *ProductStatisticsDelete {
+	mutation := newProductStatisticsMutation(c.config, OpDelete)
+	return &ProductStatisticsDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *ProductStatisticsClient) DeleteOne(ps *ProductStatistics) *ProductStatisticsDeleteOne {
+	return c.DeleteOneID(ps.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *ProductStatisticsClient) DeleteOneID(id int) *ProductStatisticsDeleteOne {
+	builder := c.Delete().Where(productstatistics.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &ProductStatisticsDeleteOne{builder}
+}
+
+// Query returns a query builder for ProductStatistics.
+func (c *ProductStatisticsClient) Query() *ProductStatisticsQuery {
+	return &ProductStatisticsQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeProductStatistics},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a ProductStatistics entity by its id.
+func (c *ProductStatisticsClient) Get(ctx context.Context, id int) (*ProductStatistics, error) {
+	return c.Query().Where(productstatistics.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *ProductStatisticsClient) GetX(ctx context.Context, id int) *ProductStatistics {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *ProductStatisticsClient) Hooks() []Hook {
+	return c.hooks.ProductStatistics
+}
+
+// Interceptors returns the client interceptors.
+func (c *ProductStatisticsClient) Interceptors() []Interceptor {
+	return c.inters.ProductStatistics
+}
+
+func (c *ProductStatisticsClient) mutate(ctx context.Context, m *ProductStatisticsMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&ProductStatisticsCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&ProductStatisticsUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&ProductStatisticsUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&ProductStatisticsDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("generated: unknown ProductStatistics mutation op: %q", m.Op())
+	}
+}
+
 // RoleClient is a client for the Role schema.
 type RoleClient struct {
 	config
@@ -2183,148 +2739,16 @@ func (c *TenantClient) mutate(ctx context.Context, m *TenantMutation) (Value, er
 	}
 }
 
-// UserPositionClient is a client for the UserPosition schema.
-type UserPositionClient struct {
-	config
-}
-
-// NewUserPositionClient returns a client for the UserPosition from the given config.
-func NewUserPositionClient(c config) *UserPositionClient {
-	return &UserPositionClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `userposition.Hooks(f(g(h())))`.
-func (c *UserPositionClient) Use(hooks ...Hook) {
-	c.hooks.UserPosition = append(c.hooks.UserPosition, hooks...)
-}
-
-// Intercept adds a list of query interceptors to the interceptors stack.
-// A call to `Intercept(f, g, h)` equals to `userposition.Intercept(f(g(h())))`.
-func (c *UserPositionClient) Intercept(interceptors ...Interceptor) {
-	c.inters.UserPosition = append(c.inters.UserPosition, interceptors...)
-}
-
-// Create returns a builder for creating a UserPosition entity.
-func (c *UserPositionClient) Create() *UserPositionCreate {
-	mutation := newUserPositionMutation(c.config, OpCreate)
-	return &UserPositionCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// CreateBulk returns a builder for creating a bulk of UserPosition entities.
-func (c *UserPositionClient) CreateBulk(builders ...*UserPositionCreate) *UserPositionCreateBulk {
-	return &UserPositionCreateBulk{config: c.config, builders: builders}
-}
-
-// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
-// a builder and applies setFunc on it.
-func (c *UserPositionClient) MapCreateBulk(slice any, setFunc func(*UserPositionCreate, int)) *UserPositionCreateBulk {
-	rv := reflect.ValueOf(slice)
-	if rv.Kind() != reflect.Slice {
-		return &UserPositionCreateBulk{err: fmt.Errorf("calling to UserPositionClient.MapCreateBulk with wrong type %T, need slice", slice)}
-	}
-	builders := make([]*UserPositionCreate, rv.Len())
-	for i := 0; i < rv.Len(); i++ {
-		builders[i] = c.Create()
-		setFunc(builders[i], i)
-	}
-	return &UserPositionCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for UserPosition.
-func (c *UserPositionClient) Update() *UserPositionUpdate {
-	mutation := newUserPositionMutation(c.config, OpUpdate)
-	return &UserPositionUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *UserPositionClient) UpdateOne(up *UserPosition) *UserPositionUpdateOne {
-	mutation := newUserPositionMutation(c.config, OpUpdateOne, withUserPosition(up))
-	return &UserPositionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *UserPositionClient) UpdateOneID(id int) *UserPositionUpdateOne {
-	mutation := newUserPositionMutation(c.config, OpUpdateOne, withUserPositionID(id))
-	return &UserPositionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for UserPosition.
-func (c *UserPositionClient) Delete() *UserPositionDelete {
-	mutation := newUserPositionMutation(c.config, OpDelete)
-	return &UserPositionDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a builder for deleting the given entity.
-func (c *UserPositionClient) DeleteOne(up *UserPosition) *UserPositionDeleteOne {
-	return c.DeleteOneID(up.ID)
-}
-
-// DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *UserPositionClient) DeleteOneID(id int) *UserPositionDeleteOne {
-	builder := c.Delete().Where(userposition.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &UserPositionDeleteOne{builder}
-}
-
-// Query returns a query builder for UserPosition.
-func (c *UserPositionClient) Query() *UserPositionQuery {
-	return &UserPositionQuery{
-		config: c.config,
-		ctx:    &QueryContext{Type: TypeUserPosition},
-		inters: c.Interceptors(),
-	}
-}
-
-// Get returns a UserPosition entity by its id.
-func (c *UserPositionClient) Get(ctx context.Context, id int) (*UserPosition, error) {
-	return c.Query().Where(userposition.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *UserPositionClient) GetX(ctx context.Context, id int) *UserPosition {
-	obj, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return obj
-}
-
-// Hooks returns the client hooks.
-func (c *UserPositionClient) Hooks() []Hook {
-	return c.hooks.UserPosition
-}
-
-// Interceptors returns the client interceptors.
-func (c *UserPositionClient) Interceptors() []Interceptor {
-	return c.inters.UserPosition
-}
-
-func (c *UserPositionClient) mutate(ctx context.Context, m *UserPositionMutation) (Value, error) {
-	switch m.Op() {
-	case OpCreate:
-		return (&UserPositionCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpUpdate:
-		return (&UserPositionUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpUpdateOne:
-		return (&UserPositionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
-	case OpDelete, OpDeleteOne:
-		return (&UserPositionDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
-	default:
-		return nil, fmt.Errorf("generated: unknown UserPosition mutation op: %q", m.Op())
-	}
-}
-
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		CasbinRule, Department, DictItem, DictType, LoginLog, Menu, Permission, Plan,
-		Position, Role, SysUser, SystemLog, Task, Tenant, UserPosition []ent.Hook
+		CasbinRule, Department, DictItem, DictType, Factory, Inventory, LoginLog, Menu,
+		Permission, Plan, Position, Product, ProductStatistics, Role, SysUser,
+		SystemLog, Task, Tenant []ent.Hook
 	}
 	inters struct {
-		CasbinRule, Department, DictItem, DictType, LoginLog, Menu, Permission, Plan,
-		Position, Role, SysUser, SystemLog, Task, Tenant,
-		UserPosition []ent.Interceptor
+		CasbinRule, Department, DictItem, DictType, Factory, Inventory, LoginLog, Menu,
+		Permission, Plan, Position, Product, ProductStatistics, Role, SysUser,
+		SystemLog, Task, Tenant []ent.Interceptor
 	}
 )

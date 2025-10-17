@@ -60,6 +60,23 @@
         ]
       }
     },
+    "/api/admin/v1/auth/devices/active": {
+      "get": {
+        "summary": "获取当前用户活跃设备数量",
+        "operationId": "GetActiveDevices",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetActiveDevicesResp"
+            }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
     "/api/admin/v1/auth/login": {
       "post": {
         "summary": "用户登录",
@@ -89,7 +106,7 @@
     },
     "/api/admin/v1/auth/logout": {
       "post": {
-        "summary": "用户登出",
+        "summary": "用户登出（当前设备）",
         "operationId": "Logout",
         "responses": {
           "200": {
@@ -99,6 +116,50 @@
             }
           }
         },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/admin/v1/auth/logout-all": {
+      "post": {
+        "summary": "用户登出（所有设备）",
+        "operationId": "LogoutAll",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/admin/v1/auth/refresh-token": {
+      "post": {
+        "summary": "刷新访问令牌",
+        "operationId": "RefreshToken",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/RefreshTokenResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RefreshTokenReq"
+            }
+          }
+        ],
         "tags": [
           "auth"
         ]
@@ -156,173 +217,6 @@
         ],
         "tags": [
           "auth"
-        ]
-      }
-    },
-    "/api/admin/v1/departments": {
-      "get": {
-        "summary": "获取部门列表",
-        "operationId": "ListDepartment",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/DepartmentListResp"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "page",
-            "description": " 当前页",
-            "in": "query",
-            "required": true,
-            "type": "integer",
-            "format": "int32",
-            "default": "1"
-          },
-          {
-            "name": "page_size",
-            "description": " 每页大小",
-            "in": "query",
-            "required": true,
-            "type": "integer",
-            "format": "int32",
-            "default": "10"
-          },
-          {
-            "name": "name",
-            "description": " 部门名称",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "parent_id",
-            "description": " 父部门ID",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "organization"
-        ],
-        "consumes": [
-          "multipart/form-data"
-        ]
-      },
-      "post": {
-        "summary": "创建部门",
-        "operationId": "CreateDepartment",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/CreateDepartmentResp"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "description": " 部门相关数据结构",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/CreateDepartmentReq"
-            }
-          }
-        ],
-        "tags": [
-          "organization"
-        ]
-      }
-    },
-    "/api/admin/v1/departments/{department_id}": {
-      "get": {
-        "summary": "获取部门详情",
-        "operationId": "GetDepartment",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/DepartmentInfo"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "department_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "organization"
-        ]
-      },
-      "delete": {
-        "summary": "删除部门",
-        "operationId": "DeleteDepartment",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/bool"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "department_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/DeleteDepartmentReq"
-            }
-          }
-        ],
-        "tags": [
-          "organization"
-        ]
-      },
-      "put": {
-        "summary": "更新部门",
-        "operationId": "UpdateDepartment",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/bool"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "department_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/UpdateDepartmentReq"
-            }
-          }
-        ],
-        "tags": [
-          "organization"
         ]
       }
     },
@@ -1006,411 +900,6 @@
         ]
       }
     },
-    "/api/admin/v1/org-tree": {
-      "get": {
-        "summary": "获取组织架构树",
-        "operationId": "GetOrgTree",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/GetOrgTreeResp"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "tenant_id",
-            "description": " 租户ID，可选参数",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "organization"
-        ],
-        "consumes": [
-          "multipart/form-data"
-        ]
-      }
-    },
-    "/api/admin/v1/plans": {
-      "get": {
-        "summary": "获取计划列表",
-        "operationId": "ListPlan",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/PlanListResp"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "page",
-            "description": " 当前页",
-            "in": "query",
-            "required": true,
-            "type": "integer",
-            "format": "int32",
-            "default": "1"
-          },
-          {
-            "name": "page_size",
-            "description": " 每页大小",
-            "in": "query",
-            "required": true,
-            "type": "integer",
-            "format": "int32",
-            "default": "10"
-          },
-          {
-            "name": "name",
-            "description": " 计划名称",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "group",
-            "description": " 任务分组",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "status",
-            "description": " 状态",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "plan_type",
-            "description": " 计划类型",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "task"
-        ],
-        "consumes": [
-          "multipart/form-data"
-        ]
-      },
-      "post": {
-        "summary": "创建计划",
-        "operationId": "CreatePlan",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/CreatePlanResp"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "description": " 创建计划请求",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/CreatePlanReq"
-            }
-          }
-        ],
-        "tags": [
-          "task"
-        ]
-      }
-    },
-    "/api/admin/v1/plans/{plan_id}": {
-      "get": {
-        "summary": "获取计划详情",
-        "operationId": "GetPlan",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/PlanInfo"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "plan_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "task"
-        ]
-      },
-      "delete": {
-        "summary": "删除计划",
-        "operationId": "DeletePlan",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/bool"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "plan_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "description": " 删除计划请求",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/DeletePlanReq"
-            }
-          }
-        ],
-        "tags": [
-          "task"
-        ]
-      },
-      "put": {
-        "summary": "更新计划",
-        "operationId": "UpdatePlan",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/bool"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "plan_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "description": " 更新计划请求",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/UpdatePlanReq"
-            }
-          }
-        ],
-        "tags": [
-          "task"
-        ]
-      }
-    },
-    "/api/admin/v1/positions": {
-      "get": {
-        "summary": "获取岗位列表",
-        "operationId": "ListPosition",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/PositionListResp"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "page",
-            "description": " 当前页",
-            "in": "query",
-            "required": true,
-            "type": "integer",
-            "format": "int32",
-            "default": "1"
-          },
-          {
-            "name": "page_size",
-            "description": " 每页大小",
-            "in": "query",
-            "required": true,
-            "type": "integer",
-            "format": "int32",
-            "default": "10"
-          },
-          {
-            "name": "name",
-            "description": " 岗位名称",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "department_id",
-            "description": " 部门ID",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "organization"
-        ],
-        "consumes": [
-          "multipart/form-data"
-        ]
-      },
-      "post": {
-        "summary": "创建岗位",
-        "operationId": "CreatePosition",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/CreatePositionResp"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "description": " 岗位相关数据结构",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/CreatePositionReq"
-            }
-          }
-        ],
-        "tags": [
-          "organization"
-        ]
-      }
-    },
-    "/api/admin/v1/positions/{position_id}": {
-      "get": {
-        "summary": "获取岗位详情",
-        "operationId": "GetPosition",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/PositionInfo"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "position_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "organization"
-        ]
-      },
-      "delete": {
-        "summary": "删除岗位",
-        "operationId": "DeletePosition",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/bool"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "position_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/DeletePositionReq"
-            }
-          }
-        ],
-        "tags": [
-          "organization"
-        ]
-      },
-      "put": {
-        "summary": "更新岗位",
-        "operationId": "UpdatePosition",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/bool"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "position_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/UpdatePositionReq"
-            }
-          }
-        ],
-        "tags": [
-          "organization"
-        ]
-      }
-    },
-    "/api/admin/v1/positions/{position_id}/users": {
-      "get": {
-        "summary": "获取岗位下的用户列表",
-        "operationId": "GetPositionUsers",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/GetPositionUsersResp"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "position_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "organization"
-        ]
-      }
-    },
     "/api/admin/v1/roles": {
       "get": {
         "summary": "获取角色列表",
@@ -1679,186 +1168,6 @@
         ]
       }
     },
-    "/api/admin/v1/tasks": {
-      "get": {
-        "summary": "获取任务列表",
-        "operationId": "ListTask",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/TaskListResp"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "page",
-            "description": " 当前页",
-            "in": "query",
-            "required": true,
-            "type": "integer",
-            "format": "int32",
-            "default": "1"
-          },
-          {
-            "name": "page_size",
-            "description": " 每页大小",
-            "in": "query",
-            "required": true,
-            "type": "integer",
-            "format": "int32",
-            "default": "10"
-          },
-          {
-            "name": "plan_id",
-            "description": " 计划ID",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "name",
-            "description": " 任务名称",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "group",
-            "description": " 任务分组",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "status",
-            "description": " 任务状态",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "start_time",
-            "description": " 开始时间",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "end_time",
-            "description": " 结束时间",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "tags": [
-          "task"
-        ],
-        "consumes": [
-          "multipart/form-data"
-        ]
-      }
-    },
-    "/api/admin/v1/tasks/trigger": {
-      "post": {
-        "summary": "手动触发任务",
-        "operationId": "TriggerTask",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/TriggerTaskResp"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "description": " 手动触发任务请求",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/TriggerTaskReq"
-            }
-          }
-        ],
-        "tags": [
-          "task"
-        ]
-      }
-    },
-    "/api/admin/v1/tasks/{task_id}": {
-      "delete": {
-        "summary": "删除任务",
-        "operationId": "DeleteTask",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/bool"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "task_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "description": " 删除任务请求",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/DeleteTaskReq"
-            }
-          }
-        ],
-        "tags": [
-          "task"
-        ]
-      }
-    },
-    "/api/admin/v1/tasks/{task_id}/stop": {
-      "post": {
-        "summary": "停止任务",
-        "operationId": "StopTask",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/bool"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "task_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "description": " 停止任务请求",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/StopTaskReq"
-            }
-          }
-        ],
-        "tags": [
-          "task"
-        ]
-      }
-    },
     "/api/admin/v1/tenants": {
       "get": {
         "summary": "获取租户列表",
@@ -2019,59 +1328,6 @@
         ],
         "tags": [
           "tenant"
-        ]
-      }
-    },
-    "/api/admin/v1/user-positions": {
-      "delete": {
-        "summary": "移除用户岗位",
-        "operationId": "RemoveUserPosition",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/bool"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/RemoveUserPositionReq"
-            }
-          }
-        ],
-        "tags": [
-          "organization"
-        ]
-      },
-      "post": {
-        "summary": "分配用户岗位",
-        "operationId": "AssignUserPosition",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/bool"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "description": " 用户-岗位关联相关数据结构",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/AssignUserPositionReq"
-            }
-          }
-        ],
-        "tags": [
-          "organization"
         ]
       }
     },
@@ -2268,31 +1524,6 @@
         ]
       }
     },
-    "/api/admin/v1/users/{user_id}/positions": {
-      "get": {
-        "summary": "获取用户的岗位列表",
-        "operationId": "GetUserPositions",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/GetUserPositionsResp"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "user_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "organization"
-        ]
-      }
-    },
     "/api/admin/v1/users/{user_id}/roles": {
       "get": {
         "summary": "获取用户角色列表",
@@ -2349,27 +1580,615 @@
           "role"
         ]
       }
+    },
+    "/api/business/v1/factories": {
+      "get": {
+        "summary": "获取工厂列表",
+        "operationId": "ListFactory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/FactoryListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": " 当前页",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "1"
+          },
+          {
+            "name": "page_size",
+            "description": " 每页大小",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "10"
+          },
+          {
+            "name": "factory_name",
+            "description": " 工厂名称",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "description": " 状态",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "factory"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      },
+      "post": {
+        "summary": "创建工厂",
+        "operationId": "CreateFactory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateFactoryResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 创建工厂请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateFactoryReq"
+            }
+          }
+        ],
+        "tags": [
+          "factory"
+        ]
+      }
+    },
+    "/api/business/v1/factories/{factory_id}": {
+      "get": {
+        "summary": "获取工厂详情",
+        "operationId": "GetFactory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/FactoryInfo"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "factory_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "factory"
+        ]
+      },
+      "delete": {
+        "summary": "删除工厂",
+        "operationId": "DeleteFactory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "factory_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 删除工厂请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteFactoryReq"
+            }
+          }
+        ],
+        "tags": [
+          "factory"
+        ]
+      },
+      "put": {
+        "summary": "更新工厂",
+        "operationId": "UpdateFactory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "factory_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 更新工厂请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateFactoryReq"
+            }
+          }
+        ],
+        "tags": [
+          "factory"
+        ]
+      }
+    },
+    "/api/business/v1/inventory/history": {
+      "get": {
+        "summary": "获取库存操作历史",
+        "operationId": "GetInventoryHistory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/InventoryListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": " 当前页",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "1"
+          },
+          {
+            "name": "page_size",
+            "description": " 每页大小",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "10"
+          },
+          {
+            "name": "product_id",
+            "description": " 商品ID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "operation_type",
+            "description": " 操作类型",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "operator_id",
+            "description": " 操作人ID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start_time",
+            "description": " 开始时间",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "end_time",
+            "description": " 结束时间",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "inventory"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      }
+    },
+    "/api/business/v1/inventory/in": {
+      "post": {
+        "summary": "商品入库",
+        "operationId": "ProductIn",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/InventoryOperationResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 商品入库请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ProductInReq"
+            }
+          }
+        ],
+        "tags": [
+          "inventory"
+        ]
+      }
+    },
+    "/api/business/v1/inventory/list": {
+      "get": {
+        "summary": "获取库存记录列表",
+        "operationId": "ListInventory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/InventoryListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": " 当前页",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "1"
+          },
+          {
+            "name": "page_size",
+            "description": " 每页大小",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "10"
+          },
+          {
+            "name": "product_id",
+            "description": " 商品ID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "operation_type",
+            "description": " 操作类型",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "operator_id",
+            "description": " 操作人ID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start_time",
+            "description": " 开始时间",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "end_time",
+            "description": " 结束时间",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "inventory"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      }
+    },
+    "/api/business/v1/inventory/out": {
+      "post": {
+        "summary": "商品出库",
+        "operationId": "ProductOut",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/InventoryOperationResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 商品出库请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ProductOutReq"
+            }
+          }
+        ],
+        "tags": [
+          "inventory"
+        ]
+      }
+    },
+    "/api/business/v1/inventory/stock": {
+      "get": {
+        "summary": "获取商品库存信息",
+        "operationId": "GetProductStock",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ProductStockResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "product_id",
+            "description": " 商品ID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "factory_id",
+            "description": " 工厂ID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "inventory"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      }
+    },
+    "/api/business/v1/products": {
+      "get": {
+        "summary": "获取商品列表",
+        "operationId": "ListProduct",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ProductListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": " 当前页",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "1"
+          },
+          {
+            "name": "page_size",
+            "description": " 每页大小",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "default": "10"
+          },
+          {
+            "name": "product_name",
+            "description": " 商品名称",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "factory_id",
+            "description": " 工厂ID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "description": " 状态",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "product"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ]
+      },
+      "post": {
+        "summary": "创建商品",
+        "operationId": "CreateProduct",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateProductResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " 创建商品请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateProductReq"
+            }
+          }
+        ],
+        "tags": [
+          "product"
+        ]
+      }
+    },
+    "/api/business/v1/products/{product_id}": {
+      "get": {
+        "summary": "获取商品详情",
+        "operationId": "GetProduct",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ProductInfo"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "product"
+        ]
+      },
+      "delete": {
+        "summary": "删除商品",
+        "operationId": "DeleteProduct",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 删除商品请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteProductReq"
+            }
+          }
+        ],
+        "tags": [
+          "product"
+        ]
+      },
+      "put": {
+        "summary": "更新商品",
+        "operationId": "UpdateProduct",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bool"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": " 更新商品请求",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateProductReq"
+            }
+          }
+        ],
+        "tags": [
+          "product"
+        ]
+      }
+    },
+    "/api/business/v1/statistics": {
+      "get": {
+        "summary": "获取实时统计",
+        "operationId": "GetStatistics",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/StatisticsResp"
+            }
+          }
+        },
+        "tags": [
+          "statistics"
+        ]
+      }
     }
   },
   "definitions": {
-    "AssignUserPositionReq": {
-      "type": "object",
-      "properties": {
-        "user_id": {
-          "type": "string",
-          "description": " 用户ID"
-        },
-        "position_id": {
-          "type": "string",
-          "description": " 岗位ID"
-        }
-      },
-      "title": "AssignUserPositionReq",
-      "required": [
-        "user_id",
-        "position_id"
-      ]
-    },
     "CaptchaResp": {
       "type": "object",
       "properties": {
@@ -2427,41 +2246,6 @@
       "required": [
         "old_password",
         "new_password"
-      ]
-    },
-    "CreateDepartmentReq": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": " 部门名称"
-        },
-        "parent_id": {
-          "type": "string",
-          "description": " 父部门ID"
-        },
-        "sort": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 排序"
-        }
-      },
-      "title": "CreateDepartmentReq",
-      "required": [
-        "name"
-      ]
-    },
-    "CreateDepartmentResp": {
-      "type": "object",
-      "properties": {
-        "department_id": {
-          "type": "string",
-          "description": " 部门ID"
-        }
-      },
-      "title": "CreateDepartmentResp",
-      "required": [
-        "department_id"
       ]
     },
     "CreateDictItemReq": {
@@ -2554,6 +2338,49 @@
       "title": "CreateDictTypeResp",
       "required": [
         "type_id"
+      ]
+    },
+    "CreateFactoryReq": {
+      "type": "object",
+      "properties": {
+        "factory_name": {
+          "type": "string",
+          "description": " 工厂名称"
+        },
+        "address": {
+          "type": "string",
+          "description": " 工厂地址"
+        },
+        "contact_phone": {
+          "type": "string",
+          "description": " 联系电话"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "default": "1",
+          "description": " 状态"
+        }
+      },
+      "title": "CreateFactoryReq",
+      "required": [
+        "factory_name",
+        "address",
+        "contact_phone",
+        "status"
+      ]
+    },
+    "CreateFactoryResp": {
+      "type": "object",
+      "properties": {
+        "factory_id": {
+          "type": "string",
+          "description": " 工厂ID"
+        }
+      },
+      "title": "CreateFactoryResp",
+      "required": [
+        "factory_id"
       ]
     },
     "CreateMenuReq": {
@@ -2691,127 +2518,70 @@
         "permission_id"
       ]
     },
-    "CreatePlanReq": {
+    "CreateProductReq": {
       "type": "object",
       "properties": {
-        "name": {
+        "product_name": {
           "type": "string",
-          "description": " 计划名称"
+          "description": " 商品名称"
         },
-        "description": {
+        "unit": {
           "type": "string",
-          "description": " 计划描述"
+          "description": " 单位"
         },
-        "group": {
+        "purchase_price": {
           "type": "string",
-          "description": " 任务分组"
+          "description": " 采购价格"
         },
-        "cron_spec": {
+        "sale_price": {
           "type": "string",
-          "description": " cron表达式"
+          "description": " 销售价格"
+        },
+        "current_stock": {
+          "type": "integer",
+          "format": "int32",
+          "default": "0",
+          "description": " 当前库存"
+        },
+        "min_stock": {
+          "type": "integer",
+          "format": "int32",
+          "default": "0",
+          "description": " 最小库存预警"
         },
         "status": {
           "type": "integer",
           "format": "int32",
-          "description": " 状态: 1:启用, 2:禁用"
+          "default": "1",
+          "description": " 状态"
         },
-        "plan_type": {
+        "factory_id": {
           "type": "string",
-          "description": " 计划类型: routine/special"
-        },
-        "priority": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 任务优先级"
-        },
-        "timeout": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 任务超时时间(秒)"
-        },
-        "retry_times": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 重试次数"
-        },
-        "retry_interval": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 重试间隔(秒)"
-        },
-        "start_time": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 生效开始时间"
-        },
-        "end_time": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 生效结束时间"
-        },
-        "command": {
-          "type": "string",
-          "description": " 要执行的命令或方法"
-        },
-        "params": {
-          "type": "string",
-          "description": " 执行参数，支持JSON格式"
+          "description": " 所属工厂ID"
         }
       },
-      "title": "CreatePlanReq",
+      "title": "CreateProductReq",
       "required": [
-        "name",
-        "cron_spec",
-        "status",
-        "command"
+        "product_name",
+        "unit",
+        "purchase_price",
+        "sale_price",
+        "current_stock",
+        "min_stock",
+        "status"
       ]
     },
-    "CreatePlanResp": {
+    "CreateProductResp": {
       "type": "object",
       "properties": {
-        "plan_id": {
+        "product_id": {
           "type": "string",
-          "description": " 计划ID"
+          "description": " 商品ID"
         }
       },
-      "title": "CreatePlanResp",
+      "title": "CreateProductResp",
       "required": [
-        "plan_id"
-      ]
-    },
-    "CreatePositionReq": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": " 岗位名称"
-        },
-        "department_id": {
-          "type": "string",
-          "description": " 部门ID"
-        },
-        "description": {
-          "type": "string",
-          "description": " 岗位描述"
-        }
-      },
-      "title": "CreatePositionReq",
-      "required": [
-        "name",
-        "department_id"
-      ]
-    },
-    "CreatePositionResp": {
-      "type": "object",
-      "properties": {
-        "position_id": {
-          "type": "string",
-          "description": " 岗位ID"
-        }
-      },
-      "title": "CreatePositionResp",
-      "required": [
-        "position_id"
+        "product_id"
       ]
     },
     "CreateRoleReq": {
@@ -2962,10 +2732,6 @@
         "user_id"
       ]
     },
-    "DeleteDepartmentReq": {
-      "type": "object",
-      "title": "DeleteDepartmentReq"
-    },
     "DeleteDictItemReq": {
       "type": "object",
       "title": "DeleteDictItemReq"
@@ -2973,6 +2739,10 @@
     "DeleteDictTypeReq": {
       "type": "object",
       "title": "DeleteDictTypeReq"
+    },
+    "DeleteFactoryReq": {
+      "type": "object",
+      "title": "DeleteFactoryReq"
     },
     "DeleteMenuReq": {
       "type": "object",
@@ -2982,21 +2752,13 @@
       "type": "object",
       "title": "DeletePermissionReq"
     },
-    "DeletePlanReq": {
+    "DeleteProductReq": {
       "type": "object",
-      "title": "DeletePlanReq"
-    },
-    "DeletePositionReq": {
-      "type": "object",
-      "title": "DeletePositionReq"
+      "title": "DeleteProductReq"
     },
     "DeleteRoleReq": {
       "type": "object",
       "title": "DeleteRoleReq"
-    },
-    "DeleteTaskReq": {
-      "type": "object",
-      "title": "DeleteTaskReq"
     },
     "DeleteTenantReq": {
       "type": "object",
@@ -3005,94 +2767,6 @@
     "DeleteUserReq": {
       "type": "object",
       "title": "DeleteUserReq"
-    },
-    "DepartmentInfo": {
-      "type": "object",
-      "properties": {
-        "department_id": {
-          "type": "string",
-          "description": " 部门ID"
-        },
-        "name": {
-          "type": "string",
-          "description": " 部门名称"
-        },
-        "parent_id": {
-          "type": "string",
-          "description": " 父部门ID"
-        },
-        "sort": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 排序"
-        },
-        "created_at": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 创建时间"
-        },
-        "updated_at": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 更新时间"
-        }
-      },
-      "title": "DepartmentInfo",
-      "required": [
-        "department_id",
-        "name",
-        "parent_id",
-        "sort",
-        "created_at",
-        "updated_at"
-      ]
-    },
-    "DepartmentListReq": {
-      "type": "object",
-      "properties": {
-        "page": {
-          "type": "integer",
-          "format": "int32",
-          "default": "1",
-          "description": " 当前页"
-        },
-        "page_size": {
-          "type": "integer",
-          "format": "int32",
-          "default": "10",
-          "description": " 每页大小"
-        },
-        "name": {
-          "type": "string",
-          "description": " 部门名称"
-        },
-        "parent_id": {
-          "type": "string",
-          "description": " 父部门ID"
-        }
-      },
-      "title": "DepartmentListReq"
-    },
-    "DepartmentListResp": {
-      "type": "object",
-      "properties": {
-        "page": {
-          "$ref": "#/definitions/PageResponse",
-          "description": " 分页"
-        },
-        "list": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/DepartmentInfo"
-          },
-          "description": " 部门列表"
-        }
-      },
-      "title": "DepartmentListResp",
-      "required": [
-        "page",
-        "list"
-      ]
     },
     "DictItemAllResp": {
       "type": "object",
@@ -3301,6 +2975,114 @@
         "list"
       ]
     },
+    "FactoryInfo": {
+      "type": "object",
+      "properties": {
+        "factory_id": {
+          "type": "string",
+          "description": " 工厂ID"
+        },
+        "factory_name": {
+          "type": "string",
+          "description": " 工厂名称"
+        },
+        "address": {
+          "type": "string",
+          "description": " 工厂地址"
+        },
+        "contact_phone": {
+          "type": "string",
+          "description": " 联系电话"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        },
+        "created_at": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 创建时间"
+        },
+        "updated_at": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 更新时间"
+        }
+      },
+      "title": "FactoryInfo",
+      "required": [
+        "factory_id",
+        "factory_name",
+        "address",
+        "contact_phone",
+        "status",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    "FactoryListReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int32",
+          "default": "1",
+          "description": " 当前页"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int32",
+          "default": "10",
+          "description": " 每页大小"
+        },
+        "factory_name": {
+          "type": "string",
+          "description": " 工厂名称"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        }
+      },
+      "title": "FactoryListReq"
+    },
+    "FactoryListResp": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/PageResponse",
+          "description": " 分页"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FactoryInfo"
+          },
+          "description": " 工厂列表"
+        }
+      },
+      "title": "FactoryListResp",
+      "required": [
+        "page",
+        "list"
+      ]
+    },
+    "GetActiveDevicesResp": {
+      "type": "object",
+      "properties": {
+        "active_devices": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 当前活跃设备数量"
+        }
+      },
+      "title": "GetActiveDevicesResp",
+      "required": [
+        "active_devices"
+      ]
+    },
     "GetAllRolesResp": {
       "type": "object",
       "properties": {
@@ -3317,10 +3099,6 @@
         "list"
       ]
     },
-    "GetDepartmentReq": {
-      "type": "object",
-      "title": "GetDepartmentReq"
-    },
     "GetDictItemAllReq": {
       "type": "object",
       "title": "GetDictItemAllReq"
@@ -3333,35 +3111,13 @@
       "type": "object",
       "title": "GetDictTypeReq"
     },
+    "GetFactoryReq": {
+      "type": "object",
+      "title": "GetFactoryReq"
+    },
     "GetMenuReq": {
       "type": "object",
       "title": "GetMenuReq"
-    },
-    "GetOrgTreeReq": {
-      "type": "object",
-      "properties": {
-        "tenant_id": {
-          "type": "string",
-          "description": " 租户ID，可选参数"
-        }
-      },
-      "title": "GetOrgTreeReq"
-    },
-    "GetOrgTreeResp": {
-      "type": "object",
-      "properties": {
-        "tree": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/OrgTreeNode"
-          },
-          "description": " 组织树"
-        }
-      },
-      "title": "GetOrgTreeResp",
-      "required": [
-        "tree"
-      ]
     },
     "GetPermissionReq": {
       "type": "object",
@@ -3427,33 +3183,9 @@
       },
       "title": "GetPermissionResp"
     },
-    "GetPlanReq": {
+    "GetProductReq": {
       "type": "object",
-      "title": "GetPlanReq"
-    },
-    "GetPositionReq": {
-      "type": "object",
-      "title": "GetPositionReq"
-    },
-    "GetPositionUsersReq": {
-      "type": "object",
-      "title": "GetPositionUsersReq"
-    },
-    "GetPositionUsersResp": {
-      "type": "object",
-      "properties": {
-        "list": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/UserPositionInfo"
-          },
-          "description": " 用户列表"
-        }
-      },
-      "title": "GetPositionUsersResp",
-      "required": [
-        "list"
-      ]
+      "title": "GetProductReq"
     },
     "GetResourceTypesResp": {
       "type": "object",
@@ -3521,26 +3253,6 @@
       },
       "title": "GetTenantResp"
     },
-    "GetUserPositionsReq": {
-      "type": "object",
-      "title": "GetUserPositionsReq"
-    },
-    "GetUserPositionsResp": {
-      "type": "object",
-      "properties": {
-        "list": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PositionInfo"
-          },
-          "description": " 岗位列表"
-        }
-      },
-      "title": "GetUserPositionsResp",
-      "required": [
-        "list"
-      ]
-    },
     "GetUserReq": {
       "type": "object",
       "title": "GetUserReq"
@@ -3577,6 +3289,160 @@
       "title": "IDRequest",
       "required": [
         "id"
+      ]
+    },
+    "InventoryInfo": {
+      "type": "object",
+      "properties": {
+        "inventory_id": {
+          "type": "string",
+          "description": " 库存记录ID"
+        },
+        "product_id": {
+          "type": "string",
+          "description": " 商品ID"
+        },
+        "product_name": {
+          "type": "string",
+          "description": " 商品名称"
+        },
+        "operation_type": {
+          "type": "string",
+          "description": " 操作类型"
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 操作数量"
+        },
+        "unit_price": {
+          "type": "string",
+          "description": " 单价"
+        },
+        "total_amount": {
+          "type": "string",
+          "description": " 总金额"
+        },
+        "operator_id": {
+          "type": "string",
+          "description": " 操作人ID"
+        },
+        "operator_name": {
+          "type": "string",
+          "description": " 操作人姓名"
+        },
+        "remark": {
+          "type": "string",
+          "description": " 备注"
+        },
+        "operation_time": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 操作时间"
+        },
+        "before_stock": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 操作前库存"
+        },
+        "after_stock": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 操作后库存"
+        }
+      },
+      "title": "InventoryInfo",
+      "required": [
+        "inventory_id",
+        "product_id",
+        "product_name",
+        "operation_type",
+        "quantity",
+        "unit_price",
+        "total_amount",
+        "operator_id",
+        "operator_name",
+        "remark",
+        "operation_time",
+        "before_stock",
+        "after_stock"
+      ]
+    },
+    "InventoryListReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int32",
+          "default": "1",
+          "description": " 当前页"
+        },
+        "page_size": {
+          "type": "integer",
+          "format": "int32",
+          "default": "10",
+          "description": " 每页大小"
+        },
+        "product_id": {
+          "type": "string",
+          "description": " 商品ID"
+        },
+        "operation_type": {
+          "type": "string",
+          "description": " 操作类型"
+        },
+        "operator_id": {
+          "type": "string",
+          "description": " 操作人ID"
+        },
+        "start_time": {
+          "type": "string",
+          "description": " 开始时间"
+        },
+        "end_time": {
+          "type": "string",
+          "description": " 结束时间"
+        }
+      },
+      "title": "InventoryListReq"
+    },
+    "InventoryListResp": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/PageResponse",
+          "description": " 分页"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InventoryInfo"
+          },
+          "description": " 库存记录列表"
+        }
+      },
+      "title": "InventoryListResp",
+      "required": [
+        "page",
+        "list"
+      ]
+    },
+    "InventoryOperationResp": {
+      "type": "object",
+      "properties": {
+        "inventory_id": {
+          "type": "string",
+          "description": " 库存记录ID"
+        },
+        "message": {
+          "type": "string",
+          "description": " 操作结果信息"
+        }
+      },
+      "title": "InventoryOperationResp",
+      "required": [
+        "inventory_id",
+        "message"
       ]
     },
     "ListPermissionReq": {
@@ -3832,7 +3698,10 @@
     "LoginResp": {
       "type": "object",
       "properties": {
-        "token": {
+        "access_token": {
+          "type": "string"
+        },
+        "refresh_token": {
           "type": "string"
         },
         "user_id": {
@@ -3850,7 +3719,8 @@
       },
       "title": "LoginResp",
       "required": [
-        "token",
+        "access_token",
+        "refresh_token",
         "user_id",
         "user_name",
         "phone",
@@ -4074,51 +3944,6 @@
         "list"
       ]
     },
-    "OrgTreeNode": {
-      "type": "object",
-      "properties": {
-        "department_id": {
-          "type": "string",
-          "description": " 部门ID"
-        },
-        "name": {
-          "type": "string",
-          "description": " 部门名称"
-        },
-        "parent_id": {
-          "type": "string",
-          "description": " 父部门ID"
-        },
-        "sort": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 排序"
-        },
-        "positions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PositionInfo"
-          },
-          "description": " 部门下的岗位列表"
-        },
-        "children": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/OrgTreeNode"
-          },
-          "description": " 子部门列表"
-        }
-      },
-      "title": "OrgTreeNode",
-      "required": [
-        "department_id",
-        "name",
-        "parent_id",
-        "sort",
-        "positions",
-        "children"
-      ]
-    },
     "PageJsonRequest": {
       "type": "object",
       "properties": {
@@ -4291,176 +4116,85 @@
         "created_at"
       ]
     },
-    "PlanInfo": {
+    "ProductInReq": {
       "type": "object",
       "properties": {
-        "plan_id": {
+        "product_id": {
           "type": "string",
-          "description": " 计划ID"
+          "description": " 商品ID"
         },
-        "name": {
-          "type": "string",
-          "description": " 计划名称"
+        "quantity": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 入库数量"
         },
-        "description": {
+        "unit_price": {
           "type": "string",
-          "description": " 计划描述"
+          "description": " 单价"
         },
-        "group": {
+        "operator_id": {
           "type": "string",
-          "description": " 任务分组"
+          "description": " 操作人ID"
         },
-        "cron_spec": {
+        "remark": {
           "type": "string",
-          "description": " cron表达式"
+          "description": " 备注"
+        }
+      },
+      "title": "ProductInReq",
+      "required": [
+        "product_id",
+        "quantity",
+        "unit_price",
+        "operator_id",
+        "remark"
+      ]
+    },
+    "ProductInfo": {
+      "type": "object",
+      "properties": {
+        "product_id": {
+          "type": "string",
+          "description": " 商品ID"
+        },
+        "product_name": {
+          "type": "string",
+          "description": " 商品名称"
+        },
+        "unit": {
+          "type": "string",
+          "description": " 单位"
+        },
+        "purchase_price": {
+          "type": "string",
+          "description": " 采购价格"
+        },
+        "sale_price": {
+          "type": "string",
+          "description": " 销售价格"
+        },
+        "current_stock": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 当前库存"
+        },
+        "min_stock": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 最小库存预警"
         },
         "status": {
           "type": "integer",
           "format": "int32",
           "description": " 状态"
         },
-        "plan_type": {
+        "factory_id": {
           "type": "string",
-          "description": " 计划类型"
+          "description": " 所属工厂ID"
         },
-        "priority": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 任务优先级"
-        },
-        "timeout": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 任务超时时间(秒)"
-        },
-        "retry_times": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 重试次数"
-        },
-        "retry_interval": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 重试间隔(秒)"
-        },
-        "start_time": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 生效开始时间"
-        },
-        "end_time": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 生效结束时间"
-        },
-        "command": {
+        "factory_name": {
           "type": "string",
-          "description": " 要执行的命令或方法"
-        },
-        "params": {
-          "type": "string",
-          "description": " 执行参数，支持JSON格式"
-        },
-        "created_at": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 创建时间"
-        }
-      },
-      "title": "PlanInfo",
-      "required": [
-        "plan_id",
-        "name",
-        "description",
-        "group",
-        "cron_spec",
-        "status",
-        "plan_type",
-        "priority",
-        "timeout",
-        "retry_times",
-        "retry_interval",
-        "start_time",
-        "end_time",
-        "command",
-        "params",
-        "created_at"
-      ]
-    },
-    "PlanListReq": {
-      "type": "object",
-      "properties": {
-        "page": {
-          "type": "integer",
-          "format": "int32",
-          "default": "1",
-          "description": " 当前页"
-        },
-        "page_size": {
-          "type": "integer",
-          "format": "int32",
-          "default": "10",
-          "description": " 每页大小"
-        },
-        "name": {
-          "type": "string",
-          "description": " 计划名称"
-        },
-        "group": {
-          "type": "string",
-          "description": " 任务分组"
-        },
-        "status": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 状态"
-        },
-        "plan_type": {
-          "type": "string",
-          "description": " 计划类型"
-        }
-      },
-      "title": "PlanListReq"
-    },
-    "PlanListResp": {
-      "type": "object",
-      "properties": {
-        "page": {
-          "$ref": "#/definitions/PageResponse",
-          "description": " 分页信息"
-        },
-        "list": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PlanInfo"
-          },
-          "description": " 计划列表"
-        }
-      },
-      "title": "PlanListResp",
-      "required": [
-        "page",
-        "list"
-      ]
-    },
-    "PositionInfo": {
-      "type": "object",
-      "properties": {
-        "position_id": {
-          "type": "string",
-          "description": " 岗位ID"
-        },
-        "name": {
-          "type": "string",
-          "description": " 岗位名称"
-        },
-        "department_id": {
-          "type": "string",
-          "description": " 部门ID"
-        },
-        "description": {
-          "type": "string",
-          "description": " 岗位描述"
+          "description": " 工厂名称"
         },
         "created_at": {
           "type": "integer",
@@ -4473,17 +4207,23 @@
           "description": " 更新时间"
         }
       },
-      "title": "PositionInfo",
+      "title": "ProductInfo",
       "required": [
-        "position_id",
-        "name",
-        "department_id",
-        "description",
+        "product_id",
+        "product_name",
+        "unit",
+        "purchase_price",
+        "sale_price",
+        "current_stock",
+        "min_stock",
+        "status",
+        "factory_id",
+        "factory_name",
         "created_at",
         "updated_at"
       ]
     },
-    "PositionListReq": {
+    "ProductListReq": {
       "type": "object",
       "properties": {
         "page": {
@@ -4498,18 +4238,23 @@
           "default": "10",
           "description": " 每页大小"
         },
-        "name": {
+        "product_name": {
           "type": "string",
-          "description": " 岗位名称"
+          "description": " 商品名称"
         },
-        "department_id": {
+        "factory_id": {
           "type": "string",
-          "description": " 部门ID"
+          "description": " 工厂ID"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
         }
       },
-      "title": "PositionListReq"
+      "title": "ProductListReq"
     },
-    "PositionListResp": {
+    "ProductListResp": {
       "type": "object",
       "properties": {
         "page": {
@@ -4519,15 +4264,108 @@
         "list": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/PositionInfo"
+            "$ref": "#/definitions/ProductInfo"
           },
-          "description": " 岗位列表"
+          "description": " 商品列表"
         }
       },
-      "title": "PositionListResp",
+      "title": "ProductListResp",
       "required": [
         "page",
         "list"
+      ]
+    },
+    "ProductOutReq": {
+      "type": "object",
+      "properties": {
+        "product_id": {
+          "type": "string",
+          "description": " 商品ID"
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 出库数量"
+        },
+        "unit_price": {
+          "type": "string",
+          "description": " 单价"
+        },
+        "operator_id": {
+          "type": "string",
+          "description": " 操作人ID"
+        },
+        "remark": {
+          "type": "string",
+          "description": " 备注"
+        }
+      },
+      "title": "ProductOutReq",
+      "required": [
+        "product_id",
+        "quantity",
+        "unit_price",
+        "operator_id",
+        "remark"
+      ]
+    },
+    "ProductStockReq": {
+      "type": "object",
+      "properties": {
+        "product_id": {
+          "type": "string",
+          "description": " 商品ID"
+        },
+        "factory_id": {
+          "type": "string",
+          "description": " 工厂ID"
+        }
+      },
+      "title": "ProductStockReq"
+    },
+    "ProductStockResp": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StockInfo"
+          },
+          "description": " 库存信息列表"
+        }
+      },
+      "title": "ProductStockResp",
+      "required": [
+        "list"
+      ]
+    },
+    "RefreshTokenReq": {
+      "type": "object",
+      "properties": {
+        "refresh_token": {
+          "type": "string",
+          "description": " 刷新令牌"
+        }
+      },
+      "title": "RefreshTokenReq",
+      "required": [
+        "refresh_token"
+      ]
+    },
+    "RefreshTokenResp": {
+      "type": "object",
+      "properties": {
+        "access_token": {
+          "type": "string"
+        },
+        "refresh_token": {
+          "type": "string",
+          "description": " 可选：可以返回新的refresh token"
+        }
+      },
+      "title": "RefreshTokenResp",
+      "required": [
+        "access_token"
       ]
     },
     "RegisterReq": {
@@ -4574,24 +4412,6 @@
       "title": "RegisterResp",
       "required": [
         "user_id"
-      ]
-    },
-    "RemoveUserPositionReq": {
-      "type": "object",
-      "properties": {
-        "user_id": {
-          "type": "string",
-          "description": " 用户ID"
-        },
-        "position_id": {
-          "type": "string",
-          "description": " 岗位ID"
-        }
-      },
-      "title": "RemoveUserPositionReq",
-      "required": [
-        "user_id",
-        "position_id"
       ]
     },
     "ResetPasswordReq": {
@@ -4800,6 +4620,80 @@
         "role_code_list"
       ]
     },
+    "StatisticsReq": {
+      "type": "object",
+      "title": "StatisticsReq"
+    },
+    "StatisticsResp": {
+      "type": "object",
+      "properties": {
+        "total_products": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 商品总数"
+        },
+        "active_products": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 启用商品数"
+        },
+        "total_stock": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 总库存数量"
+        },
+        "total_stock_value": {
+          "type": "string",
+          "description": " 总库存价值"
+        },
+        "low_stock_products": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 低库存商品数"
+        },
+        "total_in_quantity": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 总入库数量"
+        },
+        "total_in_amount": {
+          "type": "string",
+          "description": " 总入库金额"
+        },
+        "total_out_quantity": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 总出库数量"
+        },
+        "total_out_amount": {
+          "type": "string",
+          "description": " 总出库金额"
+        },
+        "total_sales_amount": {
+          "type": "string",
+          "description": " 总销售金额"
+        },
+        "total_sales_quantity": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 总销售数量"
+        }
+      },
+      "title": "StatisticsResp",
+      "required": [
+        "total_products",
+        "active_products",
+        "total_stock",
+        "total_stock_value",
+        "low_stock_products",
+        "total_in_quantity",
+        "total_in_amount",
+        "total_out_quantity",
+        "total_out_amount",
+        "total_sales_amount",
+        "total_sales_quantity"
+      ]
+    },
     "StatusRequest": {
       "type": "object",
       "properties": {
@@ -4820,169 +4714,71 @@
         "status"
       ]
     },
-    "StopTaskReq": {
-      "type": "object",
-      "title": "StopTaskReq"
-    },
-    "TaskInfo": {
+    "StockInfo": {
       "type": "object",
       "properties": {
-        "task_id": {
+        "product_id": {
           "type": "string",
-          "description": " 任务ID"
+          "description": " 商品ID"
         },
-        "name": {
+        "product_name": {
           "type": "string",
-          "description": " 任务名称"
+          "description": " 商品名称"
         },
-        "plan_id": {
+        "factory_id": {
           "type": "string",
-          "description": " 计划ID"
+          "description": " 工厂ID"
         },
-        "plan_type": {
+        "factory_name": {
           "type": "string",
-          "description": " 计划类型"
+          "description": " 工厂名称"
         },
-        "group": {
-          "type": "string",
-          "description": " 任务分组"
-        },
-        "priority": {
+        "current_stock": {
           "type": "integer",
           "format": "int32",
-          "description": " 任务优先级"
+          "description": " 当前库存"
+        },
+        "min_stock": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 最小库存预警"
+        },
+        "unit": {
+          "type": "string",
+          "description": " 单位"
+        },
+        "purchase_price": {
+          "type": "string",
+          "description": " 采购价格"
+        },
+        "sale_price": {
+          "type": "string",
+          "description": " 销售价格"
         },
         "status": {
-          "type": "string",
-          "description": " 任务状态"
-        },
-        "planned_time": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 计划执行时间"
-        },
-        "start_time": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 实际开始时间"
-        },
-        "end_time": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 实际结束时间"
-        },
-        "duration": {
           "type": "integer",
           "format": "int32",
-          "description": " 执行时长(ms)"
+          "description": " 状态"
         },
-        "result": {
-          "type": "string",
-          "description": " 执行结果"
-        },
-        "error": {
-          "type": "string",
-          "description": " 错误信息"
-        },
-        "retry_count": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 已重试次数"
-        },
-        "next_retry_time": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 下次重试时间"
-        },
-        "created_at": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 创建时间"
+        "is_low_stock": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " 是否低库存"
         }
       },
-      "title": "TaskInfo",
+      "title": "StockInfo",
       "required": [
-        "task_id",
-        "name",
-        "plan_id",
-        "plan_type",
-        "group",
-        "priority",
+        "product_id",
+        "product_name",
+        "factory_id",
+        "factory_name",
+        "current_stock",
+        "min_stock",
+        "unit",
+        "purchase_price",
+        "sale_price",
         "status",
-        "planned_time",
-        "start_time",
-        "end_time",
-        "duration",
-        "result",
-        "error",
-        "retry_count",
-        "next_retry_time",
-        "created_at"
-      ]
-    },
-    "TaskListReq": {
-      "type": "object",
-      "properties": {
-        "page": {
-          "type": "integer",
-          "format": "int32",
-          "default": "1",
-          "description": " 当前页"
-        },
-        "page_size": {
-          "type": "integer",
-          "format": "int32",
-          "default": "10",
-          "description": " 每页大小"
-        },
-        "plan_id": {
-          "type": "string",
-          "description": " 计划ID"
-        },
-        "name": {
-          "type": "string",
-          "description": " 任务名称"
-        },
-        "group": {
-          "type": "string",
-          "description": " 任务分组"
-        },
-        "status": {
-          "type": "string",
-          "description": " 任务状态"
-        },
-        "start_time": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 开始时间"
-        },
-        "end_time": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 结束时间"
-        }
-      },
-      "title": "TaskListReq"
-    },
-    "TaskListResp": {
-      "type": "object",
-      "properties": {
-        "page": {
-          "$ref": "#/definitions/PageResponse",
-          "description": " 分页信息"
-        },
-        "list": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/TaskInfo"
-          },
-          "description": " 任务列表"
-        }
-      },
-      "title": "TaskListResp",
-      "required": [
-        "page",
-        "list"
+        "is_low_stock"
       ]
     },
     "TenantInfo": {
@@ -5027,51 +4823,6 @@
         }
       },
       "title": "TimeRange"
-    },
-    "TriggerTaskReq": {
-      "type": "object",
-      "properties": {
-        "plan_id": {
-          "type": "string",
-          "description": " 计划ID"
-        }
-      },
-      "title": "TriggerTaskReq",
-      "required": [
-        "plan_id"
-      ]
-    },
-    "TriggerTaskResp": {
-      "type": "object",
-      "properties": {
-        "task_id": {
-          "type": "string",
-          "description": " 任务ID"
-        }
-      },
-      "title": "TriggerTaskResp",
-      "required": [
-        "task_id"
-      ]
-    },
-    "UpdateDepartmentReq": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": " 部门名称"
-        },
-        "parent_id": {
-          "type": "string",
-          "description": " 父部门ID"
-        },
-        "sort": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 排序"
-        }
-      },
-      "title": "UpdateDepartmentReq"
     },
     "UpdateDictItemReq": {
       "type": "object",
@@ -5126,6 +4877,29 @@
         }
       },
       "title": "UpdateDictTypeReq"
+    },
+    "UpdateFactoryReq": {
+      "type": "object",
+      "properties": {
+        "factory_name": {
+          "type": "string",
+          "description": " 工厂名称"
+        },
+        "address": {
+          "type": "string",
+          "description": " 工厂地址"
+        },
+        "contact_phone": {
+          "type": "string",
+          "description": " 联系电话"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        }
+      },
+      "title": "UpdateFactoryReq"
     },
     "UpdateMenuReq": {
       "type": "object",
@@ -5209,88 +4983,46 @@
       },
       "title": "UpdatePermissionReq"
     },
-    "UpdatePlanReq": {
+    "UpdateProductReq": {
       "type": "object",
       "properties": {
-        "name": {
+        "product_name": {
           "type": "string",
-          "description": " 计划名称"
+          "description": " 商品名称"
         },
-        "description": {
+        "unit": {
           "type": "string",
-          "description": " 计划描述"
+          "description": " 单位"
         },
-        "group": {
+        "purchase_price": {
           "type": "string",
-          "description": " 任务分组"
+          "description": " 采购价格"
         },
-        "cron_spec": {
+        "sale_price": {
           "type": "string",
-          "description": " cron表达式"
+          "description": " 销售价格"
+        },
+        "current_stock": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 当前库存"
+        },
+        "min_stock": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 最小库存预警"
         },
         "status": {
           "type": "integer",
           "format": "int32",
           "description": " 状态"
         },
-        "priority": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 任务优先级"
-        },
-        "timeout": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 任务超时时间(秒)"
-        },
-        "retry_times": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 重试次数"
-        },
-        "retry_interval": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 重试间隔(秒)"
-        },
-        "start_time": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 生效开始时间"
-        },
-        "end_time": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 生效结束时间"
-        },
-        "command": {
+        "factory_id": {
           "type": "string",
-          "description": " 要执行的命令或方法"
-        },
-        "params": {
-          "type": "string",
-          "description": " 执行参数，支持JSON格式"
+          "description": " 所属工厂ID"
         }
       },
-      "title": "UpdatePlanReq"
-    },
-    "UpdatePositionReq": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": " 岗位名称"
-        },
-        "department_id": {
-          "type": "string",
-          "description": " 部门ID"
-        },
-        "description": {
-          "type": "string",
-          "description": " 岗位描述"
-        }
-      },
-      "title": "UpdatePositionReq"
+      "title": "UpdateProductReq"
     },
     "UpdateRoleReq": {
       "type": "object",
@@ -5474,39 +5206,6 @@
       "required": [
         "page",
         "list"
-      ]
-    },
-    "UserPositionInfo": {
-      "type": "object",
-      "properties": {
-        "user_id": {
-          "type": "string",
-          "description": " 用户ID"
-        },
-        "name": {
-          "type": "string",
-          "description": " 用户姓名"
-        },
-        "user_name": {
-          "type": "string",
-          "description": " 用户名"
-        },
-        "avatar": {
-          "type": "string",
-          "description": " 头像"
-        },
-        "position_id": {
-          "type": "string",
-          "description": " 岗位ID"
-        }
-      },
-      "title": "UserPositionInfo",
-      "required": [
-        "user_id",
-        "name",
-        "user_name",
-        "avatar",
-        "position_id"
       ]
     }
   },

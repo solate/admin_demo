@@ -20,6 +20,10 @@ type Tx struct {
 	DictItem *DictItemClient
 	// DictType is the client for interacting with the DictType builders.
 	DictType *DictTypeClient
+	// Factory is the client for interacting with the Factory builders.
+	Factory *FactoryClient
+	// Inventory is the client for interacting with the Inventory builders.
+	Inventory *InventoryClient
 	// LoginLog is the client for interacting with the LoginLog builders.
 	LoginLog *LoginLogClient
 	// Menu is the client for interacting with the Menu builders.
@@ -30,6 +34,10 @@ type Tx struct {
 	Plan *PlanClient
 	// Position is the client for interacting with the Position builders.
 	Position *PositionClient
+	// Product is the client for interacting with the Product builders.
+	Product *ProductClient
+	// ProductStatistics is the client for interacting with the ProductStatistics builders.
+	ProductStatistics *ProductStatisticsClient
 	// Role is the client for interacting with the Role builders.
 	Role *RoleClient
 	// SysUser is the client for interacting with the SysUser builders.
@@ -40,8 +48,6 @@ type Tx struct {
 	Task *TaskClient
 	// Tenant is the client for interacting with the Tenant builders.
 	Tenant *TenantClient
-	// UserPosition is the client for interacting with the UserPosition builders.
-	UserPosition *UserPositionClient
 
 	// lazily loaded.
 	client     *Client
@@ -177,17 +183,20 @@ func (tx *Tx) init() {
 	tx.Department = NewDepartmentClient(tx.config)
 	tx.DictItem = NewDictItemClient(tx.config)
 	tx.DictType = NewDictTypeClient(tx.config)
+	tx.Factory = NewFactoryClient(tx.config)
+	tx.Inventory = NewInventoryClient(tx.config)
 	tx.LoginLog = NewLoginLogClient(tx.config)
 	tx.Menu = NewMenuClient(tx.config)
 	tx.Permission = NewPermissionClient(tx.config)
 	tx.Plan = NewPlanClient(tx.config)
 	tx.Position = NewPositionClient(tx.config)
+	tx.Product = NewProductClient(tx.config)
+	tx.ProductStatistics = NewProductStatisticsClient(tx.config)
 	tx.Role = NewRoleClient(tx.config)
 	tx.SysUser = NewSysUserClient(tx.config)
 	tx.SystemLog = NewSystemLogClient(tx.config)
 	tx.Task = NewTaskClient(tx.config)
 	tx.Tenant = NewTenantClient(tx.config)
-	tx.UserPosition = NewUserPositionClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

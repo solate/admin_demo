@@ -7,18 +7,23 @@ import (
 	"admin_backend/pkg/ent/generated/department"
 	"admin_backend/pkg/ent/generated/dictitem"
 	"admin_backend/pkg/ent/generated/dicttype"
+	"admin_backend/pkg/ent/generated/factory"
+	"admin_backend/pkg/ent/generated/inventory"
 	"admin_backend/pkg/ent/generated/loginlog"
 	"admin_backend/pkg/ent/generated/menu"
 	"admin_backend/pkg/ent/generated/permission"
 	"admin_backend/pkg/ent/generated/plan"
 	"admin_backend/pkg/ent/generated/position"
+	"admin_backend/pkg/ent/generated/product"
+	"admin_backend/pkg/ent/generated/productstatistics"
 	"admin_backend/pkg/ent/generated/role"
 	"admin_backend/pkg/ent/generated/systemlog"
 	"admin_backend/pkg/ent/generated/sysuser"
 	"admin_backend/pkg/ent/generated/task"
 	"admin_backend/pkg/ent/generated/tenant"
-	"admin_backend/pkg/ent/generated/userposition"
 	"admin_backend/pkg/ent/schema"
+
+	"github.com/shopspring/decimal"
 )
 
 // The init function reads all schema descriptors with runtime code
@@ -141,6 +146,70 @@ func init() {
 	dicttypeDescStatus := dicttypeFields[8].Descriptor()
 	// dicttype.DefaultStatus holds the default value on creation for the status field.
 	dicttype.DefaultStatus = dicttypeDescStatus.Default.(int)
+	factoryFields := schema.Factory{}.Fields()
+	_ = factoryFields
+	// factoryDescCreatedAt is the schema descriptor for created_at field.
+	factoryDescCreatedAt := factoryFields[0].Descriptor()
+	// factory.DefaultCreatedAt holds the default value on creation for the created_at field.
+	factory.DefaultCreatedAt = factoryDescCreatedAt.Default.(int64)
+	// factoryDescUpdatedAt is the schema descriptor for updated_at field.
+	factoryDescUpdatedAt := factoryFields[1].Descriptor()
+	// factory.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	factory.DefaultUpdatedAt = factoryDescUpdatedAt.Default.(int64)
+	// factoryDescFactoryName is the schema descriptor for factory_name field.
+	factoryDescFactoryName := factoryFields[5].Descriptor()
+	// factory.FactoryNameValidator is a validator for the "factory_name" field. It is called by the builders before save.
+	factory.FactoryNameValidator = factoryDescFactoryName.Validators[0].(func(string) error)
+	// factoryDescAddress is the schema descriptor for address field.
+	factoryDescAddress := factoryFields[6].Descriptor()
+	// factory.DefaultAddress holds the default value on creation for the address field.
+	factory.DefaultAddress = factoryDescAddress.Default.(string)
+	// factoryDescContactPhone is the schema descriptor for contact_phone field.
+	factoryDescContactPhone := factoryFields[7].Descriptor()
+	// factory.DefaultContactPhone holds the default value on creation for the contact_phone field.
+	factory.DefaultContactPhone = factoryDescContactPhone.Default.(string)
+	// factoryDescStatus is the schema descriptor for status field.
+	factoryDescStatus := factoryFields[8].Descriptor()
+	// factory.DefaultStatus holds the default value on creation for the status field.
+	factory.DefaultStatus = factoryDescStatus.Default.(int)
+	inventoryFields := schema.Inventory{}.Fields()
+	_ = inventoryFields
+	// inventoryDescCreatedAt is the schema descriptor for created_at field.
+	inventoryDescCreatedAt := inventoryFields[0].Descriptor()
+	// inventory.DefaultCreatedAt holds the default value on creation for the created_at field.
+	inventory.DefaultCreatedAt = inventoryDescCreatedAt.Default.(int64)
+	// inventoryDescUpdatedAt is the schema descriptor for updated_at field.
+	inventoryDescUpdatedAt := inventoryFields[1].Descriptor()
+	// inventory.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	inventory.DefaultUpdatedAt = inventoryDescUpdatedAt.Default.(int64)
+	// inventoryDescProductID is the schema descriptor for product_id field.
+	inventoryDescProductID := inventoryFields[5].Descriptor()
+	// inventory.ProductIDValidator is a validator for the "product_id" field. It is called by the builders before save.
+	inventory.ProductIDValidator = inventoryDescProductID.Validators[0].(func(string) error)
+	// inventoryDescOperationType is the schema descriptor for operation_type field.
+	inventoryDescOperationType := inventoryFields[6].Descriptor()
+	// inventory.OperationTypeValidator is a validator for the "operation_type" field. It is called by the builders before save.
+	inventory.OperationTypeValidator = inventoryDescOperationType.Validators[0].(func(string) error)
+	// inventoryDescUnitPrice is the schema descriptor for unit_price field.
+	inventoryDescUnitPrice := inventoryFields[8].Descriptor()
+	// inventory.DefaultUnitPrice holds the default value on creation for the unit_price field.
+	inventory.DefaultUnitPrice = inventoryDescUnitPrice.Default.(decimal.Decimal)
+	// inventoryDescTotalAmount is the schema descriptor for total_amount field.
+	inventoryDescTotalAmount := inventoryFields[9].Descriptor()
+	// inventory.DefaultTotalAmount holds the default value on creation for the total_amount field.
+	inventory.DefaultTotalAmount = inventoryDescTotalAmount.Default.(decimal.Decimal)
+	// inventoryDescRemark is the schema descriptor for remark field.
+	inventoryDescRemark := inventoryFields[11].Descriptor()
+	// inventory.DefaultRemark holds the default value on creation for the remark field.
+	inventory.DefaultRemark = inventoryDescRemark.Default.(string)
+	// inventoryDescBeforeStock is the schema descriptor for before_stock field.
+	inventoryDescBeforeStock := inventoryFields[13].Descriptor()
+	// inventory.DefaultBeforeStock holds the default value on creation for the before_stock field.
+	inventory.DefaultBeforeStock = inventoryDescBeforeStock.Default.(int)
+	// inventoryDescAfterStock is the schema descriptor for after_stock field.
+	inventoryDescAfterStock := inventoryFields[14].Descriptor()
+	// inventory.DefaultAfterStock holds the default value on creation for the after_stock field.
+	inventory.DefaultAfterStock = inventoryDescAfterStock.Default.(int)
 	loginlogFields := schema.LoginLog{}.Fields()
 	_ = loginlogFields
 	// loginlogDescCreatedAt is the schema descriptor for created_at field.
@@ -299,6 +368,98 @@ func init() {
 	positionDescDepartmentID := positionFields[6].Descriptor()
 	// position.DepartmentIDValidator is a validator for the "department_id" field. It is called by the builders before save.
 	position.DepartmentIDValidator = positionDescDepartmentID.Validators[0].(func(string) error)
+	productFields := schema.Product{}.Fields()
+	_ = productFields
+	// productDescCreatedAt is the schema descriptor for created_at field.
+	productDescCreatedAt := productFields[0].Descriptor()
+	// product.DefaultCreatedAt holds the default value on creation for the created_at field.
+	product.DefaultCreatedAt = productDescCreatedAt.Default.(int64)
+	// productDescUpdatedAt is the schema descriptor for updated_at field.
+	productDescUpdatedAt := productFields[1].Descriptor()
+	// product.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	product.DefaultUpdatedAt = productDescUpdatedAt.Default.(int64)
+	// productDescProductName is the schema descriptor for product_name field.
+	productDescProductName := productFields[5].Descriptor()
+	// product.ProductNameValidator is a validator for the "product_name" field. It is called by the builders before save.
+	product.ProductNameValidator = productDescProductName.Validators[0].(func(string) error)
+	// productDescUnit is the schema descriptor for unit field.
+	productDescUnit := productFields[6].Descriptor()
+	// product.DefaultUnit holds the default value on creation for the unit field.
+	product.DefaultUnit = productDescUnit.Default.(string)
+	// productDescPurchasePrice is the schema descriptor for purchase_price field.
+	productDescPurchasePrice := productFields[7].Descriptor()
+	// product.DefaultPurchasePrice holds the default value on creation for the purchase_price field.
+	product.DefaultPurchasePrice = productDescPurchasePrice.Default.(decimal.Decimal)
+	// productDescSalePrice is the schema descriptor for sale_price field.
+	productDescSalePrice := productFields[8].Descriptor()
+	// product.DefaultSalePrice holds the default value on creation for the sale_price field.
+	product.DefaultSalePrice = productDescSalePrice.Default.(decimal.Decimal)
+	// productDescCurrentStock is the schema descriptor for current_stock field.
+	productDescCurrentStock := productFields[9].Descriptor()
+	// product.DefaultCurrentStock holds the default value on creation for the current_stock field.
+	product.DefaultCurrentStock = productDescCurrentStock.Default.(int)
+	// productDescMinStock is the schema descriptor for min_stock field.
+	productDescMinStock := productFields[10].Descriptor()
+	// product.DefaultMinStock holds the default value on creation for the min_stock field.
+	product.DefaultMinStock = productDescMinStock.Default.(int)
+	// productDescStatus is the schema descriptor for status field.
+	productDescStatus := productFields[11].Descriptor()
+	// product.DefaultStatus holds the default value on creation for the status field.
+	product.DefaultStatus = productDescStatus.Default.(int)
+	productstatisticsFields := schema.ProductStatistics{}.Fields()
+	_ = productstatisticsFields
+	// productstatisticsDescCreatedAt is the schema descriptor for created_at field.
+	productstatisticsDescCreatedAt := productstatisticsFields[0].Descriptor()
+	// productstatistics.DefaultCreatedAt holds the default value on creation for the created_at field.
+	productstatistics.DefaultCreatedAt = productstatisticsDescCreatedAt.Default.(int64)
+	// productstatisticsDescUpdatedAt is the schema descriptor for updated_at field.
+	productstatisticsDescUpdatedAt := productstatisticsFields[1].Descriptor()
+	// productstatistics.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	productstatistics.DefaultUpdatedAt = productstatisticsDescUpdatedAt.Default.(int64)
+	// productstatisticsDescTotalProducts is the schema descriptor for total_products field.
+	productstatisticsDescTotalProducts := productstatisticsFields[3].Descriptor()
+	// productstatistics.DefaultTotalProducts holds the default value on creation for the total_products field.
+	productstatistics.DefaultTotalProducts = productstatisticsDescTotalProducts.Default.(int)
+	// productstatisticsDescActiveProducts is the schema descriptor for active_products field.
+	productstatisticsDescActiveProducts := productstatisticsFields[4].Descriptor()
+	// productstatistics.DefaultActiveProducts holds the default value on creation for the active_products field.
+	productstatistics.DefaultActiveProducts = productstatisticsDescActiveProducts.Default.(int)
+	// productstatisticsDescTotalStock is the schema descriptor for total_stock field.
+	productstatisticsDescTotalStock := productstatisticsFields[5].Descriptor()
+	// productstatistics.DefaultTotalStock holds the default value on creation for the total_stock field.
+	productstatistics.DefaultTotalStock = productstatisticsDescTotalStock.Default.(int)
+	// productstatisticsDescTotalStockValue is the schema descriptor for total_stock_value field.
+	productstatisticsDescTotalStockValue := productstatisticsFields[6].Descriptor()
+	// productstatistics.DefaultTotalStockValue holds the default value on creation for the total_stock_value field.
+	productstatistics.DefaultTotalStockValue = productstatisticsDescTotalStockValue.Default.(decimal.Decimal)
+	// productstatisticsDescLowStockProducts is the schema descriptor for low_stock_products field.
+	productstatisticsDescLowStockProducts := productstatisticsFields[7].Descriptor()
+	// productstatistics.DefaultLowStockProducts holds the default value on creation for the low_stock_products field.
+	productstatistics.DefaultLowStockProducts = productstatisticsDescLowStockProducts.Default.(int)
+	// productstatisticsDescTotalInQuantity is the schema descriptor for total_in_quantity field.
+	productstatisticsDescTotalInQuantity := productstatisticsFields[8].Descriptor()
+	// productstatistics.DefaultTotalInQuantity holds the default value on creation for the total_in_quantity field.
+	productstatistics.DefaultTotalInQuantity = productstatisticsDescTotalInQuantity.Default.(int)
+	// productstatisticsDescTotalInAmount is the schema descriptor for total_in_amount field.
+	productstatisticsDescTotalInAmount := productstatisticsFields[9].Descriptor()
+	// productstatistics.DefaultTotalInAmount holds the default value on creation for the total_in_amount field.
+	productstatistics.DefaultTotalInAmount = productstatisticsDescTotalInAmount.Default.(decimal.Decimal)
+	// productstatisticsDescTotalOutQuantity is the schema descriptor for total_out_quantity field.
+	productstatisticsDescTotalOutQuantity := productstatisticsFields[10].Descriptor()
+	// productstatistics.DefaultTotalOutQuantity holds the default value on creation for the total_out_quantity field.
+	productstatistics.DefaultTotalOutQuantity = productstatisticsDescTotalOutQuantity.Default.(int)
+	// productstatisticsDescTotalOutAmount is the schema descriptor for total_out_amount field.
+	productstatisticsDescTotalOutAmount := productstatisticsFields[11].Descriptor()
+	// productstatistics.DefaultTotalOutAmount holds the default value on creation for the total_out_amount field.
+	productstatistics.DefaultTotalOutAmount = productstatisticsDescTotalOutAmount.Default.(decimal.Decimal)
+	// productstatisticsDescTotalSalesAmount is the schema descriptor for total_sales_amount field.
+	productstatisticsDescTotalSalesAmount := productstatisticsFields[12].Descriptor()
+	// productstatistics.DefaultTotalSalesAmount holds the default value on creation for the total_sales_amount field.
+	productstatistics.DefaultTotalSalesAmount = productstatisticsDescTotalSalesAmount.Default.(decimal.Decimal)
+	// productstatisticsDescTotalSalesQuantity is the schema descriptor for total_sales_quantity field.
+	productstatisticsDescTotalSalesQuantity := productstatisticsFields[13].Descriptor()
+	// productstatistics.DefaultTotalSalesQuantity holds the default value on creation for the total_sales_quantity field.
+	productstatistics.DefaultTotalSalesQuantity = productstatisticsDescTotalSalesQuantity.Default.(int)
 	roleFields := schema.Role{}.Fields()
 	_ = roleFields
 	// roleDescCreatedAt is the schema descriptor for created_at field.
@@ -465,14 +626,4 @@ func init() {
 	tenantDescStatus := tenantFields[7].Descriptor()
 	// tenant.DefaultStatus holds the default value on creation for the status field.
 	tenant.DefaultStatus = tenantDescStatus.Default.(int)
-	userpositionFields := schema.UserPosition{}.Fields()
-	_ = userpositionFields
-	// userpositionDescUserID is the schema descriptor for user_id field.
-	userpositionDescUserID := userpositionFields[0].Descriptor()
-	// userposition.UserIDValidator is a validator for the "user_id" field. It is called by the builders before save.
-	userposition.UserIDValidator = userpositionDescUserID.Validators[0].(func(string) error)
-	// userpositionDescPositionID is the schema descriptor for position_id field.
-	userpositionDescPositionID := userpositionFields[1].Descriptor()
-	// userposition.PositionIDValidator is a validator for the "position_id" field. It is called by the builders before save.
-	userposition.PositionIDValidator = userpositionDescPositionID.Validators[0].(func(string) error)
 }

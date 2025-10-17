@@ -108,6 +108,86 @@ var (
 			},
 		},
 	}
+	// FactoriesColumns holds the columns for the "factories" table.
+	FactoriesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "修改时间", Default: 0},
+		{Name: "deleted_at", Type: field.TypeInt64, Nullable: true, Comment: "删除时间"},
+		{Name: "tenant_code", Type: field.TypeString, Comment: "租户code"},
+		{Name: "factory_id", Type: field.TypeString, Unique: true, Comment: "工厂ID"},
+		{Name: "factory_name", Type: field.TypeString, Comment: "工厂名称"},
+		{Name: "address", Type: field.TypeString, Comment: "工厂地址", Default: ""},
+		{Name: "contact_phone", Type: field.TypeString, Comment: "联系电话", Default: ""},
+		{Name: "status", Type: field.TypeInt, Comment: "状态: 1:启用, 2:禁用", Default: 1},
+	}
+	// FactoriesTable holds the schema information for the "factories" table.
+	FactoriesTable = &schema.Table{
+		Name:       "factories",
+		Comment:    "工厂",
+		Columns:    FactoriesColumns,
+		PrimaryKey: []*schema.Column{FactoriesColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "factory_factory_name",
+				Unique:  false,
+				Columns: []*schema.Column{FactoriesColumns[6]},
+			},
+			{
+				Name:    "factory_tenant_code",
+				Unique:  false,
+				Columns: []*schema.Column{FactoriesColumns[4]},
+			},
+		},
+	}
+	// InventoriesColumns holds the columns for the "inventories" table.
+	InventoriesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "修改时间", Default: 0},
+		{Name: "deleted_at", Type: field.TypeInt64, Nullable: true, Comment: "删除时间"},
+		{Name: "tenant_code", Type: field.TypeString, Comment: "租户code"},
+		{Name: "inventory_id", Type: field.TypeString, Unique: true, Comment: "库存记录ID"},
+		{Name: "product_id", Type: field.TypeString, Comment: "商品ID"},
+		{Name: "operation_type", Type: field.TypeString, Comment: "操作类型: in-入库, out-出库"},
+		{Name: "quantity", Type: field.TypeInt, Comment: "操作数量"},
+		{Name: "unit_price", Type: field.TypeOther, Comment: "单价", SchemaType: map[string]string{"mysql": "decimal(18,4)", "postgres": "numeric(18,4)"}},
+		{Name: "total_amount", Type: field.TypeOther, Comment: "总金额", SchemaType: map[string]string{"mysql": "decimal(18,4)", "postgres": "numeric(18,4)"}},
+		{Name: "operator_id", Type: field.TypeString, Comment: "操作人ID"},
+		{Name: "remark", Type: field.TypeString, Comment: "备注", Default: ""},
+		{Name: "operation_time", Type: field.TypeInt64, Comment: "操作时间"},
+		{Name: "before_stock", Type: field.TypeInt, Comment: "操作前库存", Default: 0},
+		{Name: "after_stock", Type: field.TypeInt, Comment: "操作后库存", Default: 0},
+	}
+	// InventoriesTable holds the schema information for the "inventories" table.
+	InventoriesTable = &schema.Table{
+		Name:       "inventories",
+		Comment:    "库存记录",
+		Columns:    InventoriesColumns,
+		PrimaryKey: []*schema.Column{InventoriesColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "inventory_product_id",
+				Unique:  false,
+				Columns: []*schema.Column{InventoriesColumns[6]},
+			},
+			{
+				Name:    "inventory_operation_type",
+				Unique:  false,
+				Columns: []*schema.Column{InventoriesColumns[7]},
+			},
+			{
+				Name:    "inventory_operator_id",
+				Unique:  false,
+				Columns: []*schema.Column{InventoriesColumns[11]},
+			},
+			{
+				Name:    "inventory_operation_time",
+				Unique:  false,
+				Columns: []*schema.Column{InventoriesColumns[13]},
+			},
+		},
+	}
 	// SysLoginLogColumns holds the columns for the "sys_login_log" table.
 	SysLoginLogColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -253,6 +333,79 @@ var (
 				Name:    "position_position_id",
 				Unique:  false,
 				Columns: []*schema.Column{SysPositionsColumns[5]},
+			},
+		},
+	}
+	// ProductsColumns holds the columns for the "products" table.
+	ProductsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "修改时间", Default: 0},
+		{Name: "deleted_at", Type: field.TypeInt64, Nullable: true, Comment: "删除时间"},
+		{Name: "tenant_code", Type: field.TypeString, Comment: "租户code"},
+		{Name: "product_id", Type: field.TypeString, Unique: true, Comment: "商品ID"},
+		{Name: "product_name", Type: field.TypeString, Comment: "商品名称"},
+		{Name: "unit", Type: field.TypeString, Comment: "单位", Default: ""},
+		{Name: "purchase_price", Type: field.TypeOther, Comment: "采购价格", SchemaType: map[string]string{"mysql": "decimal(18,4)", "postgres": "numeric(18,4)"}},
+		{Name: "sale_price", Type: field.TypeOther, Comment: "销售价格", SchemaType: map[string]string{"mysql": "decimal(18,4)", "postgres": "numeric(18,4)"}},
+		{Name: "current_stock", Type: field.TypeInt, Comment: "当前库存", Default: 0},
+		{Name: "min_stock", Type: field.TypeInt, Comment: "最小库存预警", Default: 0},
+		{Name: "status", Type: field.TypeInt, Comment: "状态: 1:启用, 2:禁用", Default: 1},
+		{Name: "factory_id", Type: field.TypeString, Nullable: true, Comment: "所属工厂ID"},
+	}
+	// ProductsTable holds the schema information for the "products" table.
+	ProductsTable = &schema.Table{
+		Name:       "products",
+		Comment:    "商品",
+		Columns:    ProductsColumns,
+		PrimaryKey: []*schema.Column{ProductsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "product_product_name",
+				Unique:  false,
+				Columns: []*schema.Column{ProductsColumns[6]},
+			},
+			{
+				Name:    "product_factory_id",
+				Unique:  false,
+				Columns: []*schema.Column{ProductsColumns[13]},
+			},
+			{
+				Name:    "product_tenant_code",
+				Unique:  false,
+				Columns: []*schema.Column{ProductsColumns[4]},
+			},
+		},
+	}
+	// ProductStatisticsColumns holds the columns for the "product_statistics" table.
+	ProductStatisticsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
+		{Name: "updated_at", Type: field.TypeInt64, Comment: "修改时间", Default: 0},
+		{Name: "tenant_code", Type: field.TypeString, Comment: "租户code"},
+		{Name: "total_products", Type: field.TypeInt, Comment: "商品总数", Default: 0},
+		{Name: "active_products", Type: field.TypeInt, Comment: "启用商品数", Default: 0},
+		{Name: "total_stock", Type: field.TypeInt, Comment: "总库存数量", Default: 0},
+		{Name: "total_stock_value", Type: field.TypeOther, Comment: "总库存价值", SchemaType: map[string]string{"mysql": "decimal(18,4)", "postgres": "numeric(18,4)"}},
+		{Name: "low_stock_products", Type: field.TypeInt, Comment: "低库存商品数", Default: 0},
+		{Name: "total_in_quantity", Type: field.TypeInt, Comment: "总入库数量", Default: 0},
+		{Name: "total_in_amount", Type: field.TypeOther, Comment: "总入库金额", SchemaType: map[string]string{"mysql": "decimal(18,4)", "postgres": "numeric(18,4)"}},
+		{Name: "total_out_quantity", Type: field.TypeInt, Comment: "总出库数量", Default: 0},
+		{Name: "total_out_amount", Type: field.TypeOther, Comment: "总出库金额", SchemaType: map[string]string{"mysql": "decimal(18,4)", "postgres": "numeric(18,4)"}},
+		{Name: "total_sales_amount", Type: field.TypeOther, Comment: "总销售金额", SchemaType: map[string]string{"mysql": "decimal(18,4)", "postgres": "numeric(18,4)"}},
+		{Name: "total_sales_quantity", Type: field.TypeInt, Comment: "总销售数量", Default: 0},
+	}
+	// ProductStatisticsTable holds the schema information for the "product_statistics" table.
+	ProductStatisticsTable = &schema.Table{
+		Name:       "product_statistics",
+		Comment:    "商品统计",
+		Columns:    ProductStatisticsColumns,
+		PrimaryKey: []*schema.Column{ProductStatisticsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "productstatistics_tenant_code",
+				Unique:  false,
+				Columns: []*schema.Column{ProductStatisticsColumns[3]},
 			},
 		},
 	}
@@ -408,53 +561,26 @@ var (
 			},
 		},
 	}
-	// SysUserPositionsRelationColumns holds the columns for the "sys_user_positions_relation" table.
-	SysUserPositionsRelationColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "user_id", Type: field.TypeString, Comment: "用户ID"},
-		{Name: "position_id", Type: field.TypeString, Comment: "岗位ID"},
-	}
-	// SysUserPositionsRelationTable holds the schema information for the "sys_user_positions_relation" table.
-	SysUserPositionsRelationTable = &schema.Table{
-		Name:       "sys_user_positions_relation",
-		Comment:    "用户岗位关联",
-		Columns:    SysUserPositionsRelationColumns,
-		PrimaryKey: []*schema.Column{SysUserPositionsRelationColumns[0]},
-		Indexes: []*schema.Index{
-			{
-				Name:    "userposition_user_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysUserPositionsRelationColumns[1]},
-			},
-			{
-				Name:    "userposition_position_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysUserPositionsRelationColumns[2]},
-			},
-			{
-				Name:    "userposition_user_id_position_id",
-				Unique:  true,
-				Columns: []*schema.Column{SysUserPositionsRelationColumns[1], SysUserPositionsRelationColumns[2]},
-			},
-		},
-	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		CasbinRulesTable,
 		SysDepartmentsTable,
 		SysDictItemsTable,
 		SysDictTypesTable,
+		FactoriesTable,
+		InventoriesTable,
 		SysLoginLogTable,
 		SysMenusTable,
 		SysPermissionsTable,
 		SysPlansTable,
 		SysPositionsTable,
+		ProductsTable,
+		ProductStatisticsTable,
 		SysRolesTable,
 		SysUsersTable,
 		SysSystemLogsTable,
 		SysTasksTable,
 		SysTenantsTable,
-		SysUserPositionsRelationTable,
 	}
 )
 
@@ -467,6 +593,12 @@ func init() {
 	}
 	SysDictTypesTable.Annotation = &entsql.Annotation{
 		Table: "sys_dict_types",
+	}
+	FactoriesTable.Annotation = &entsql.Annotation{
+		Table: "factories",
+	}
+	InventoriesTable.Annotation = &entsql.Annotation{
+		Table: "inventories",
 	}
 	SysLoginLogTable.Annotation = &entsql.Annotation{
 		Table: "sys_login_log",
@@ -483,6 +615,12 @@ func init() {
 	SysPositionsTable.Annotation = &entsql.Annotation{
 		Table: "sys_positions",
 	}
+	ProductsTable.Annotation = &entsql.Annotation{
+		Table: "products",
+	}
+	ProductStatisticsTable.Annotation = &entsql.Annotation{
+		Table: "product_statistics",
+	}
 	SysRolesTable.Annotation = &entsql.Annotation{
 		Table: "sys_roles",
 	}
@@ -497,8 +635,5 @@ func init() {
 	}
 	SysTenantsTable.Annotation = &entsql.Annotation{
 		Table: "sys_tenants",
-	}
-	SysUserPositionsRelationTable.Annotation = &entsql.Annotation{
-		Table: "sys_user_positions_relation",
 	}
 }

@@ -8,11 +8,13 @@ import (
 
 	auth "admin_backend/app/admin/internal/handler/auth"
 	dict "admin_backend/app/admin/internal/handler/dict"
+	factory "admin_backend/app/admin/internal/handler/factory"
+	inventory "admin_backend/app/admin/internal/handler/inventory"
 	menu "admin_backend/app/admin/internal/handler/menu"
-	organization "admin_backend/app/admin/internal/handler/organization"
 	permission "admin_backend/app/admin/internal/handler/permission"
+	product "admin_backend/app/admin/internal/handler/product"
 	role "admin_backend/app/admin/internal/handler/role"
-	task "admin_backend/app/admin/internal/handler/task"
+	statistics "admin_backend/app/admin/internal/handler/statistics"
 	tenant "admin_backend/app/admin/internal/handler/tenant"
 	user "admin_backend/app/admin/internal/handler/user"
 	"admin_backend/app/admin/internal/svc"
@@ -170,6 +172,84 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			[]rest.Middleware{serverCtx.AuthMiddleware},
 			[]rest.Route{
 				{
+					// 创建工厂
+					Method:  http.MethodPost,
+					Path:    "/factories",
+					Handler: factory.CreateFactoryHandler(serverCtx),
+				},
+				{
+					// 获取工厂列表
+					Method:  http.MethodGet,
+					Path:    "/factories",
+					Handler: factory.ListFactoryHandler(serverCtx),
+				},
+				{
+					// 更新工厂
+					Method:  http.MethodPut,
+					Path:    "/factories/:factory_id",
+					Handler: factory.UpdateFactoryHandler(serverCtx),
+				},
+				{
+					// 删除工厂
+					Method:  http.MethodDelete,
+					Path:    "/factories/:factory_id",
+					Handler: factory.DeleteFactoryHandler(serverCtx),
+				},
+				{
+					// 获取工厂详情
+					Method:  http.MethodGet,
+					Path:    "/factories/:factory_id",
+					Handler: factory.GetFactoryHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/business/v1"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.AuthMiddleware},
+			[]rest.Route{
+				{
+					// 获取库存操作历史
+					Method:  http.MethodGet,
+					Path:    "/inventory/history",
+					Handler: inventory.GetInventoryHistoryHandler(serverCtx),
+				},
+				{
+					// 商品入库
+					Method:  http.MethodPost,
+					Path:    "/inventory/in",
+					Handler: inventory.ProductInHandler(serverCtx),
+				},
+				{
+					// 获取库存记录列表
+					Method:  http.MethodGet,
+					Path:    "/inventory/list",
+					Handler: inventory.ListInventoryHandler(serverCtx),
+				},
+				{
+					// 商品出库
+					Method:  http.MethodPost,
+					Path:    "/inventory/out",
+					Handler: inventory.ProductOutHandler(serverCtx),
+				},
+				{
+					// 获取商品库存信息
+					Method:  http.MethodGet,
+					Path:    "/inventory/stock",
+					Handler: inventory.GetProductStockHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/business/v1"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.AuthMiddleware},
+			[]rest.Route{
+				{
 					// 创建菜单
 					Method:  http.MethodPost,
 					Path:    "/menus",
@@ -221,105 +301,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			[]rest.Middleware{serverCtx.AuthMiddleware},
 			[]rest.Route{
 				{
-					// 创建部门
-					Method:  http.MethodPost,
-					Path:    "/departments",
-					Handler: organization.CreateDepartmentHandler(serverCtx),
-				},
-				{
-					// 获取部门列表
-					Method:  http.MethodGet,
-					Path:    "/departments",
-					Handler: organization.ListDepartmentHandler(serverCtx),
-				},
-				{
-					// 更新部门
-					Method:  http.MethodPut,
-					Path:    "/departments/:department_id",
-					Handler: organization.UpdateDepartmentHandler(serverCtx),
-				},
-				{
-					// 删除部门
-					Method:  http.MethodDelete,
-					Path:    "/departments/:department_id",
-					Handler: organization.DeleteDepartmentHandler(serverCtx),
-				},
-				{
-					// 获取部门详情
-					Method:  http.MethodGet,
-					Path:    "/departments/:department_id",
-					Handler: organization.GetDepartmentHandler(serverCtx),
-				},
-				{
-					// 获取组织架构树
-					Method:  http.MethodGet,
-					Path:    "/org-tree",
-					Handler: organization.GetOrgTreeHandler(serverCtx),
-				},
-				{
-					// 创建岗位
-					Method:  http.MethodPost,
-					Path:    "/positions",
-					Handler: organization.CreatePositionHandler(serverCtx),
-				},
-				{
-					// 获取岗位列表
-					Method:  http.MethodGet,
-					Path:    "/positions",
-					Handler: organization.ListPositionHandler(serverCtx),
-				},
-				{
-					// 更新岗位
-					Method:  http.MethodPut,
-					Path:    "/positions/:position_id",
-					Handler: organization.UpdatePositionHandler(serverCtx),
-				},
-				{
-					// 删除岗位
-					Method:  http.MethodDelete,
-					Path:    "/positions/:position_id",
-					Handler: organization.DeletePositionHandler(serverCtx),
-				},
-				{
-					// 获取岗位详情
-					Method:  http.MethodGet,
-					Path:    "/positions/:position_id",
-					Handler: organization.GetPositionHandler(serverCtx),
-				},
-				{
-					// 获取岗位下的用户列表
-					Method:  http.MethodGet,
-					Path:    "/positions/:position_id/users",
-					Handler: organization.GetPositionUsersHandler(serverCtx),
-				},
-				{
-					// 分配用户岗位
-					Method:  http.MethodPost,
-					Path:    "/user-positions",
-					Handler: organization.AssignUserPositionHandler(serverCtx),
-				},
-				{
-					// 移除用户岗位
-					Method:  http.MethodDelete,
-					Path:    "/user-positions",
-					Handler: organization.RemoveUserPositionHandler(serverCtx),
-				},
-				{
-					// 获取用户的岗位列表
-					Method:  http.MethodGet,
-					Path:    "/users/:user_id/positions",
-					Handler: organization.GetUserPositionsHandler(serverCtx),
-				},
-			}...,
-		),
-		rest.WithPrefix("/api/admin/v1"),
-	)
-
-	server.AddRoutes(
-		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.AuthMiddleware},
-			[]rest.Route{
-				{
 					// 设置角色权限
 					Method:  http.MethodPost,
 					Path:    "/roles/:role_code/permissions",
@@ -340,6 +321,45 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			}...,
 		),
 		rest.WithPrefix("/api/admin/v1"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.AuthMiddleware},
+			[]rest.Route{
+				{
+					// 创建商品
+					Method:  http.MethodPost,
+					Path:    "/products",
+					Handler: product.CreateProductHandler(serverCtx),
+				},
+				{
+					// 获取商品列表
+					Method:  http.MethodGet,
+					Path:    "/products",
+					Handler: product.ListProductHandler(serverCtx),
+				},
+				{
+					// 更新商品
+					Method:  http.MethodPut,
+					Path:    "/products/:product_id",
+					Handler: product.UpdateProductHandler(serverCtx),
+				},
+				{
+					// 删除商品
+					Method:  http.MethodDelete,
+					Path:    "/products/:product_id",
+					Handler: product.DeleteProductHandler(serverCtx),
+				},
+				{
+					// 获取商品详情
+					Method:  http.MethodGet,
+					Path:    "/products/:product_id",
+					Handler: product.GetProductHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/business/v1"),
 	)
 
 	server.AddRoutes(
@@ -404,62 +424,14 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			[]rest.Middleware{serverCtx.AuthMiddleware},
 			[]rest.Route{
 				{
-					// 创建计划
-					Method:  http.MethodPost,
-					Path:    "/plans",
-					Handler: task.CreatePlanHandler(serverCtx),
-				},
-				{
-					// 获取计划列表
+					// 获取实时统计
 					Method:  http.MethodGet,
-					Path:    "/plans",
-					Handler: task.ListPlanHandler(serverCtx),
-				},
-				{
-					// 更新计划
-					Method:  http.MethodPut,
-					Path:    "/plans/:plan_id",
-					Handler: task.UpdatePlanHandler(serverCtx),
-				},
-				{
-					// 删除计划
-					Method:  http.MethodDelete,
-					Path:    "/plans/:plan_id",
-					Handler: task.DeletePlanHandler(serverCtx),
-				},
-				{
-					// 获取计划详情
-					Method:  http.MethodGet,
-					Path:    "/plans/:plan_id",
-					Handler: task.GetPlanHandler(serverCtx),
-				},
-				{
-					// 获取任务列表
-					Method:  http.MethodGet,
-					Path:    "/tasks",
-					Handler: task.ListTaskHandler(serverCtx),
-				},
-				{
-					// 删除任务
-					Method:  http.MethodDelete,
-					Path:    "/tasks/:task_id",
-					Handler: task.DeleteTaskHandler(serverCtx),
-				},
-				{
-					// 停止任务
-					Method:  http.MethodPost,
-					Path:    "/tasks/:task_id/stop",
-					Handler: task.StopTaskHandler(serverCtx),
-				},
-				{
-					// 手动触发任务
-					Method:  http.MethodPost,
-					Path:    "/tasks/trigger",
-					Handler: task.TriggerTaskHandler(serverCtx),
+					Path:    "/statistics",
+					Handler: statistics.GetStatisticsHandler(serverCtx),
 				},
 			}...,
 		),
-		rest.WithPrefix("/api/admin/v1"),
+		rest.WithPrefix("/api/business/v1"),
 	)
 
 	server.AddRoutes(

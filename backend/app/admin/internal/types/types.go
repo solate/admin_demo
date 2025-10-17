@@ -3,11 +3,6 @@
 
 package types
 
-type AssignUserPositionReq struct {
-	UserID     string `json:"user_id"`     // 用户ID
-	PositionID string `json:"position_id"` // 岗位ID
-}
-
 type CaptchaResp struct {
 	CaptchaId  string `json:"captcha_id"`  // 验证码ID
 	CaptchaUrl string `json:"captcha_url"` // 验证码图片（base64）
@@ -22,16 +17,6 @@ type CasbinRuleInfo struct {
 type ChangePasswordReq struct {
 	OldPassword string `json:"old_password" validate:"required"` // 原密码
 	NewPassword string `json:"new_password" validate:"required"` // 新密码
-}
-
-type CreateDepartmentReq struct {
-	Name     string `json:"name"`               // 部门名称
-	ParentID string `json:"parent_id,optional"` // 父部门ID
-	Sort     int    `json:"sort,optional"`      // 排序
-}
-
-type CreateDepartmentResp struct {
-	DepartmentID string `json:"department_id"` // 部门ID
 }
 
 type CreateDictItemReq struct {
@@ -56,6 +41,17 @@ type CreateDictTypeReq struct {
 
 type CreateDictTypeResp struct {
 	TypeID string `json:"type_id"` // 字典类型ID
+}
+
+type CreateFactoryReq struct {
+	FactoryName  string `json:"factory_name" validate:"required"` // 工厂名称
+	Address      string `json:"address"`                          // 工厂地址
+	ContactPhone string `json:"contact_phone"`                    // 联系电话
+	Status       int    `json:"status,default=1"`                 // 状态
+}
+
+type CreateFactoryResp struct {
+	FactoryID string `json:"factory_id"` // 工厂ID
 }
 
 type CreateMenuReq struct {
@@ -92,35 +88,19 @@ type CreatePermissionResp struct {
 	PermissionID string `json:"permission_id"` // 权限规则ID
 }
 
-type CreatePlanReq struct {
-	Name          string `json:"name"`                    // 计划名称
-	Description   string `json:"description,optional"`    // 计划描述
-	Group         string `json:"group,optional"`          // 任务分组
-	CronSpec      string `json:"cron_spec"`               // cron表达式
-	Status        int    `json:"status"`                  // 状态: 1:启用, 2:禁用
-	PlanType      string `json:"plan_type,optional"`      // 计划类型: routine/special
-	Priority      int    `json:"priority,optional"`       // 任务优先级
-	Timeout       int    `json:"timeout,optional"`        // 任务超时时间(秒)
-	RetryTimes    int    `json:"retry_times,optional"`    // 重试次数
-	RetryInterval int    `json:"retry_interval,optional"` // 重试间隔(秒)
-	StartTime     int64  `json:"start_time,optional"`     // 生效开始时间
-	EndTime       int64  `json:"end_time,optional"`       // 生效结束时间
-	Command       string `json:"command"`                 // 要执行的命令或方法
-	Params        string `json:"params,optional"`         // 执行参数，支持JSON格式
+type CreateProductReq struct {
+	ProductName   string `json:"product_name" validate:"required"` // 商品名称
+	Unit          string `json:"unit"`                             // 单位
+	PurchasePrice string `json:"purchase_price"`                   // 采购价格
+	SalePrice     string `json:"sale_price"`                       // 销售价格
+	CurrentStock  int    `json:"current_stock,default=0"`          // 当前库存
+	MinStock      int    `json:"min_stock,default=0"`              // 最小库存预警
+	Status        int    `json:"status,default=1"`                 // 状态
+	FactoryID     string `json:"factory_id,optional"`              // 所属工厂ID
 }
 
-type CreatePlanResp struct {
-	PlanID string `json:"plan_id"` // 计划ID
-}
-
-type CreatePositionReq struct {
-	Name         string `json:"name"`                 // 岗位名称
-	DepartmentID string `json:"department_id"`        // 部门ID
-	Description  string `json:"description,optional"` // 岗位描述
-}
-
-type CreatePositionResp struct {
-	PositionID string `json:"position_id"` // 岗位ID
+type CreateProductResp struct {
+	ProductID string `json:"product_id"` // 商品ID
 }
 
 type CreateRoleReq struct {
@@ -162,10 +142,6 @@ type CreateUserResp struct {
 	UserID string `json:"user_id"` // 用户ID
 }
 
-type DeleteDepartmentReq struct {
-	DepartmentID string `path:"department_id"` // 部门ID
-}
-
 type DeleteDictItemReq struct {
 	ItemID   string `path:"item_id"`
 	TypeCode string `path:"type_code"` // 字典类型编码
@@ -173,6 +149,10 @@ type DeleteDictItemReq struct {
 
 type DeleteDictTypeReq struct {
 	TypeID string `path:"type_id"`
+}
+
+type DeleteFactoryReq struct {
+	FactoryID string `path:"factory_id" validate:"required"` // 工厂ID
 }
 
 type DeleteMenuReq struct {
@@ -183,20 +163,12 @@ type DeletePermissionReq struct {
 	PermissionID string `path:"permission_id" validate:"required"` // 权限规则ID
 }
 
-type DeletePlanReq struct {
-	PlanID string `path:"plan_id"`
-}
-
-type DeletePositionReq struct {
-	PositionID string `path:"position_id"` // 岗位ID
+type DeleteProductReq struct {
+	ProductID string `path:"product_id" validate:"required"` // 商品ID
 }
 
 type DeleteRoleReq struct {
 	RoleID string `path:"role_id"`
-}
-
-type DeleteTaskReq struct {
-	TaskID string `path:"task_id"` // 任务ID
 }
 
 type DeleteTenantReq struct {
@@ -205,26 +177,6 @@ type DeleteTenantReq struct {
 
 type DeleteUserReq struct {
 	UserID string `path:"user_id"`
-}
-
-type DepartmentInfo struct {
-	DepartmentID string `json:"department_id"` // 部门ID
-	Name         string `json:"name"`          // 部门名称
-	ParentID     string `json:"parent_id"`     // 父部门ID
-	Sort         int    `json:"sort"`          // 排序
-	CreatedAt    int64  `json:"created_at"`    // 创建时间
-	UpdatedAt    int64  `json:"updated_at"`    // 更新时间
-}
-
-type DepartmentListReq struct {
-	PageRequest
-	Name     string `form:"name,optional"`      // 部门名称
-	ParentID string `form:"parent_id,optional"` // 父部门ID
-}
-
-type DepartmentListResp struct {
-	Page *PageResponse     `json:"page"` // 分页
-	List []*DepartmentInfo `json:"list"` // 部门列表
 }
 
 type DictItemAllResp struct {
@@ -275,16 +227,33 @@ type DictTypeListResp struct {
 	List []*DictTypeInfo `json:"list"` // 字典类型列表
 }
 
+type FactoryInfo struct {
+	FactoryID    string `json:"factory_id"`    // 工厂ID
+	FactoryName  string `json:"factory_name"`  // 工厂名称
+	Address      string `json:"address"`       // 工厂地址
+	ContactPhone string `json:"contact_phone"` // 联系电话
+	Status       int    `json:"status"`        // 状态
+	CreatedAt    int64  `json:"created_at"`    // 创建时间
+	UpdatedAt    int64  `json:"updated_at"`    // 更新时间
+}
+
+type FactoryListReq struct {
+	PageRequest
+	FactoryName string `form:"factory_name,optional"` // 工厂名称
+	Status      int    `form:"status,optional"`       // 状态
+}
+
+type FactoryListResp struct {
+	Page *PageResponse  `json:"page"` // 分页
+	List []*FactoryInfo `json:"list"` // 工厂列表
+}
+
 type GetActiveDevicesResp struct {
 	ActiveDevices int `json:"active_devices"` // 当前活跃设备数量
 }
 
 type GetAllRolesResp struct {
 	List []*RoleInfo `json:"list"` // 角色列表
-}
-
-type GetDepartmentReq struct {
-	DepartmentID string `path:"department_id"` // 部门ID
 }
 
 type GetDictItemAllReq struct {
@@ -300,16 +269,12 @@ type GetDictTypeReq struct {
 	TypeID string `path:"type_id"`
 }
 
+type GetFactoryReq struct {
+	FactoryID string `path:"factory_id" validate:"required"` // 工厂ID
+}
+
 type GetMenuReq struct {
 	MenuID string `path:"menu_id"`
-}
-
-type GetOrgTreeReq struct {
-	TenantID string `form:"tenant_id,optional"` // 租户ID，可选参数
-}
-
-type GetOrgTreeResp struct {
-	Tree []*OrgTreeNode `json:"tree"` // 组织树
 }
 
 type GetPermissionReq struct {
@@ -320,20 +285,8 @@ type GetPermissionResp struct {
 	PermissionInfo
 }
 
-type GetPlanReq struct {
-	PlanID string `path:"plan_id"`
-}
-
-type GetPositionReq struct {
-	PositionID string `path:"position_id"` // 岗位ID
-}
-
-type GetPositionUsersReq struct {
-	PositionID string `path:"position_id"` // 岗位ID
-}
-
-type GetPositionUsersResp struct {
-	List []*UserPositionInfo `json:"list"` // 用户列表
+type GetProductReq struct {
+	ProductID string `path:"product_id" validate:"required"` // 商品ID
 }
 
 type GetResourceTypesResp struct {
@@ -360,14 +313,6 @@ type GetTenantResp struct {
 	TenantInfo
 }
 
-type GetUserPositionsReq struct {
-	UserID string `path:"user_id"` // 用户ID
-}
-
-type GetUserPositionsResp struct {
-	List []*PositionInfo `json:"list"` // 岗位列表
-}
-
 type GetUserReq struct {
 	UserID string `path:"user_id"`
 }
@@ -382,6 +327,41 @@ type GetUserRolesResp struct {
 
 type IDRequest struct {
 	ID int `json:"id"` // ID
+}
+
+type InventoryInfo struct {
+	InventoryID   string `json:"inventory_id"`   // 库存记录ID
+	ProductID     string `json:"product_id"`     // 商品ID
+	ProductName   string `json:"product_name"`   // 商品名称
+	OperationType string `json:"operation_type"` // 操作类型
+	Quantity      int    `json:"quantity"`       // 操作数量
+	UnitPrice     string `json:"unit_price"`     // 单价
+	TotalAmount   string `json:"total_amount"`   // 总金额
+	OperatorID    string `json:"operator_id"`    // 操作人ID
+	OperatorName  string `json:"operator_name"`  // 操作人姓名
+	Remark        string `json:"remark"`         // 备注
+	OperationTime int64  `json:"operation_time"` // 操作时间
+	BeforeStock   int    `json:"before_stock"`   // 操作前库存
+	AfterStock    int    `json:"after_stock"`    // 操作后库存
+}
+
+type InventoryListReq struct {
+	PageRequest
+	ProductID     string `form:"product_id,optional"`     // 商品ID
+	OperationType string `form:"operation_type,optional"` // 操作类型
+	OperatorID    string `form:"operator_id,optional"`    // 操作人ID
+	StartTime     string `form:"start_time,optional"`     // 开始时间
+	EndTime       string `form:"end_time,optional"`       // 结束时间
+}
+
+type InventoryListResp struct {
+	Page *PageResponse    `json:"page"` // 分页
+	List []*InventoryInfo `json:"list"` // 库存记录列表
+}
+
+type InventoryOperationResp struct {
+	InventoryID string `json:"inventory_id"` // 库存记录ID
+	Message     string `json:"message"`      // 操作结果信息
 }
 
 type ListPermissionReq struct {
@@ -497,15 +477,6 @@ type MenuTreeResp struct {
 	List []*MenuTree `json:"list"` // 菜单树列表
 }
 
-type OrgTreeNode struct {
-	DepartmentID string          `json:"department_id"` // 部门ID
-	Name         string          `json:"name"`          // 部门名称
-	ParentID     string          `json:"parent_id"`     // 父部门ID
-	Sort         int             `json:"sort"`          // 排序
-	Positions    []*PositionInfo `json:"positions"`     // 部门下的岗位列表
-	Children     []*OrgTreeNode  `json:"children"`      // 子部门列表
-}
-
 type PageJsonRequest struct {
 	Current  int `json:"current"`   // 当前页
 	PageSize int `json:"page_size"` // 每页大小
@@ -545,56 +516,56 @@ type PermissionInfo struct {
 	CreatedAt    int64  `json:"created_at"`    // 创建时间
 }
 
-type PlanInfo struct {
-	PlanID        string `json:"plan_id"`        // 计划ID
-	Name          string `json:"name"`           // 计划名称
-	Description   string `json:"description"`    // 计划描述
-	Group         string `json:"group"`          // 任务分组
-	CronSpec      string `json:"cron_spec"`      // cron表达式
+type ProductInReq struct {
+	ProductID  string `json:"product_id" validate:"required"`    // 商品ID
+	Quantity   int    `json:"quantity" validate:"required,gt=0"` // 入库数量
+	UnitPrice  string `json:"unit_price"`                        // 单价
+	OperatorID string `json:"operator_id" validate:"required"`   // 操作人ID
+	Remark     string `json:"remark"`                            // 备注
+}
+
+type ProductInfo struct {
+	ProductID     string `json:"product_id"`     // 商品ID
+	ProductName   string `json:"product_name"`   // 商品名称
+	Unit          string `json:"unit"`           // 单位
+	PurchasePrice string `json:"purchase_price"` // 采购价格
+	SalePrice     string `json:"sale_price"`     // 销售价格
+	CurrentStock  int    `json:"current_stock"`  // 当前库存
+	MinStock      int    `json:"min_stock"`      // 最小库存预警
 	Status        int    `json:"status"`         // 状态
-	PlanType      string `json:"plan_type"`      // 计划类型
-	Priority      int    `json:"priority"`       // 任务优先级
-	Timeout       int    `json:"timeout"`        // 任务超时时间(秒)
-	RetryTimes    int    `json:"retry_times"`    // 重试次数
-	RetryInterval int    `json:"retry_interval"` // 重试间隔(秒)
-	StartTime     int64  `json:"start_time"`     // 生效开始时间
-	EndTime       int64  `json:"end_time"`       // 生效结束时间
-	Command       string `json:"command"`        // 要执行的命令或方法
-	Params        string `json:"params"`         // 执行参数，支持JSON格式
+	FactoryID     string `json:"factory_id"`     // 所属工厂ID
+	FactoryName   string `json:"factory_name"`   // 工厂名称
 	CreatedAt     int64  `json:"created_at"`     // 创建时间
+	UpdatedAt     int64  `json:"updated_at"`     // 更新时间
 }
 
-type PlanListReq struct {
+type ProductListReq struct {
 	PageRequest
-	Name     string `form:"name,optional"`      // 计划名称
-	Group    string `form:"group,optional"`     // 任务分组
-	Status   int    `form:"status,optional"`    // 状态
-	PlanType string `form:"plan_type,optional"` // 计划类型
+	ProductName string `form:"product_name,optional"` // 商品名称
+	FactoryID   string `form:"factory_id,optional"`   // 工厂ID
+	Status      int    `form:"status,optional"`       // 状态
 }
 
-type PlanListResp struct {
-	Page *PageResponse `json:"page"` // 分页信息
-	List []*PlanInfo   `json:"list"` // 计划列表
+type ProductListResp struct {
+	Page *PageResponse  `json:"page"` // 分页
+	List []*ProductInfo `json:"list"` // 商品列表
 }
 
-type PositionInfo struct {
-	PositionID   string `json:"position_id"`   // 岗位ID
-	Name         string `json:"name"`          // 岗位名称
-	DepartmentID string `json:"department_id"` // 部门ID
-	Description  string `json:"description"`   // 岗位描述
-	CreatedAt    int64  `json:"created_at"`    // 创建时间
-	UpdatedAt    int64  `json:"updated_at"`    // 更新时间
+type ProductOutReq struct {
+	ProductID  string `json:"product_id" validate:"required"`    // 商品ID
+	Quantity   int    `json:"quantity" validate:"required,gt=0"` // 出库数量
+	UnitPrice  string `json:"unit_price"`                        // 单价
+	OperatorID string `json:"operator_id" validate:"required"`   // 操作人ID
+	Remark     string `json:"remark"`                            // 备注
 }
 
-type PositionListReq struct {
-	PageRequest
-	Name         string `form:"name,optional"`          // 岗位名称
-	DepartmentID string `form:"department_id,optional"` // 部门ID
+type ProductStockReq struct {
+	ProductID string `form:"product_id,optional"` // 商品ID
+	FactoryID string `form:"factory_id,optional"` // 工厂ID
 }
 
-type PositionListResp struct {
-	Page *PageResponse   `json:"page"` // 分页
-	List []*PositionInfo `json:"list"` // 岗位列表
+type ProductStockResp struct {
+	List []*StockInfo `json:"list"` // 库存信息列表
 }
 
 type RefreshTokenReq struct {
@@ -618,11 +589,6 @@ type RegisterReq struct {
 
 type RegisterResp struct {
 	UserID string `json:"user_id"`
-}
-
-type RemoveUserPositionReq struct {
-	UserID     string `json:"user_id"`     // 用户ID
-	PositionID string `json:"position_id"` // 岗位ID
 }
 
 type ResetPasswordReq struct {
@@ -675,47 +641,40 @@ type SetUserRolesReq struct {
 	RoleCodeList []string `json:"role_code_list" validate:"required"` // 角色Code列表
 }
 
+type StatisticsReq struct {
+}
+
+type StatisticsResp struct {
+	TotalProducts      int    `json:"total_products"`       // 商品总数
+	ActiveProducts     int    `json:"active_products"`      // 启用商品数
+	TotalStock         int    `json:"total_stock"`          // 总库存数量
+	TotalStockValue    string `json:"total_stock_value"`    // 总库存价值
+	LowStockProducts   int    `json:"low_stock_products"`   // 低库存商品数
+	TotalInQuantity    int    `json:"total_in_quantity"`    // 总入库数量
+	TotalInAmount      string `json:"total_in_amount"`      // 总入库金额
+	TotalOutQuantity   int    `json:"total_out_quantity"`   // 总出库数量
+	TotalOutAmount     string `json:"total_out_amount"`     // 总出库金额
+	TotalSalesAmount   string `json:"total_sales_amount"`   // 总销售金额
+	TotalSalesQuantity int    `json:"total_sales_quantity"` // 总销售数量
+}
+
 type StatusRequest struct {
 	ID     int `json:"id"`     // ID
 	Status int `json:"status"` // 状态
 }
 
-type StopTaskReq struct {
-	TaskID string `path:"task_id"` // 任务ID
-}
-
-type TaskInfo struct {
-	TaskID        string `json:"task_id"`         // 任务ID
-	Name          string `json:"name"`            // 任务名称
-	PlanID        string `json:"plan_id"`         // 计划ID
-	PlanType      string `json:"plan_type"`       // 计划类型
-	Group         string `json:"group"`           // 任务分组
-	Priority      int    `json:"priority"`        // 任务优先级
-	Status        string `json:"status"`          // 任务状态
-	PlannedTime   int64  `json:"planned_time"`    // 计划执行时间
-	StartTime     int64  `json:"start_time"`      // 实际开始时间
-	EndTime       int64  `json:"end_time"`        // 实际结束时间
-	Duration      int    `json:"duration"`        // 执行时长(ms)
-	Result        string `json:"result"`          // 执行结果
-	Error         string `json:"error"`           // 错误信息
-	RetryCount    int    `json:"retry_count"`     // 已重试次数
-	NextRetryTime int64  `json:"next_retry_time"` // 下次重试时间
-	CreatedAt     int64  `json:"created_at"`      // 创建时间
-}
-
-type TaskListReq struct {
-	PageRequest
-	PlanID    string `form:"plan_id,optional"`    // 计划ID
-	Name      string `form:"name,optional"`       // 任务名称
-	Group     string `form:"group,optional"`      // 任务分组
-	Status    string `form:"status,optional"`     // 任务状态
-	StartTime int64  `form:"start_time,optional"` // 开始时间
-	EndTime   int64  `form:"end_time,optional"`   // 结束时间
-}
-
-type TaskListResp struct {
-	Page *PageResponse `json:"page"` // 分页信息
-	List []*TaskInfo   `json:"list"` // 任务列表
+type StockInfo struct {
+	ProductID     string `json:"product_id"`     // 商品ID
+	ProductName   string `json:"product_name"`   // 商品名称
+	FactoryID     string `json:"factory_id"`     // 工厂ID
+	FactoryName   string `json:"factory_name"`   // 工厂名称
+	CurrentStock  int    `json:"current_stock"`  // 当前库存
+	MinStock      int    `json:"min_stock"`      // 最小库存预警
+	Unit          string `json:"unit"`           // 单位
+	PurchasePrice string `json:"purchase_price"` // 采购价格
+	SalePrice     string `json:"sale_price"`     // 销售价格
+	Status        int    `json:"status"`         // 状态
+	IsLowStock    bool   `json:"is_low_stock"`   // 是否低库存
 }
 
 type TenantInfo struct {
@@ -729,21 +688,6 @@ type TenantInfo struct {
 type TimeRange struct {
 	StartTime string `form:"start_time,optional"` // 开始时间
 	EndTime   string `form:"end_time,optional"`   // 结束时间
-}
-
-type TriggerTaskReq struct {
-	PlanID string `json:"plan_id"` // 计划ID
-}
-
-type TriggerTaskResp struct {
-	TaskID string `json:"task_id"` // 任务ID
-}
-
-type UpdateDepartmentReq struct {
-	DepartmentID string `path:"department_id"`      // 部门ID
-	Name         string `json:"name,optional"`      // 部门名称
-	ParentID     string `json:"parent_id,optional"` // 父部门ID
-	Sort         int    `json:"sort,optional"`      // 排序
 }
 
 type UpdateDictItemReq struct {
@@ -761,6 +705,14 @@ type UpdateDictTypeReq struct {
 	Name        string `json:"name,optional"`        // 字典类型名称
 	Description string `json:"description,optional"` // 字典类型描述
 	Status      int    `json:"status,optional"`      // 状态
+}
+
+type UpdateFactoryReq struct {
+	FactoryID    string `path:"factory_id" validate:"required"` // 工厂ID
+	FactoryName  string `json:"factory_name,optional"`          // 工厂名称
+	Address      string `json:"address,optional"`               // 工厂地址
+	ContactPhone string `json:"contact_phone,optional"`         // 联系电话
+	Status       int    `json:"status,optional"`                // 状态
 }
 
 type UpdateMenuReq struct {
@@ -787,28 +739,16 @@ type UpdatePermissionReq struct {
 	MenuID       string `json:"menu_id,optional"`     // 菜单ID
 }
 
-type UpdatePlanReq struct {
-	PlanID        string `path:"plan_id"`
-	Name          string `json:"name,optional"`           // 计划名称
-	Description   string `json:"description,optional"`    // 计划描述
-	Group         string `json:"group,optional"`          // 任务分组
-	CronSpec      string `json:"cron_spec,optional"`      // cron表达式
-	Status        int    `json:"status,optional"`         // 状态
-	Priority      int    `json:"priority,optional"`       // 任务优先级
-	Timeout       int    `json:"timeout,optional"`        // 任务超时时间(秒)
-	RetryTimes    int    `json:"retry_times,optional"`    // 重试次数
-	RetryInterval int    `json:"retry_interval,optional"` // 重试间隔(秒)
-	StartTime     int64  `json:"start_time,optional"`     // 生效开始时间
-	EndTime       int64  `json:"end_time,optional"`       // 生效结束时间
-	Command       string `json:"command,optional"`        // 要执行的命令或方法
-	Params        string `json:"params,optional"`         // 执行参数，支持JSON格式
-}
-
-type UpdatePositionReq struct {
-	PositionID   string `path:"position_id"`            // 岗位ID
-	Name         string `json:"name,optional"`          // 岗位名称
-	DepartmentID string `json:"department_id,optional"` // 部门ID
-	Description  string `json:"description,optional"`   // 岗位描述
+type UpdateProductReq struct {
+	ProductID     string `path:"product_id" validate:"required"` // 商品ID
+	ProductName   string `json:"product_name,optional"`          // 商品名称
+	Unit          string `json:"unit,optional"`                  // 单位
+	PurchasePrice string `json:"purchase_price,optional"`        // 采购价格
+	SalePrice     string `json:"sale_price,optional"`            // 销售价格
+	CurrentStock  int    `json:"current_stock,optional"`         // 当前库存
+	MinStock      int    `json:"min_stock,optional"`             // 最小库存预警
+	Status        int    `json:"status,optional"`                // 状态
+	FactoryID     string `json:"factory_id,optional"`            // 所属工厂ID
 }
 
 type UpdateRoleReq struct {
@@ -858,12 +798,4 @@ type UserListReq struct {
 type UserListResp struct {
 	Page *PageResponse `json:"page"` // 分页
 	List []*UserInfo   `json:"list"` // 用户列表
-}
-
-type UserPositionInfo struct {
-	UserID     string `json:"user_id"`     // 用户ID
-	Name       string `json:"name"`        // 用户姓名
-	UserName   string `json:"user_name"`   // 用户名
-	Avatar     string `json:"avatar"`      // 头像
-	PositionID string `json:"position_id"` // 岗位ID
 }

@@ -7,17 +7,20 @@ import (
 	"admin_backend/pkg/ent/generated/department"
 	"admin_backend/pkg/ent/generated/dictitem"
 	"admin_backend/pkg/ent/generated/dicttype"
+	"admin_backend/pkg/ent/generated/factory"
+	"admin_backend/pkg/ent/generated/inventory"
 	"admin_backend/pkg/ent/generated/loginlog"
 	"admin_backend/pkg/ent/generated/menu"
 	"admin_backend/pkg/ent/generated/permission"
 	"admin_backend/pkg/ent/generated/plan"
 	"admin_backend/pkg/ent/generated/position"
+	"admin_backend/pkg/ent/generated/product"
+	"admin_backend/pkg/ent/generated/productstatistics"
 	"admin_backend/pkg/ent/generated/role"
 	"admin_backend/pkg/ent/generated/systemlog"
 	"admin_backend/pkg/ent/generated/sysuser"
 	"admin_backend/pkg/ent/generated/task"
 	"admin_backend/pkg/ent/generated/tenant"
-	"admin_backend/pkg/ent/generated/userposition"
 	"context"
 	"errors"
 	"fmt"
@@ -87,21 +90,24 @@ var (
 func checkColumn(table, column string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			casbinrule.Table:   casbinrule.ValidColumn,
-			department.Table:   department.ValidColumn,
-			dictitem.Table:     dictitem.ValidColumn,
-			dicttype.Table:     dicttype.ValidColumn,
-			loginlog.Table:     loginlog.ValidColumn,
-			menu.Table:         menu.ValidColumn,
-			permission.Table:   permission.ValidColumn,
-			plan.Table:         plan.ValidColumn,
-			position.Table:     position.ValidColumn,
-			role.Table:         role.ValidColumn,
-			sysuser.Table:      sysuser.ValidColumn,
-			systemlog.Table:    systemlog.ValidColumn,
-			task.Table:         task.ValidColumn,
-			tenant.Table:       tenant.ValidColumn,
-			userposition.Table: userposition.ValidColumn,
+			casbinrule.Table:        casbinrule.ValidColumn,
+			department.Table:        department.ValidColumn,
+			dictitem.Table:          dictitem.ValidColumn,
+			dicttype.Table:          dicttype.ValidColumn,
+			factory.Table:           factory.ValidColumn,
+			inventory.Table:         inventory.ValidColumn,
+			loginlog.Table:          loginlog.ValidColumn,
+			menu.Table:              menu.ValidColumn,
+			permission.Table:        permission.ValidColumn,
+			plan.Table:              plan.ValidColumn,
+			position.Table:          position.ValidColumn,
+			product.Table:           product.ValidColumn,
+			productstatistics.Table: productstatistics.ValidColumn,
+			role.Table:              role.ValidColumn,
+			sysuser.Table:           sysuser.ValidColumn,
+			systemlog.Table:         systemlog.ValidColumn,
+			task.Table:              task.ValidColumn,
+			tenant.Table:            tenant.ValidColumn,
 		})
 	})
 	return columnCheck(table, column)

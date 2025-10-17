@@ -1,0 +1,45 @@
+syntax = "v1"
+
+import (
+    "../base.api"
+)
+
+info (
+	title   : "数据统计接口"
+	desc    : "数据统计相关接口定义"
+	author  : "solate"
+	version : "v1.0"
+)
+   
+type (
+    // 实时统计请求
+    StatisticsReq {
+        // 无需参数，直接获取实时统计
+    }
+
+    // 实时统计响应
+    StatisticsResp {
+        TotalProducts      int    `json:"total_products"`                 // 商品总数
+        ActiveProducts     int    `json:"active_products"`                // 启用商品数
+        TotalStock         int    `json:"total_stock"`                    // 总库存数量
+        TotalStockValue    string `json:"total_stock_value"`              // 总库存价值
+        LowStockProducts   int    `json:"low_stock_products"`             // 低库存商品数
+        TotalInQuantity    int    `json:"total_in_quantity"`              // 总入库数量
+        TotalInAmount      string `json:"total_in_amount"`                // 总入库金额
+        TotalOutQuantity   int    `json:"total_out_quantity"`             // 总出库数量
+        TotalOutAmount     string `json:"total_out_amount"`               // 总出库金额
+        TotalSalesAmount   string `json:"total_sales_amount"`             // 总销售金额
+        TotalSalesQuantity int    `json:"total_sales_quantity"`           // 总销售数量
+    }
+)
+
+@server (
+    prefix: /api/business/v1
+    group: statistics
+    middleware: AuthMiddleware
+)
+service admin {
+    @doc "获取实时统计"
+    @handler GetStatistics
+    get /statistics (StatisticsReq) returns (StatisticsResp)
+}

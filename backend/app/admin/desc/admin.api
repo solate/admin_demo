@@ -9,7 +9,10 @@ import (
 	"type/admin/permission.api"
 	"type/admin/menu.api"
 	"type/admin/dict.api"
-	"type/admin/organization.api"
-	"type/admin/task.api"
+	// 业务管理接口
+	"type/business/factory.api"
+	"type/business/product.api"
+	"type/business/inventory.api"
+	"type/business/statistics.api"
 )
 

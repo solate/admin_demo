@@ -1,0 +1,111 @@
+syntax = "v1"
+
+import (
+    "../base.api"
+)
+
+info (
+	title   : "商品管理接口"
+	desc    : "商品管理相关接口定义"
+	author  : "solate"
+	version : "v1.0"
+)
+   
+type (
+    // 创建商品请求
+    CreateProductReq { 
+        ProductName   string  `json:"product_name" validate:"required"`  // 商品名称
+        Unit          string  `json:"unit"`                              // 单位
+        PurchasePrice string  `json:"purchase_price"`                    // 采购价格
+        SalePrice     string  `json:"sale_price"`                        // 销售价格
+        CurrentStock  int     `json:"current_stock,default=0"`           // 当前库存
+        MinStock      int     `json:"min_stock,default=0"`               // 最小库存预警
+        Status        int     `json:"status,default=1"`                  // 状态
+        FactoryID     string  `json:"factory_id,optional"`               // 所属工厂ID
+    }
+
+    // 创建商品响应
+    CreateProductResp {
+        ProductID string `json:"product_id"` // 商品ID
+    }
+
+    // 更新商品请求
+    UpdateProductReq {
+        ProductID     string `path:"product_id" validate:"required"`     // 商品ID
+        ProductName   string `json:"product_name,optional"`              // 商品名称
+        Unit          string `json:"unit,optional"`                      // 单位
+        PurchasePrice string `json:"purchase_price,optional"`            // 采购价格
+        SalePrice     string `json:"sale_price,optional"`                // 销售价格
+        CurrentStock  int    `json:"current_stock,optional"`             // 当前库存
+        MinStock      int    `json:"min_stock,optional"`                 // 最小库存预警
+        Status        int    `json:"status,optional"`                    // 状态
+        FactoryID     string `json:"factory_id,optional"`                // 所属工厂ID
+    }
+
+    // 删除商品请求
+    DeleteProductReq {
+        ProductID string `path:"product_id" validate:"required"`         // 商品ID
+    }
+
+    // 获取商品详情请求
+    GetProductReq {
+        ProductID string `path:"product_id" validate:"required"`         // 商品ID
+    }
+
+    // 商品列表请求
+    ProductListReq {
+        PageRequest
+        ProductName string `form:"product_name,optional"`                // 商品名称
+        FactoryID   string `form:"factory_id,optional"`                  // 工厂ID
+        Status      int    `form:"status,optional"`                      // 状态
+    }
+
+    // 商品列表响应
+    ProductListResp {
+        Page *PageResponse `json:"page"`                                 // 分页
+        List []*ProductInfo `json:"list"`                               // 商品列表
+    }
+
+    // 商品基本信息
+    ProductInfo {
+        ProductID     string `json:"product_id"`                         // 商品ID
+        ProductName   string `json:"product_name"`                       // 商品名称
+        Unit          string `json:"unit"`                               // 单位
+        PurchasePrice string `json:"purchase_price"`                     // 采购价格
+        SalePrice     string `json:"sale_price"`                         // 销售价格
+        CurrentStock  int    `json:"current_stock"`                      // 当前库存
+        MinStock      int    `json:"min_stock"`                          // 最小库存预警
+        Status        int    `json:"status"`                             // 状态
+        FactoryID     string `json:"factory_id"`                         // 所属工厂ID
+        FactoryName   string `json:"factory_name"`                       // 工厂名称
+        CreatedAt     int64  `json:"created_at"`                         // 创建时间
+        UpdatedAt     int64  `json:"updated_at"`                         // 更新时间
+    }
+)
+
+@server (
+    prefix: /api/business/v1
+    group: product
+    middleware: AuthMiddleware
+)
+service admin {
+    @doc "创建商品"
+    @handler CreateProduct
+    post /products (CreateProductReq) returns (CreateProductResp)
+
+    @doc "更新商品"
+    @handler UpdateProduct
+    put /products/:product_id (UpdateProductReq) returns (bool)
+
+    @doc "删除商品"
+    @handler DeleteProduct
+    delete /products/:product_id (DeleteProductReq) returns (bool)
+
+    @doc "获取商品列表"
+    @handler ListProduct
+    get /products (ProductListReq) returns (ProductListResp)
+
+    @doc "获取商品详情"
+    @handler GetProduct
+    get /products/:product_id (GetProductReq) returns (ProductInfo)
+}

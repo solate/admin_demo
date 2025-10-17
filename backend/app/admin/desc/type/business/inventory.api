@@ -1,0 +1,124 @@
+syntax = "v1"
+
+import (
+    "../base.api"
+)
+
+info (
+	title   : "库存管理接口"
+	desc    : "库存管理相关接口定义"
+	author  : "solate"
+	version : "v1.0"
+)
+   
+type (
+    // 商品入库请求
+    ProductInReq { 
+        ProductID     string `json:"product_id" validate:"required"`     // 商品ID
+        Quantity      int    `json:"quantity" validate:"required,gt=0"`  // 入库数量
+        UnitPrice     string `json:"unit_price"`                         // 单价
+        OperatorID    string `json:"operator_id" validate:"required"`    // 操作人ID
+        Remark        string `json:"remark"`                             // 备注
+    }
+
+    // 商品出库请求
+    ProductOutReq { 
+        ProductID     string `json:"product_id" validate:"required"`     // 商品ID
+        Quantity      int    `json:"quantity" validate:"required,gt=0"`  // 出库数量
+        UnitPrice     string `json:"unit_price"`                         // 单价
+        OperatorID    string `json:"operator_id" validate:"required"`    // 操作人ID
+        Remark        string `json:"remark"`                             // 备注
+    }
+
+    // 库存操作响应
+    InventoryOperationResp {
+        InventoryID string `json:"inventory_id"` // 库存记录ID
+        Message     string `json:"message"`      // 操作结果信息
+    }
+
+    // 库存记录列表请求
+    InventoryListReq {
+        PageRequest
+        ProductID     string `form:"product_id,optional"`                // 商品ID
+        OperationType string `form:"operation_type,optional"`            // 操作类型
+        OperatorID    string `form:"operator_id,optional"`               // 操作人ID
+        StartTime     string `form:"start_time,optional"`                // 开始时间
+        EndTime       string `form:"end_time,optional"`                  // 结束时间
+    }
+
+    // 库存记录列表响应
+    InventoryListResp {
+        Page *PageResponse `json:"page"`                                 // 分页
+        List []*InventoryInfo `json:"list"`                             // 库存记录列表
+    }
+
+    // 库存记录信息
+    InventoryInfo {
+        InventoryID   string `json:"inventory_id"`                       // 库存记录ID
+        ProductID     string `json:"product_id"`                         // 商品ID
+        ProductName   string `json:"product_name"`                       // 商品名称
+        OperationType string `json:"operation_type"`                     // 操作类型
+        Quantity      int    `json:"quantity"`                           // 操作数量
+        UnitPrice     string `json:"unit_price"`                         // 单价
+        TotalAmount   string `json:"total_amount"`                       // 总金额
+        OperatorID    string `json:"operator_id"`                        // 操作人ID
+        OperatorName  string `json:"operator_name"`                      // 操作人姓名
+        Remark        string `json:"remark"`                             // 备注
+        OperationTime int64  `json:"operation_time"`                     // 操作时间
+        BeforeStock   int    `json:"before_stock"`                       // 操作前库存
+        AfterStock    int    `json:"after_stock"`                        // 操作后库存
+    }
+
+    // 商品库存信息请求
+    ProductStockReq {
+        ProductID string `form:"product_id,optional"`                    // 商品ID
+        FactoryID string `form:"factory_id,optional"`                    // 工厂ID
+    }
+
+    // 商品库存信息响应
+    ProductStockResp {
+        List []*StockInfo `json:"list"`                                  // 库存信息列表
+    }
+
+    // 库存信息
+    StockInfo {
+        ProductID     string `json:"product_id"`                         // 商品ID
+        ProductName   string `json:"product_name"`                       // 商品名称
+        FactoryID     string `json:"factory_id"`                         // 工厂ID
+        FactoryName   string `json:"factory_name"`                       // 工厂名称
+        CurrentStock  int    `json:"current_stock"`                      // 当前库存
+        MinStock      int    `json:"min_stock"`                          // 最小库存预警
+        Unit          string `json:"unit"`                               // 单位
+        PurchasePrice string `json:"purchase_price"`                     // 采购价格
+        SalePrice     string `json:"sale_price"`                         // 销售价格
+        Status        int    `json:"status"`                             // 状态
+        IsLowStock    bool   `json:"is_low_stock"`                       // 是否低库存
+    }
+)
+
+@server (
+    prefix: /api/business/v1
+    group: inventory
+    middleware: AuthMiddleware
+)
+service admin {
+    @doc "商品入库"
+    @handler ProductIn
+    post /inventory/in (ProductInReq) returns (InventoryOperationResp)
+
+    @doc "商品出库"
+    @handler ProductOut
+    post /inventory/out (ProductOutReq) returns (InventoryOperationResp)
+
+    @doc "获取库存记录列表"
+    @handler ListInventory
+    get /inventory/list (InventoryListReq) returns (InventoryListResp)
+
+    @doc "获取商品库存信息"
+    @handler GetProductStock
+    get /inventory/stock (ProductStockReq) returns (ProductStockResp)
+
+    @doc "获取库存操作历史"
+    @handler GetInventoryHistory
+    get /inventory/history (InventoryListReq) returns (InventoryListResp)
+}
