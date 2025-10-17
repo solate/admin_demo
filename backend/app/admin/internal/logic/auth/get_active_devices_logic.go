@@ -1,6 +1,3 @@
-// Code scaffolded by goctl. Safe to edit.
-// goctl 1.9.2
-
 package auth
 
 import (
@@ -8,6 +5,8 @@ import (
 
 	"admin_backend/app/admin/internal/svc"
 	"admin_backend/app/admin/internal/types"
+	"admin_backend/pkg/common/contextutil"
+	"admin_backend/pkg/common/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -28,7 +27,17 @@ func NewGetActiveDevicesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *GetActiveDevicesLogic) GetActiveDevices() (resp *types.GetActiveDevicesResp, err error) {
-	// todo: add your logic here and delete this line
+	// 1. 获取当前用户ID
+	userID := contextutil.GetUserIDFromCtx(l.ctx)
 
-	return
+	// 2. 从JWT Manager获取活跃设备数量
+	count, err := l.svcCtx.JWTManager.GetUserActiveTokens(l.ctx, userID)
+	if err != nil {
+		l.Error("GetActiveDevices GetUserActiveTokens err:", err.Error())
+		return nil, xerr.NewErrCodeMsg(xerr.ServerError, "获取活跃设备数量失败")
+	}
+
+	return &types.GetActiveDevicesResp{
+		ActiveDevices: count,
+	}, nil
 }

@@ -64,12 +64,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Handler: auth.ChangePasswordHandler(serverCtx),
 				},
 				{
-					// 获取当前用户活跃设备数量
-					Method:  http.MethodGet,
-					Path:    "/devices/active",
-					Handler: auth.GetActiveDevicesHandler(serverCtx),
-				},
-				{
 					// 用户登出（当前设备）
 					Method:  http.MethodPost,
 					Path:    "/logout",

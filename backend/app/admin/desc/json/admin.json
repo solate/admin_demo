@@ -60,23 +60,6 @@
         ]
       }
     },
-    "/api/admin/v1/auth/devices/active": {
-      "get": {
-        "summary": "获取当前用户活跃设备数量",
-        "operationId": "GetActiveDevices",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/GetActiveDevicesResp"
-            }
-          }
-        },
-        "tags": [
-          "auth"
-        ]
-      }
-    },
     "/api/admin/v1/auth/login": {
       "post": {
         "summary": "用户登录",

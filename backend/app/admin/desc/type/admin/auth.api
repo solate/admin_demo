@@ -114,10 +114,6 @@ service admin {
     @handler LogoutAll
     post /logout-all returns (bool)
 
-    @doc "获取当前用户活跃设备数量"
-    @handler GetActiveDevices
-    get /devices/active returns (GetActiveDevicesResp)
-
     @doc "修改密码"
     @handler ChangePassword
     post /change-password (ChangePasswordReq) returns (bool)
