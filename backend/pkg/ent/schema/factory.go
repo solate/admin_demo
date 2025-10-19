@@ -15,7 +15,7 @@ type Factory struct {
 
 func (Factory) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Annotation{Table: "factories"},
+		entsql.Annotation{Table: "bus_factories"},
 		entsql.WithComments(true),
 		schema.Comment("工厂"),
 	}

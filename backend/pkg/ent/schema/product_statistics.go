@@ -17,7 +17,7 @@ type ProductStatistics struct {
 
 func (ProductStatistics) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Annotation{Table: "product_statistics"},
+		entsql.Annotation{Table: "bus_product_statistics"},
 		entsql.WithComments(true),
 		schema.Comment("商品统计"),
 	}

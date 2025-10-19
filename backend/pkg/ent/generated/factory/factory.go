@@ -30,7 +30,7 @@ const (
 	// FieldStatus holds the string denoting the status field in the database.
 	FieldStatus = "status"
 	// Table holds the table name of the factory in the database.
-	Table = "factories"
+	Table = "bus_factories"
 )
 
 // Columns holds all SQL columns for factory fields.

@@ -41,7 +41,7 @@ const (
 	// FieldTotalSalesQuantity holds the string denoting the total_sales_quantity field in the database.
 	FieldTotalSalesQuantity = "total_sales_quantity"
 	// Table holds the table name of the productstatistics in the database.
-	Table = "product_statistics"
+	Table = "bus_product_statistics"
 )
 
 // Columns holds all SQL columns for productstatistics fields.

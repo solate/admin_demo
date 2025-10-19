@@ -2,7 +2,7 @@ syntax = "v1"
 
 import (
 	"type/base.api"
-	"type/admin/user.api"
+	"type/admin/sys_user.api"
 	"type/admin/auth.api"
 	"type/admin/tenant.api"
 	"type/admin/role.api"

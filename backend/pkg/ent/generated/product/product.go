@@ -39,7 +39,7 @@ const (
 	// FieldFactoryID holds the string denoting the factory_id field in the database.
 	FieldFactoryID = "factory_id"
 	// Table holds the table name of the product in the database.
-	Table = "products"
+	Table = "bus_products"
 )
 
 // Columns holds all SQL columns for product fields.

@@ -1,25 +1,25 @@
-package user
+package sys_user
 
 import (
 	"net/http"
 
-	"admin_backend/app/admin/internal/logic/user"
+	"admin_backend/app/admin/internal/logic/sys_user"
 	"admin_backend/app/admin/internal/svc"
 	"admin_backend/app/admin/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-// 删除用户
-func DeleteUserHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+// 查询登录记录
+func ListLoginLogHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.DeleteUserReq
+		var req types.LoginLogListReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := user.NewDeleteUserLogic(r.Context(), svcCtx)
-		resp, err := l.DeleteUser(&req)
+		l := sys_user.NewListLoginLogLogic(r.Context(), svcCtx)
+		resp, err := l.ListLoginLog(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

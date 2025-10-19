@@ -15,8 +15,8 @@ import (
 	product "admin_backend/app/admin/internal/handler/product"
 	role "admin_backend/app/admin/internal/handler/role"
 	statistics "admin_backend/app/admin/internal/handler/statistics"
+	sys_user "admin_backend/app/admin/internal/handler/sys_user"
 	tenant "admin_backend/app/admin/internal/handler/tenant"
-	user "admin_backend/app/admin/internal/handler/user"
 	"admin_backend/app/admin/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -433,6 +433,57 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			[]rest.Middleware{serverCtx.AuthMiddleware},
 			[]rest.Route{
 				{
+					// 查询登录记录
+					Method:  http.MethodGet,
+					Path:    "/login-logs",
+					Handler: sys_user.ListLoginLogHandler(serverCtx),
+				},
+				{
+					// 创建用户
+					Method:  http.MethodPost,
+					Path:    "/users",
+					Handler: sys_user.CreateUserHandler(serverCtx),
+				},
+				{
+					// 获取用户列表
+					Method:  http.MethodGet,
+					Path:    "/users",
+					Handler: sys_user.ListUserHandler(serverCtx),
+				},
+				{
+					// 更新用户
+					Method:  http.MethodPut,
+					Path:    "/users/:user_id",
+					Handler: sys_user.UpdateUserHandler(serverCtx),
+				},
+				{
+					// 删除用户
+					Method:  http.MethodDelete,
+					Path:    "/users/:user_id",
+					Handler: sys_user.DeleteUserHandler(serverCtx),
+				},
+				{
+					// 获取用户详情
+					Method:  http.MethodGet,
+					Path:    "/users/:user_id",
+					Handler: sys_user.GetUserHandler(serverCtx),
+				},
+				{
+					// 获取当前用户信息
+					Method:  http.MethodGet,
+					Path:    "/users/me",
+					Handler: sys_user.GetCurrentUserHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/admin/v1"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.AuthMiddleware},
+			[]rest.Route{
+				{
 					// 创建租户
 					Method:  http.MethodPost,
 					Path:    "/tenants",
@@ -461,57 +512,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Method:  http.MethodDelete,
 					Path:    "/tenants/:tenant_id",
 					Handler: tenant.DeleteTenantHandler(serverCtx),
-				},
-			}...,
-		),
-		rest.WithPrefix("/api/admin/v1"),
-	)
-
-	server.AddRoutes(
-		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.AuthMiddleware},
-			[]rest.Route{
-				{
-					// 查询登录记录
-					Method:  http.MethodGet,
-					Path:    "/login-logs",
-					Handler: user.ListLoginLogHandler(serverCtx),
-				},
-				{
-					// 创建用户
-					Method:  http.MethodPost,
-					Path:    "/users",
-					Handler: user.CreateUserHandler(serverCtx),
-				},
-				{
-					// 获取用户列表
-					Method:  http.MethodGet,
-					Path:    "/users",
-					Handler: user.ListUserHandler(serverCtx),
-				},
-				{
-					// 更新用户
-					Method:  http.MethodPut,
-					Path:    "/users/:user_id",
-					Handler: user.UpdateUserHandler(serverCtx),
-				},
-				{
-					// 删除用户
-					Method:  http.MethodDelete,
-					Path:    "/users/:user_id",
-					Handler: user.DeleteUserHandler(serverCtx),
-				},
-				{
-					// 获取用户详情
-					Method:  http.MethodGet,
-					Path:    "/users/:user_id",
-					Handler: user.GetUserHandler(serverCtx),
-				},
-				{
-					// 获取当前用户信息
-					Method:  http.MethodGet,
-					Path:    "/users/me",
-					Handler: user.GetCurrentUserHandler(serverCtx),
 				},
 			}...,
 		),

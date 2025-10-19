@@ -1,11 +1,12 @@
-package user
+package sys_user
 
 import (
 	"net/http"
 
-	"admin_backend/app/admin/internal/logic/user"
+	"admin_backend/app/admin/internal/logic/sys_user"
 	"admin_backend/app/admin/internal/svc"
 	"admin_backend/app/admin/internal/types"
+
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
@@ -18,7 +19,7 @@ func CreateUserHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := user.NewCreateUserLogic(r.Context(), svcCtx)
+		l := sys_user.NewCreateUserLogic(r.Context(), svcCtx)
 		resp, err := l.CreateUser(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)

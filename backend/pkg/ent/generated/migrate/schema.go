@@ -108,8 +108,8 @@ var (
 			},
 		},
 	}
-	// FactoriesColumns holds the columns for the "factories" table.
-	FactoriesColumns = []*schema.Column{
+	// BusFactoriesColumns holds the columns for the "bus_factories" table.
+	BusFactoriesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
 		{Name: "updated_at", Type: field.TypeInt64, Comment: "修改时间", Default: 0},
@@ -121,27 +121,27 @@ var (
 		{Name: "contact_phone", Type: field.TypeString, Comment: "联系电话", Default: ""},
 		{Name: "status", Type: field.TypeInt, Comment: "状态: 1:启用, 2:禁用", Default: 1},
 	}
-	// FactoriesTable holds the schema information for the "factories" table.
-	FactoriesTable = &schema.Table{
-		Name:       "factories",
+	// BusFactoriesTable holds the schema information for the "bus_factories" table.
+	BusFactoriesTable = &schema.Table{
+		Name:       "bus_factories",
 		Comment:    "工厂",
-		Columns:    FactoriesColumns,
-		PrimaryKey: []*schema.Column{FactoriesColumns[0]},
+		Columns:    BusFactoriesColumns,
+		PrimaryKey: []*schema.Column{BusFactoriesColumns[0]},
 		Indexes: []*schema.Index{
 			{
 				Name:    "factory_factory_name",
 				Unique:  false,
-				Columns: []*schema.Column{FactoriesColumns[6]},
+				Columns: []*schema.Column{BusFactoriesColumns[6]},
 			},
 			{
 				Name:    "factory_tenant_code",
 				Unique:  false,
-				Columns: []*schema.Column{FactoriesColumns[4]},
+				Columns: []*schema.Column{BusFactoriesColumns[4]},
 			},
 		},
 	}
-	// InventoriesColumns holds the columns for the "inventories" table.
-	InventoriesColumns = []*schema.Column{
+	// BusInventoriesColumns holds the columns for the "bus_inventories" table.
+	BusInventoriesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
 		{Name: "updated_at", Type: field.TypeInt64, Comment: "修改时间", Default: 0},
@@ -159,32 +159,32 @@ var (
 		{Name: "before_stock", Type: field.TypeInt, Comment: "操作前库存", Default: 0},
 		{Name: "after_stock", Type: field.TypeInt, Comment: "操作后库存", Default: 0},
 	}
-	// InventoriesTable holds the schema information for the "inventories" table.
-	InventoriesTable = &schema.Table{
-		Name:       "inventories",
+	// BusInventoriesTable holds the schema information for the "bus_inventories" table.
+	BusInventoriesTable = &schema.Table{
+		Name:       "bus_inventories",
 		Comment:    "库存记录",
-		Columns:    InventoriesColumns,
-		PrimaryKey: []*schema.Column{InventoriesColumns[0]},
+		Columns:    BusInventoriesColumns,
+		PrimaryKey: []*schema.Column{BusInventoriesColumns[0]},
 		Indexes: []*schema.Index{
 			{
 				Name:    "inventory_product_id",
 				Unique:  false,
-				Columns: []*schema.Column{InventoriesColumns[6]},
+				Columns: []*schema.Column{BusInventoriesColumns[6]},
 			},
 			{
 				Name:    "inventory_operation_type",
 				Unique:  false,
-				Columns: []*schema.Column{InventoriesColumns[7]},
+				Columns: []*schema.Column{BusInventoriesColumns[7]},
 			},
 			{
 				Name:    "inventory_operator_id",
 				Unique:  false,
-				Columns: []*schema.Column{InventoriesColumns[11]},
+				Columns: []*schema.Column{BusInventoriesColumns[11]},
 			},
 			{
 				Name:    "inventory_operation_time",
 				Unique:  false,
-				Columns: []*schema.Column{InventoriesColumns[13]},
+				Columns: []*schema.Column{BusInventoriesColumns[13]},
 			},
 		},
 	}
@@ -336,8 +336,8 @@ var (
 			},
 		},
 	}
-	// ProductsColumns holds the columns for the "products" table.
-	ProductsColumns = []*schema.Column{
+	// BusProductsColumns holds the columns for the "bus_products" table.
+	BusProductsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
 		{Name: "updated_at", Type: field.TypeInt64, Comment: "修改时间", Default: 0},
@@ -353,32 +353,32 @@ var (
 		{Name: "status", Type: field.TypeInt, Comment: "状态: 1:启用, 2:禁用", Default: 1},
 		{Name: "factory_id", Type: field.TypeString, Nullable: true, Comment: "所属工厂ID"},
 	}
-	// ProductsTable holds the schema information for the "products" table.
-	ProductsTable = &schema.Table{
-		Name:       "products",
+	// BusProductsTable holds the schema information for the "bus_products" table.
+	BusProductsTable = &schema.Table{
+		Name:       "bus_products",
 		Comment:    "商品",
-		Columns:    ProductsColumns,
-		PrimaryKey: []*schema.Column{ProductsColumns[0]},
+		Columns:    BusProductsColumns,
+		PrimaryKey: []*schema.Column{BusProductsColumns[0]},
 		Indexes: []*schema.Index{
 			{
 				Name:    "product_product_name",
 				Unique:  false,
-				Columns: []*schema.Column{ProductsColumns[6]},
+				Columns: []*schema.Column{BusProductsColumns[6]},
 			},
 			{
 				Name:    "product_factory_id",
 				Unique:  false,
-				Columns: []*schema.Column{ProductsColumns[13]},
+				Columns: []*schema.Column{BusProductsColumns[13]},
 			},
 			{
 				Name:    "product_tenant_code",
 				Unique:  false,
-				Columns: []*schema.Column{ProductsColumns[4]},
+				Columns: []*schema.Column{BusProductsColumns[4]},
 			},
 		},
 	}
-	// ProductStatisticsColumns holds the columns for the "product_statistics" table.
-	ProductStatisticsColumns = []*schema.Column{
+	// BusProductStatisticsColumns holds the columns for the "bus_product_statistics" table.
+	BusProductStatisticsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "created_at", Type: field.TypeInt64, Comment: "创建时间", Default: 0},
 		{Name: "updated_at", Type: field.TypeInt64, Comment: "修改时间", Default: 0},
@@ -395,17 +395,17 @@ var (
 		{Name: "total_sales_amount", Type: field.TypeOther, Comment: "总销售金额", SchemaType: map[string]string{"mysql": "decimal(18,4)", "postgres": "numeric(18,4)"}},
 		{Name: "total_sales_quantity", Type: field.TypeInt, Comment: "总销售数量", Default: 0},
 	}
-	// ProductStatisticsTable holds the schema information for the "product_statistics" table.
-	ProductStatisticsTable = &schema.Table{
-		Name:       "product_statistics",
+	// BusProductStatisticsTable holds the schema information for the "bus_product_statistics" table.
+	BusProductStatisticsTable = &schema.Table{
+		Name:       "bus_product_statistics",
 		Comment:    "商品统计",
-		Columns:    ProductStatisticsColumns,
-		PrimaryKey: []*schema.Column{ProductStatisticsColumns[0]},
+		Columns:    BusProductStatisticsColumns,
+		PrimaryKey: []*schema.Column{BusProductStatisticsColumns[0]},
 		Indexes: []*schema.Index{
 			{
 				Name:    "productstatistics_tenant_code",
 				Unique:  false,
-				Columns: []*schema.Column{ProductStatisticsColumns[3]},
+				Columns: []*schema.Column{BusProductStatisticsColumns[3]},
 			},
 		},
 	}
@@ -567,15 +567,15 @@ var (
 		SysDepartmentsTable,
 		SysDictItemsTable,
 		SysDictTypesTable,
-		FactoriesTable,
-		InventoriesTable,
+		BusFactoriesTable,
+		BusInventoriesTable,
 		SysLoginLogTable,
 		SysMenusTable,
 		SysPermissionsTable,
 		SysPlansTable,
 		SysPositionsTable,
-		ProductsTable,
-		ProductStatisticsTable,
+		BusProductsTable,
+		BusProductStatisticsTable,
 		SysRolesTable,
 		SysUsersTable,
 		SysSystemLogsTable,
@@ -594,11 +594,11 @@ func init() {
 	SysDictTypesTable.Annotation = &entsql.Annotation{
 		Table: "sys_dict_types",
 	}
-	FactoriesTable.Annotation = &entsql.Annotation{
-		Table: "factories",
+	BusFactoriesTable.Annotation = &entsql.Annotation{
+		Table: "bus_factories",
 	}
-	InventoriesTable.Annotation = &entsql.Annotation{
-		Table: "inventories",
+	BusInventoriesTable.Annotation = &entsql.Annotation{
+		Table: "bus_inventories",
 	}
 	SysLoginLogTable.Annotation = &entsql.Annotation{
 		Table: "sys_login_log",
@@ -615,11 +615,11 @@ func init() {
 	SysPositionsTable.Annotation = &entsql.Annotation{
 		Table: "sys_positions",
 	}
-	ProductsTable.Annotation = &entsql.Annotation{
-		Table: "products",
+	BusProductsTable.Annotation = &entsql.Annotation{
+		Table: "bus_products",
 	}
-	ProductStatisticsTable.Annotation = &entsql.Annotation{
-		Table: "product_statistics",
+	BusProductStatisticsTable.Annotation = &entsql.Annotation{
+		Table: "bus_product_statistics",
 	}
 	SysRolesTable.Annotation = &entsql.Annotation{
 		Table: "sys_roles",

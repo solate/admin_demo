@@ -17,7 +17,7 @@ type Product struct {
 
 func (Product) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Annotation{Table: "products"},
+		entsql.Annotation{Table: "bus_products"},
 		entsql.WithComments(true),
 		schema.Comment("商品"),
 	}

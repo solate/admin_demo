@@ -666,7 +666,7 @@
           }
         ],
         "tags": [
-          "user"
+          "sys_user"
         ],
         "consumes": [
           "multipart/form-data"
@@ -1369,7 +1369,7 @@
           }
         ],
         "tags": [
-          "user"
+          "sys_user"
         ],
         "consumes": [
           "multipart/form-data"
@@ -1398,7 +1398,7 @@
           }
         ],
         "tags": [
-          "user"
+          "sys_user"
         ]
       }
     },
@@ -1410,12 +1410,12 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/UserInfo"
+              "$ref": "#/definitions/SysUserInfo"
             }
           }
         },
         "tags": [
-          "user"
+          "sys_user"
         ]
       }
     },
@@ -1427,7 +1427,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/UserInfo"
+              "$ref": "#/definitions/SysUserInfo"
             }
           }
         },
@@ -1440,7 +1440,7 @@
           }
         ],
         "tags": [
-          "user"
+          "sys_user"
         ]
       },
       "delete": {
@@ -1471,7 +1471,7 @@
           }
         ],
         "tags": [
-          "user"
+          "sys_user"
         ]
       },
       "put": {
@@ -1503,7 +1503,7 @@
           }
         ],
         "tags": [
-          "user"
+          "sys_user"
         ]
       }
     },
@@ -4764,6 +4764,64 @@
         "is_low_stock"
       ]
     },
+    "SysUserInfo": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "description": " 用户ID"
+        },
+        "user_name": {
+          "type": "string",
+          "description": " 用户名"
+        },
+        "name": {
+          "type": "string",
+          "description": " 姓名"
+        },
+        "phone": {
+          "type": "string",
+          "description": " 手机号"
+        },
+        "email": {
+          "type": "string",
+          "description": " 邮箱"
+        },
+        "avatar": {
+          "type": "string",
+          "description": " 头像"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        },
+        "created_at": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 创建时间"
+        },
+        "role_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RoleListInfo"
+          },
+          "description": " 角色列表"
+        }
+      },
+      "title": "SysUserInfo",
+      "required": [
+        "user_id",
+        "user_name",
+        "name",
+        "phone",
+        "email",
+        "avatar",
+        "status",
+        "created_at",
+        "role_list"
+      ]
+    },
     "TenantInfo": {
       "type": "object",
       "properties": {
@@ -5081,64 +5139,6 @@
       },
       "title": "UpdateUserReq"
     },
-    "UserInfo": {
-      "type": "object",
-      "properties": {
-        "user_id": {
-          "type": "string",
-          "description": " 用户ID"
-        },
-        "user_name": {
-          "type": "string",
-          "description": " 用户名"
-        },
-        "name": {
-          "type": "string",
-          "description": " 姓名"
-        },
-        "phone": {
-          "type": "string",
-          "description": " 手机号"
-        },
-        "email": {
-          "type": "string",
-          "description": " 邮箱"
-        },
-        "avatar": {
-          "type": "string",
-          "description": " 头像"
-        },
-        "status": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 状态"
-        },
-        "created_at": {
-          "type": "integer",
-          "format": "int64",
-          "description": " 创建时间"
-        },
-        "role_list": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/RoleListInfo"
-          },
-          "description": " 角色列表"
-        }
-      },
-      "title": "UserInfo",
-      "required": [
-        "user_id",
-        "user_name",
-        "name",
-        "phone",
-        "email",
-        "avatar",
-        "status",
-        "created_at",
-        "role_list"
-      ]
-    },
     "UserListReq": {
       "type": "object",
       "properties": {
@@ -5180,7 +5180,7 @@
         "list": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/UserInfo"
+            "$ref": "#/definitions/SysUserInfo"
           },
           "description": " 用户列表"
         }

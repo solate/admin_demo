@@ -677,6 +677,18 @@ type StockInfo struct {
 	IsLowStock    bool   `json:"is_low_stock"`   // 是否低库存
 }
 
+type SysUserInfo struct {
+	UserID    string          `json:"user_id"`    // 用户ID
+	UserName  string          `json:"user_name"`  // 用户名
+	Name      string          `json:"name"`       // 姓名
+	Phone     string          `json:"phone"`      // 手机号
+	Email     string          `json:"email"`      // 邮箱
+	Avatar    string          `json:"avatar"`     // 头像
+	Status    int             `json:"status"`     // 状态
+	CreatedAt int64           `json:"created_at"` // 创建时间
+	RoleList  []*RoleListInfo `json:"role_list"`  // 角色列表
+}
+
 type TenantInfo struct {
 	TenantID    string `json:"tenant_id"`
 	Name        string `json:"name"`
@@ -776,18 +788,6 @@ type UpdateUserReq struct {
 	RoleCodeList []string `json:"role_code_list,optional"`
 }
 
-type UserInfo struct {
-	UserID    string          `json:"user_id"`    // 用户ID
-	UserName  string          `json:"user_name"`  // 用户名
-	Name      string          `json:"name"`       // 姓名
-	Phone     string          `json:"phone"`      // 手机号
-	Email     string          `json:"email"`      // 邮箱
-	Avatar    string          `json:"avatar"`     // 头像
-	Status    int             `json:"status"`     // 状态
-	CreatedAt int64           `json:"created_at"` // 创建时间
-	RoleList  []*RoleListInfo `json:"role_list"`  // 角色列表
-}
-
 type UserListReq struct {
 	PageRequest
 	Name   string `form:"name,optional"`   // 姓名
@@ -796,6 +796,6 @@ type UserListReq struct {
 }
 
 type UserListResp struct {
-	Page *PageResponse `json:"page"` // 分页
-	List []*UserInfo   `json:"list"` // 用户列表
+	Page *PageResponse  `json:"page"` // 分页
+	List []*SysUserInfo `json:"list"` // 用户列表
 }

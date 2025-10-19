@@ -43,7 +43,7 @@ const (
 	// FieldAfterStock holds the string denoting the after_stock field in the database.
 	FieldAfterStock = "after_stock"
 	// Table holds the table name of the inventory in the database.
-	Table = "inventories"
+	Table = "bus_inventories"
 )
 
 // Columns holds all SQL columns for inventory fields.

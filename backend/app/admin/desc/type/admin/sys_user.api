@@ -65,11 +65,11 @@ type (
     // 用户列表响应
     UserListResp {
         Page *PageResponse `json:"page"` // 分页
-        List []*UserInfo   `json:"list"` // 用户列表
+        List []*SysUserInfo   `json:"list"` // 用户列表
     }
 
     // 用户基本信息
-    UserInfo {
+    SysUserInfo {
         UserID    string `json:"user_id"`      // 用户ID
         UserName  string `json:"user_name"`      // 用户名
         Name      string `json:"name"`          // 姓名
@@ -120,7 +120,7 @@ type (
 
 @server (
     prefix: /api/admin/v1
-    group: user
+    group: sys_user
     middleware: AuthMiddleware
 )
 service admin {
@@ -142,7 +142,7 @@ service admin {
 
     @doc "获取用户详情"
     @handler GetUser
-    get /users/:user_id (GetUserReq) returns (UserInfo)
+    get /users/:user_id (GetUserReq) returns (SysUserInfo)
 
     @doc "查询登录记录"
     @handler ListLoginLog
@@ -150,6 +150,6 @@ service admin {
 
     @doc "获取当前用户信息"
     @handler GetCurrentUser
-    get /users/me returns (UserInfo)
+    get /users/me returns (SysUserInfo)
 
 }
