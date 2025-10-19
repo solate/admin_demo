@@ -44,16 +44,16 @@
 ## 📸 功能截图
 
 ### 1. 登录页面
-![Login Page](./docs/images/1.png)
+![Login Page](https://github.com/solate/admin_demo/raw/main/frontend/docs/images/1.png)
 
 ### 2. 首页（数据统计总览）
-![Dashboard](./docs/images/2.png)
+![Dashboard](https://github.com/solate/admin_demo/raw/main/frontend/docs/images/2.png)
 
 ### 3. 工厂管理
-![Factory Management](./docs/images/3.png)
+![Factory Management](https://github.com/solate/admin_demo/raw/main/frontend/docs/images/3.png)
 
 ### 4. 商品管理
-![Product Management](./docs/images/4.png)
+![Product Management]([./docs/images/4.png](https://github.com/solate/admin_demo/raw/main/frontend/docs/images/4.png))
 
 ## 🛠 技术栈
 
