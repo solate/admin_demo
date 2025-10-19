@@ -14,35 +14,51 @@
       <div class="search-bar">
         <el-input
           v-model="searchKeyword"
-          placeholder="搜索商品名称或SKU"
+          placeholder="搜索商品名称"
           style="width: 300px;"
-          @input="handleSearch"
+          clearable
+          @keyup.enter="handleSearch"
+          @clear="handleSearch"
         >
           <template #prefix>
             <el-icon><Search /></el-icon>
           </template>
         </el-input>
+        <el-button type="primary" @click="handleSearch" style="margin-left: 10px;">
+          <el-icon><Search /></el-icon>
+          搜索
+        </el-button>
       </div>
       
-      <el-table :data="tableData" style="width: 100%; margin-top: 16px;">
-        <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column prop="name" label="商品名称" />
-        <el-table-column prop="sku" label="SKU" width="120" />
-        <el-table-column prop="category" label="类别" width="100" />
-        <el-table-column prop="price" label="价格" width="100">
+      <el-table :data="tableData" v-loading="loading" style="width: 100%; margin-top: 16px;">
+        <el-table-column prop="product_id" label="商品ID" width="200" />
+        <el-table-column prop="product_name" label="商品名称" />
+        <el-table-column prop="unit" label="单位" width="80" />
+        <el-table-column label="采购价格" width="100">
           <template #default="{ row }">
-            ¥{{ row.price }}
+            ¥{{ row.purchase_price }}
           </template>
         </el-table-column>
-        <el-table-column prop="unit" label="单位" width="80" />
-        <el-table-column prop="stock" label="库存" width="100">
+        <el-table-column label="销售价格" width="100">
           <template #default="{ row }">
-            <el-tag :type="row.stock > 10 ? 'success' : row.stock > 0 ? 'warning' : 'danger'">
-              {{ row.stock }}
+            ¥{{ row.sale_price }}
+          </template>
+        </el-table-column>
+        <el-table-column label="当前库存" width="100">
+          <template #default="{ row }">
+            <el-tag :type="getStockType(row)">
+              {{ row.current_stock }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="240">
+        <el-table-column label="状态" width="80">
+          <template #default="{ row }">
+            <el-tag :type="row.status === 1 ? 'success' : 'info'">
+              {{ row.status === 1 ? '启用' : '禁用' }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="350" fixed="right">
           <template #default="{ row }">
             <div class="action-buttons">
               <el-button size="small" type="primary" plain @click="handleEdit(row)">
@@ -57,6 +73,10 @@
                 <el-icon><Minus /></el-icon>
                 出库
               </el-button>
+              <el-button size="small" type="info" plain @click="handleViewHistory(row)">
+                <el-icon><Tickets /></el-icon>
+                记录
+              </el-button>
               <el-button size="small" type="danger" plain @click="handleDelete(row)">
                 <el-icon><Delete /></el-icon>
                 删除
@@ -66,15 +86,11 @@
         </el-table-column>
       </el-table>
       
-      <el-pagination
+      <Pagination
         v-model:current-page="currentPage"
         v-model:page-size="pageSize"
-        :page-sizes="[10, 20, 50, 100]"
         :total="total"
-        layout="total, sizes, prev, pager, next, jumper"
-        style="margin-top: 16px; text-align: right;"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
+        @change="loadData"
       />
     </el-card>
     
@@ -82,26 +98,36 @@
     <el-dialog
       v-model="dialogVisible"
       :title="isEdit ? '编辑商品' : '新建商品'"
-      width="500px"
+      width="600px"
     >
-      <el-form :model="form" :rules="rules" ref="formRef" label-width="80px">
-        <el-form-item label="商品名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入商品名称" />
-        </el-form-item>
-        <el-form-item label="SKU" prop="sku">
-          <el-input v-model="form.sku" placeholder="请输入SKU" />
-        </el-form-item>
-        <el-form-item label="类别" prop="category">
-          <el-input v-model="form.category" placeholder="请输入类别" />
-        </el-form-item>
-        <el-form-item label="价格" prop="price">
-          <el-input-number v-model="form.price" :min="0" :precision="2" style="width: 100%;" />
+      <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
+        <el-form-item label="商品名称" prop="product_name">
+          <el-input v-model="form.product_name" placeholder="请输入商品名称" />
         </el-form-item>
         <el-form-item label="单位" prop="unit">
-          <el-input v-model="form.unit" placeholder="请输入单位" />
+          <el-input v-model="form.unit" placeholder="请输入单位，如：个、台、箱" />
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" />
+        <el-form-item label="采购价格" prop="purchase_price">
+          <el-input v-model="form.purchase_price" placeholder="请输入采购价格">
+            <template #prefix>¥</template>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="销售价格" prop="sale_price">
+          <el-input v-model="form.sale_price" placeholder="请输入销售价格">
+            <template #prefix>¥</template>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="初始库存" prop="current_stock" v-if="!isEdit">
+          <el-input-number v-model="form.current_stock" :min="0" style="width: 100%;" />
+        </el-form-item>
+        <el-form-item label="最小库存" prop="min_stock">
+          <el-input-number v-model="form.min_stock" :min="0" style="width: 100%;" />
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-radio-group v-model="form.status">
+            <el-radio :label="1">启用</el-radio>
+            <el-radio :label="2">禁用</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -114,17 +140,22 @@
     <el-dialog
       v-model="stockDialogVisible"
       :title="stockType === 'in' ? '商品入库' : '商品出库'"
-      width="400px"
+      width="500px"
     >
-      <el-form :model="stockForm" :rules="stockRules" ref="stockFormRef" label-width="80px">
+      <el-form :model="stockForm" :rules="stockRules" ref="stockFormRef" label-width="100px">
         <el-form-item label="商品名称">
-          <el-input v-model="currentProduct.name" disabled />
+          <el-input v-model="currentProduct.product_name" disabled />
         </el-form-item>
         <el-form-item label="当前库存">
-          <el-input v-model="currentProduct.stock" disabled />
+          <el-input v-model="currentProduct.current_stock" disabled />
         </el-form-item>
         <el-form-item :label="stockType === 'in' ? '入库数量' : '出库数量'" prop="quantity">
           <el-input-number v-model="stockForm.quantity" :min="1" style="width: 100%;" />
+        </el-form-item>
+        <el-form-item label="单价" prop="unit_price">
+          <el-input v-model="stockForm.unit_price" placeholder="请输入单价">
+            <template #prefix>¥</template>
+          </el-input>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="stockForm.remark" type="textarea" placeholder="请输入备注" />
@@ -135,25 +166,84 @@
         <el-button type="primary" @click="handleStockSubmit">确定</el-button>
       </template>
     </el-dialog>
+
+    <!-- 操作记录对话框 -->
+    <el-dialog
+      v-model="historyDialogVisible"
+      title="商品操作记录"
+      width="900px"
+    >
+      <div class="history-header">
+        <div class="product-info">
+          <el-descriptions :column="3" border>
+            <el-descriptions-item label="商品名称">{{ currentProduct.product_name }}</el-descriptions-item>
+            <el-descriptions-item label="当前库存">
+              <el-tag :type="getStockType(currentProduct)">{{ currentProduct.current_stock }}</el-tag>
+            </el-descriptions-item>
+            <el-descriptions-item label="单位">{{ currentProduct.unit }}</el-descriptions-item>
+          </el-descriptions>
+        </div>
+      </div>
+
+      <el-table 
+        :data="historyData" 
+        v-loading="historyLoading" 
+        style="width: 100%; margin-top: 20px;"
+        max-height="400"
+      >
+        <el-table-column prop="operation_time" label="操作时间" width="180">
+          <template #default="{ row }">
+            {{ formatTime(row.operation_time) }}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作类型" width="100">
+          <template #default="{ row }">
+            <el-tag :type="row.operation_type === 'in' ? 'success' : 'warning'">
+              {{ row.operation_type === 'in' ? '入库' : '出库' }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="quantity" label="数量" width="80" />
+        <el-table-column label="单价" width="100">
+          <template #default="{ row }">
+            ¥{{ row.unit_price }}
+          </template>
+        </el-table-column>
+        <el-table-column label="总金额" width="100">
+          <template #default="{ row }">
+            ¥{{ row.total_amount }}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作前库存" width="100">
+          <template #default="{ row }">
+            {{ row.before_stock }}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作后库存" width="100">
+          <template #default="{ row }">
+            {{ row.after_stock }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="remark" label="备注" show-overflow-tooltip />
+      </el-table>
+
+      <Pagination
+        v-model:current-page="historyPage"
+        v-model:page-size="historyPageSize"
+        :total="historyTotal"
+        :page-sizes="[10, 20, 50]"
+        @change="loadHistory"
+      />
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Edit, Plus, Minus, Delete } from '@element-plus/icons-vue'
-
-interface Product {
-  id: number
-  name: string
-  sku: string
-  category: string
-  price: number
-  unit: string
-  stock: number
-  remark: string
-  createdAt: string
-}
+import { Edit, Plus, Minus, Delete, Search, Tickets } from '@element-plus/icons-vue'
+import { productApi, inventoryApi, type ProductInfo, type InventoryInfo } from '../api'
+import Pagination from '../components/Pagination.vue'
 
 const searchKeyword = ref('')
 const currentPage = ref(1)
@@ -161,58 +251,78 @@ const pageSize = ref(10)
 const total = ref(0)
 const dialogVisible = ref(false)
 const stockDialogVisible = ref(false)
+const historyDialogVisible = ref(false)
 const isEdit = ref(false)
 const stockType = ref<'in' | 'out'>('in')
 const formRef = ref()
 const stockFormRef = ref()
+const loading = ref(false)
+const historyLoading = ref(false)
 
-const tableData = ref<Product[]>([])
-const currentProduct = ref<Product>({} as Product)
+const tableData = ref<ProductInfo[]>([])
+const currentProduct = ref<ProductInfo>({} as ProductInfo)
+const historyData = ref<InventoryInfo[]>([])
+const historyPage = ref(1)
+const historyPageSize = ref(10)
+const historyTotal = ref(0)
 
 const form = reactive({
-  id: 0,
-  name: '',
-  sku: '',
-  category: '',
-  price: 0,
+  product_id: '',
+  product_name: '',
   unit: '',
-  remark: ''
+  purchase_price: '',
+  sale_price: '',
+  current_stock: 0,
+  min_stock: 0,
+  status: 1
 })
 
 const stockForm = reactive({
   quantity: 1,
+  unit_price: '',
   remark: ''
 })
 
 const rules = {
-  name: [{ required: true, message: '请输入商品名称', trigger: 'blur' }],
-  sku: [{ required: true, message: '请输入SKU', trigger: 'blur' }],
-  category: [{ required: true, message: '请输入类别', trigger: 'blur' }],
-  price: [{ required: true, message: '请输入价格', trigger: 'blur' }],
-  unit: [{ required: true, message: '请输入单位', trigger: 'blur' }]
+  product_name: [{ required: true, message: '请输入商品名称', trigger: 'blur' }],
+  unit: [{ required: true, message: '请输入单位', trigger: 'blur' }],
+  purchase_price: [{ required: true, message: '请输入采购价格', trigger: 'blur' }],
+  sale_price: [{ required: true, message: '请输入销售价格', trigger: 'blur' }],
+  current_stock: [{ required: true, message: '请输入初始库存', trigger: 'blur' }],
+  min_stock: [{ required: true, message: '请输入最小库存', trigger: 'blur' }],
+  status: [{ required: true, message: '请选择状态', trigger: 'change' }]
 }
 
 const stockRules = {
-  quantity: [{ required: true, message: '请输入数量', trigger: 'blur' }]
+  quantity: [{ required: true, message: '请输入数量', trigger: 'blur' }],
+  unit_price: [{ required: true, message: '请输入单价', trigger: 'blur' }],
+  remark: [{ required: true, message: '请输入备注', trigger: 'blur' }]
 }
-
-// 模拟数据
-const mockData: Product[] = [
-  { id: 1, name: '苹果手机', sku: 'IPHONE-15', category: '手机', price: 5999, unit: '台', stock: 50, remark: '最新款', createdAt: '2024-01-15 10:30:00' },
-  { id: 2, name: '华为笔记本', sku: 'HUAWEI-MATE', category: '电脑', price: 6999, unit: '台', stock: 25, remark: '办公专用', createdAt: '2024-01-16 14:20:00' },
-  { id: 3, name: '小米耳机', sku: 'MI-AIRPODS', category: '配件', price: 299, unit: '个', stock: 5, remark: '无线蓝牙', createdAt: '2024-01-17 09:15:00' }
-]
 
 onMounted(() => {
   loadData()
 })
 
-function loadData() {
-  tableData.value = mockData
-  total.value = mockData.length
+async function loadData() {
+  loading.value = true
+  try {
+    const params = {
+      page: currentPage.value,
+      page_size: pageSize.value,
+      product_name: searchKeyword.value || undefined
+    }
+    const res = await productApi.getList(params)
+    tableData.value = res.list
+    total.value = res.page.total
+  } catch (error) {
+    ElMessage.error('加载数据失败')
+  } finally {
+    loading.value = false
+  }
 }
 
 function handleSearch() {
+  currentPage.value = 1
   loadData()
 }
 
@@ -222,85 +332,174 @@ function handleAdd() {
   resetForm()
 }
 
-function handleEdit(row: Product) {
+async function handleEdit(row: ProductInfo) {
   isEdit.value = true
   dialogVisible.value = true
-  Object.assign(form, row)
+  try {
+    const detail = await productApi.getDetail(row.product_id)
+    Object.assign(form, detail)
+  } catch (error) {
+    ElMessage.error('获取详情失败')
+  }
 }
 
-function handleStockIn(row: Product) {
+function handleStockIn(row: ProductInfo) {
   stockType.value = 'in'
   currentProduct.value = row
   stockDialogVisible.value = true
   resetStockForm()
+  stockForm.unit_price = row.purchase_price
 }
 
-function handleStockOut(row: Product) {
+function handleStockOut(row: ProductInfo) {
   stockType.value = 'out'
   currentProduct.value = row
   stockDialogVisible.value = true
   resetStockForm()
+  stockForm.unit_price = row.sale_price
 }
 
-function handleDelete(row: Product) {
+function handleDelete(row: ProductInfo) {
   ElMessageBox.confirm('确定要删除这个商品吗？', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
-  }).then(() => {
-    ElMessage.success('删除成功')
+  }).then(async () => {
+    try {
+      await productApi.delete(row.product_id)
+      ElMessage.success('删除成功')
+      loadData()
+    } catch (error) {
+      ElMessage.error('删除失败')
+    }
+  })
+}
+
+async function handleSubmit() {
+  await formRef.value?.validate()
+  try {
+    if (isEdit.value) {
+      await productApi.update(form.product_id, {
+        product_name: form.product_name,
+        unit: form.unit,
+        purchase_price: form.purchase_price,
+        sale_price: form.sale_price,
+        min_stock: form.min_stock,
+        status: form.status
+      })
+      ElMessage.success('更新成功')
+    } else {
+      await productApi.create({
+        product_name: form.product_name,
+        unit: form.unit,
+        purchase_price: form.purchase_price,
+        sale_price: form.sale_price,
+        current_stock: form.current_stock,
+        min_stock: form.min_stock,
+        status: form.status
+      })
+      ElMessage.success('创建成功')
+    }
+    dialogVisible.value = false
     loadData()
-  })
+  } catch (error) {
+    ElMessage.error(isEdit.value ? '更新失败' : '创建失败')
+  }
 }
 
-function handleSubmit() {
-  formRef.value?.validate((valid: boolean) => {
-    if (valid) {
-      ElMessage.success(isEdit.value ? '编辑成功' : '新建成功')
-      dialogVisible.value = false
-      loadData()
+async function handleStockSubmit() {
+  await stockFormRef.value?.validate()
+  try {
+    const userId = localStorage.getItem('user_id') || ''
+    if (stockType.value === 'in') {
+      await inventoryApi.productIn({
+        product_id: currentProduct.value.product_id,
+        quantity: stockForm.quantity,
+        unit_price: stockForm.unit_price,
+        operator_id: userId,
+        remark: stockForm.remark
+      })
+      ElMessage.success('入库成功')
+    } else {
+      await inventoryApi.productOut({
+        product_id: currentProduct.value.product_id,
+        quantity: stockForm.quantity,
+        unit_price: stockForm.unit_price,
+        operator_id: userId,
+        remark: stockForm.remark
+      })
+      ElMessage.success('出库成功')
     }
-  })
-}
-
-function handleStockSubmit() {
-  stockFormRef.value?.validate((valid: boolean) => {
-    if (valid) {
-      const action = stockType.value === 'in' ? '入库' : '出库'
-      ElMessage.success(`${action}成功`)
-      stockDialogVisible.value = false
-      loadData()
-    }
-  })
+    stockDialogVisible.value = false
+    loadData()
+  } catch (error) {
+    ElMessage.error(stockType.value === 'in' ? '入库失败' : '出库失败')
+  }
 }
 
 function resetForm() {
   Object.assign(form, {
-    id: 0,
-    name: '',
-    sku: '',
-    category: '',
-    price: 0,
+    product_id: '',
+    product_name: '',
     unit: '',
-    remark: ''
+    purchase_price: '',
+    sale_price: '',
+    current_stock: 0,
+    min_stock: 0,
+    status: 1
   })
 }
 
 function resetStockForm() {
   Object.assign(stockForm, {
     quantity: 1,
+    unit_price: '',
     remark: ''
   })
 }
 
-function handleSizeChange(val: number) {
-  pageSize.value = val
-  loadData()
+function getStockType(row: ProductInfo) {
+  if (row.current_stock <= row.min_stock) return 'danger'
+  if (row.current_stock <= row.min_stock * 2) return 'warning'
+  return 'success'
 }
 
-function handleCurrentChange(val: number) {
-  currentPage.value = val
-  loadData()
+// 查看操作记录
+function handleViewHistory(row: ProductInfo) {
+  currentProduct.value = row
+  historyDialogVisible.value = true
+  historyPage.value = 1
+  loadHistory()
+}
+
+// 加载操作记录
+async function loadHistory() {
+  historyLoading.value = true
+  try {
+    const res = await inventoryApi.getHistory({
+      product_id: currentProduct.value.product_id,
+      page: historyPage.value,
+      page_size: historyPageSize.value
+    })
+    historyData.value = res.list || []
+    historyTotal.value = res.page?.total || 0
+  } catch (error) {
+    ElMessage.error('加载操作记录失败')
+  } finally {
+    historyLoading.value = false
+  }
+}
+
+// 格式化时间
+function formatTime(timestamp: number) {
+  const date = new Date(timestamp)
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  const seconds = String(date.getSeconds()).padStart(2, '0')
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }
 </script>
 
@@ -313,6 +512,8 @@ function handleCurrentChange(val: number) {
 
 .search-bar {
   margin-bottom: 16px;
+  display: flex;
+  align-items: center;
 }
 
 .action-buttons {
@@ -351,5 +552,16 @@ function handleCurrentChange(val: number) {
     width: 100%;
     justify-content: center;
   }
+}
+
+/* 操作记录对话框样式 */
+.history-header {
+  margin-bottom: 16px;
+}
+
+.product-info {
+  padding: 12px;
+  background: #f5f7fa;
+  border-radius: 4px;
 }
 </style>

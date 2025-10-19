@@ -8,8 +8,12 @@ const Factories = () => import('../views/Factories.vue')
 const Products = () => import('../views/Products.vue')
 const Statistics = () => import('../views/Statistics.vue')
 
+// 动态导入注册组件
+const Register = () => import('../views/Register.vue')
+
 const routes = [
   { path: '/login', name: 'login', component: Login, meta: { public: true, title: '登录' } },
+  { path: '/register', name: 'register', component: Register, meta: { public: true, title: '注册' } },
   {
     path: '/',
     component: Layout,
@@ -29,7 +33,7 @@ const router = createRouter({
 
 router.beforeEach((to, _from, next) => {
   if (to.meta.public) return next()
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('access_token')  // 修改为 access_token
   if (!token) return next({ path: '/login', query: { redirect: to.fullPath } })
   next()
 })

@@ -1,30 +1,37 @@
 import http from './http'
 
-export interface StatsOverview {
-  totalValue: number
-  productCount: number
-  stockInCount: number
-  stockOutCount: number
-  stockCount: number
+// 统计响应
+export interface ProductDetailStats {
+  product_id: string
+  product_name: string
+  unit: string
+  current_stock: number
+  min_stock: number
+  total_in_quantity: number
+  total_out_quantity: number
+  purchase_price: string
+  sale_price: string
+  stock_value: string
+  status: number
 }
 
-export interface TrendData {
-  date: string
-  inCount: number
-  outCount: number
-}
-
-export interface StatsTrends {
-  data: TrendData[]
-  range: 'daily' | 'weekly' | 'monthly'
+export interface StatisticsResponse {
+  total_products: number
+  total_stock: number
+  total_stock_value: string
+  total_sales_value: string
+  low_stock_products: number
+  total_in_quantity: number
+  total_in_amount: string
+  total_out_quantity: number
+  total_out_amount: string
+  product_detail_list: ProductDetailStats[]
 }
 
 export const statsApi = {
-  getOverview: (): Promise<StatsOverview> => {
-    return http.get('/stats/overview')
-  },
-  
-  getTrends: (range: 'daily' | 'weekly' | 'monthly'): Promise<StatsTrends> => {
-    return http.get('/stats/trends', { params: { range } })
+  // 获取实时统计
+  getStatistics: (): Promise<StatisticsResponse> => {
+    return http.get('/business/v1/statistics')
   }
 }
+

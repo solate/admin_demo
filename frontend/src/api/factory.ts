@@ -1,44 +1,82 @@
 import http from './http'
 
-export interface Factory {
-  id: number
-  name: string
-  address: string
-  owner: string
-  createdAt: string
-}
-
-export interface FactoryListParams {
-  page?: number
-  pageSize?: number
-  keyword?: string
-}
-
-export interface FactoryListResponse {
-  list: Factory[]
+// 分页信息
+export interface PageResponse {
   total: number
+  page_size: number
+  request_page_size: number
+  current: number
+}
+
+// 工厂信息
+export interface FactoryInfo {
+  factory_id: string
+  factory_name: string
+  address: string
+  contact_phone: string
+  status: number
+  created_at: number
+  updated_at: number
+}
+
+// 工厂列表请求参数
+export interface FactoryListParams {
   page: number
-  pageSize: number
+  page_size: number
+  factory_name?: string
+  status?: number
+}
+
+// 工厂列表响应
+export interface FactoryListResponse {
+  page: PageResponse
+  list: FactoryInfo[]
+}
+
+// 创建工厂请求
+export interface CreateFactoryRequest {
+  factory_name: string
+  address: string
+  contact_phone: string
+  status: number
+}
+
+// 创建工厂响应
+export interface CreateFactoryResponse {
+  factory_id: string
+}
+
+// 更新工厂请求
+export interface UpdateFactoryRequest {
+  factory_name?: string
+  address?: string
+  contact_phone?: string
+  status?: number
 }
 
 export const factoryApi = {
+  // 获取工厂列表
   getList: (params: FactoryListParams): Promise<FactoryListResponse> => {
-    return http.get('/factories', { params })
+    return http.get('/business/v1/factories', { params })
   },
-  
-  create: (data: Omit<Factory, 'id' | 'createdAt'>): Promise<Factory> => {
-    return http.post('/factories', data)
+
+  // 创建工厂
+  create: (data: CreateFactoryRequest): Promise<CreateFactoryResponse> => {
+    return http.post('/business/v1/factories', data)
   },
-  
-  update: (id: number, data: Omit<Factory, 'id' | 'createdAt'>): Promise<Factory> => {
-    return http.put(`/factories/${id}`, data)
+
+  // 获取工厂详情
+  getDetail: (factoryId: string): Promise<FactoryInfo> => {
+    return http.get(`/business/v1/factories/${factoryId}`)
   },
-  
-  delete: (id: number): Promise<void> => {
-    return http.delete(`/factories/${id}`)
+
+  // 更新工厂
+  update: (factoryId: string, data: UpdateFactoryRequest): Promise<boolean> => {
+    return http.put(`/business/v1/factories/${factoryId}`, data)
   },
-  
-  batchDelete: (ids: number[]): Promise<void> => {
-    return http.delete('/factories/batch', { data: { ids } })
+
+  // 删除工厂
+  delete: (factoryId: string): Promise<boolean> => {
+    return http.delete(`/business/v1/factories/${factoryId}`, {})
   }
 }

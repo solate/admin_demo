@@ -4,32 +4,55 @@
       <template #header>
         <div class="card-header">
           <span>工厂管理</span>
-          <el-button type="primary" @click="handleAdd">
-            <el-icon><Plus /></el-icon>
-            新建工厂
-          </el-button>
+          <div class="header-actions">
+            <el-button @click="loadData" :loading="loading">
+              <el-icon><Refresh /></el-icon>
+              刷新
+            </el-button>
+            <el-button type="primary" @click="handleAdd">
+              <el-icon><Plus /></el-icon>
+              新建工厂
+            </el-button>
+          </div>
         </div>
       </template>
       
       <div class="search-bar">
         <el-input
           v-model="searchKeyword"
-          placeholder="搜索工厂名称或地址"
+          placeholder="搜索工厂名称"
           style="width: 300px;"
-          @input="handleSearch"
+          clearable
+          @keyup.enter="handleSearch"
+          @clear="handleSearch"
         >
           <template #prefix>
             <el-icon><Search /></el-icon>
           </template>
         </el-input>
+        <el-button type="primary" @click="handleSearch" style="margin-left: 10px;">
+          <el-icon><Search /></el-icon>
+          搜索
+        </el-button>
       </div>
       
-      <el-table :data="tableData" style="width: 100%; margin-top: 16px;">
-        <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column prop="name" label="工厂名称" />
+      <el-table :data="tableData" v-loading="loading" style="width: 100%; margin-top: 16px;">
+        <el-table-column prop="factory_id" label="工厂ID" width="200" />
+        <el-table-column prop="factory_name" label="工厂名称" />
         <el-table-column prop="address" label="地址" />
-        <el-table-column prop="owner" label="负责人" />
-        <el-table-column prop="createdAt" label="创建时间" width="180" />
+        <el-table-column prop="contact_phone" label="联系电话" width="120" />
+        <el-table-column label="状态" width="80">
+          <template #default="{ row }">
+            <el-tag :type="getStatusType(row.status)">
+              {{ getStatusText(row.status) }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="创建时间" width="180">
+          <template #default="{ row }">
+            {{ formatDate(row.created_at) }}
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="160">
           <template #default="{ row }">
             <div class="action-buttons">
@@ -46,15 +69,11 @@
         </el-table-column>
       </el-table>
       
-      <el-pagination
+      <Pagination
         v-model:current-page="currentPage"
         v-model:page-size="pageSize"
-        :page-sizes="[10, 20, 50, 100]"
         :total="total"
-        layout="total, sizes, prev, pager, next, jumper"
-        style="margin-top: 16px; text-align: right;"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
+        @change="loadData"
       />
     </el-card>
     
@@ -64,15 +83,21 @@
       :title="isEdit ? '编辑工厂' : '新建工厂'"
       width="500px"
     >
-      <el-form :model="form" :rules="rules" ref="formRef" label-width="80px">
-        <el-form-item label="工厂名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入工厂名称" />
+      <el-form :model="form" :rules="rules" ref="formRef" label-width="90px">
+        <el-form-item label="工厂名称" prop="factory_name">
+          <el-input v-model="form.factory_name" placeholder="请输入工厂名称" autocomplete="off" />
         </el-form-item>
         <el-form-item label="地址" prop="address">
-          <el-input v-model="form.address" placeholder="请输入地址" />
+          <el-input v-model="form.address" placeholder="请输入地址" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="负责人" prop="owner">
-          <el-input v-model="form.owner" placeholder="请输入负责人" />
+        <el-form-item label="联系电话" prop="contact_phone">
+          <el-input v-model="form.contact_phone" placeholder="请输入联系电话" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-radio-group v-model="form.status">
+            <el-radio :value="1">启用</el-radio>
+            <el-radio :value="2">禁用</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -86,15 +111,9 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Edit, Delete } from '@element-plus/icons-vue'
-
-interface Factory {
-  id: number
-  name: string
-  address: string
-  owner: string
-  createdAt: string
-}
+import { Edit, Delete, Refresh } from '@element-plus/icons-vue'
+import { factoryApi, type FactoryInfo } from '../api'
+import Pagination from '../components/Pagination.vue'
 
 const searchKeyword = ref('')
 const currentPage = ref(1)
@@ -103,41 +122,51 @@ const total = ref(0)
 const dialogVisible = ref(false)
 const isEdit = ref(false)
 const formRef = ref()
+const loading = ref(false)
+const statusFilter = ref<number>()
 
-const tableData = ref<Factory[]>([])
+const tableData = ref<FactoryInfo[]>([])
 
 const form = reactive({
-  id: 0,
-  name: '',
+  factory_id: '',
+  factory_name: '',
   address: '',
-  owner: ''
+  contact_phone: '',
+  status: 1
 })
 
 const rules = {
-  name: [{ required: true, message: '请输入工厂名称', trigger: 'blur' }],
+  factory_name: [{ required: true, message: '请输入工厂名称', trigger: 'blur' }],
   address: [{ required: true, message: '请输入地址', trigger: 'blur' }],
-  owner: [{ required: true, message: '请输入负责人', trigger: 'blur' }]
+  contact_phone: [{ required: true, message: '请输入联系电话', trigger: 'blur' }],
+  status: [{ required: true, message: '请选择状态', trigger: 'change' }]
 }
-
-// 模拟数据
-const mockData: Factory[] = [
-  { id: 1, name: '北京工厂', address: '北京市朝阳区', owner: '张三', createdAt: '2024-01-15 10:30:00' },
-  { id: 2, name: '上海工厂', address: '上海市浦东新区', owner: '李四', createdAt: '2024-01-16 14:20:00' },
-  { id: 3, name: '广州工厂', address: '广州市天河区', owner: '王五', createdAt: '2024-01-17 09:15:00' }
-]
 
 onMounted(() => {
   loadData()
 })
 
-function loadData() {
-  // 模拟API调用
-  tableData.value = mockData
-  total.value = mockData.length
+async function loadData() {
+  loading.value = true
+  try {
+    const params = {
+      page: currentPage.value,
+      page_size: pageSize.value,
+      factory_name: searchKeyword.value || undefined,
+      status: statusFilter.value
+    }
+    const res = await factoryApi.getList(params)
+    tableData.value = res.list
+    total.value = res.page.total
+  } catch (error) {
+    ElMessage.error('加载数据失败')
+  } finally {
+    loading.value = false
+  }
 }
 
 function handleSearch() {
-  // 模拟搜索
+  currentPage.value = 1
   loadData()
 }
 
@@ -147,50 +176,80 @@ function handleAdd() {
   resetForm()
 }
 
-function handleEdit(row: Factory) {
+async function handleEdit(row: FactoryInfo) {
   isEdit.value = true
   dialogVisible.value = true
-  Object.assign(form, row)
+  try {
+    const detail = await factoryApi.getDetail(row.factory_id)
+    Object.assign(form, detail)
+  } catch (error) {
+    ElMessage.error('获取详情失败')
+  }
 }
 
-function handleDelete(row: Factory) {
+function handleDelete(row: FactoryInfo) {
   ElMessageBox.confirm('确定要删除这个工厂吗？', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
-  }).then(() => {
-    ElMessage.success('删除成功')
-    loadData()
-  })
-}
-
-function handleSubmit() {
-  formRef.value?.validate((valid: boolean) => {
-    if (valid) {
-      ElMessage.success(isEdit.value ? '编辑成功' : '新建成功')
-      dialogVisible.value = false
+  }).then(async () => {
+    try {
+      await factoryApi.delete(row.factory_id)
+      ElMessage.success('删除成功')
       loadData()
+    } catch (error) {
+      ElMessage.error('删除失败')
     }
   })
 }
 
+async function handleSubmit() {
+  await formRef.value?.validate()
+  try {
+    if (isEdit.value) {
+      await factoryApi.update(form.factory_id, {
+        factory_name: form.factory_name,
+        address: form.address,
+        contact_phone: form.contact_phone,
+        status: form.status
+      })
+      ElMessage.success('更新成功')
+    } else {
+      await factoryApi.create({
+        factory_name: form.factory_name,
+        address: form.address,
+        contact_phone: form.contact_phone,
+        status: form.status
+      })
+      ElMessage.success('创建成功')
+    }
+    dialogVisible.value = false
+    loadData()
+  } catch (error) {
+    ElMessage.error(isEdit.value ? '更新失败' : '创建失败')
+  }
+}
+
 function resetForm() {
   Object.assign(form, {
-    id: 0,
-    name: '',
+    factory_id: '',
+    factory_name: '',
     address: '',
-    owner: ''
+    contact_phone: '',
+    status: 1
   })
 }
 
-function handleSizeChange(val: number) {
-  pageSize.value = val
-  loadData()
+function formatDate(timestamp: number) {
+  return new Date(timestamp * 1000).toLocaleString('zh-CN')
 }
 
-function handleCurrentChange(val: number) {
-  currentPage.value = val
-  loadData()
+function getStatusText(status: number) {
+  return status === 1 ? '启用' : '禁用'
+}
+
+function getStatusType(status: number) {
+  return status === 1 ? 'success' : 'info'
 }
 </script>
 
@@ -201,8 +260,15 @@ function handleCurrentChange(val: number) {
   align-items: center;
 }
 
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
 .search-bar {
   margin-bottom: 16px;
+  display: flex;
+  align-items: center;
 }
 
 .action-buttons {

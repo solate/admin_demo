@@ -47,7 +47,7 @@
           <el-dropdown @command="handleCommand">
             <span class="user-info">
               <el-icon><User /></el-icon>
-              <span>管理员</span>
+              <span>{{ userInfo.user_name || '管理员' }}</span>
               <el-icon><ArrowDown /></el-icon>
             </span>
             <template #dropdown>
@@ -70,13 +70,16 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { authApi } from '../api'
+import { clearTokens, getUserInfo } from '../utils/token'
 
 const route = useRoute()
 const router = useRouter()
 
 const isCollapse = ref(false)
 const activeMenu = ref('/')
+const userInfo = getUserInfo()
 
 // 面包屑配置
 const breadcrumbMap: Record<string, string> = {
@@ -100,11 +103,30 @@ function toggleCollapse() {
   isCollapse.value = !isCollapse.value
 }
 
-function handleCommand(command: string) {
+async function handleCommand(command: string) {
   if (command === 'logout') {
-    localStorage.removeItem('token')
-    ElMessage.success('已退出登录')
-    router.push('/login')
+    try {
+      await ElMessageBox.confirm('确认退出登录吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+      
+      try {
+        // 调用后端登出接口
+        await authApi.logout()
+      } catch (error) {
+        // 即使后端接口失败，也清除本地token
+        console.error('登出接口调用失败:', error)
+      }
+      
+      // 清除本地token
+      clearTokens()
+      ElMessage.success('已退出登录')
+      router.push('/login')
+    } catch {
+      // 用户取消
+    }
   } else if (command === 'profile') {
     ElMessage.info('个人中心功能待开发')
   }
