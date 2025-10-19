@@ -53,7 +53,7 @@
 ![Factory Management](https://github.com/solate/admin_demo/raw/main/frontend/docs/images/3.png)
 
 ### 4. 商品管理
-![Product Management]([./docs/images/4.png](https://github.com/solate/admin_demo/raw/main/frontend/docs/images/4.png))
+![Product Management](https://github.com/solate/admin_demo/raw/main/frontend/docs/images/4.png)
 
 ## 🛠 技术栈
 
