@@ -88,7 +88,10 @@ func (r *FactoryRepo) PageList(ctx context.Context, current, limit int, where []
 	where = r.defaultQuery(ctx, where)
 
 	offset := common.Offset(current, limit)
-	query := r.db.Factory.Query().Where(where...).Order(generated.Desc(factory.FieldCreatedAt))
+	query := r.db.Factory.Query().Where(where...).Order(
+		generated.Desc(factory.FieldCreatedAt),
+		generated.Desc(factory.FieldFactoryID),
+	)
 
 	// 查询总数
 	total, err := query.Count(ctx)

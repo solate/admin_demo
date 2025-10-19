@@ -169,7 +169,10 @@ func (r *ProductRepo) PageList(ctx context.Context, current, limit int, where []
 	where = r.defaultQuery(ctx, where)
 
 	offset := common.Offset(current, limit)
-	query := r.db.Product.Query().Where(where...).Order(generated.Desc(product.FieldCreatedAt))
+	query := r.db.Product.Query().Where(where...).Order(
+		generated.Desc(product.FieldCreatedAt),
+		generated.Desc(product.FieldProductID),
+	)
 
 	// 查询总数
 	total, err := query.Count(ctx)

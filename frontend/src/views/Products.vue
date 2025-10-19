@@ -34,6 +34,11 @@
         <el-table-column prop="product_id" label="商品ID" width="200" />
         <el-table-column prop="product_name" label="商品名称" />
         <el-table-column prop="unit" label="单位" width="80" />
+        <el-table-column label="工厂" width="100">
+          <template #default="{ row }">
+            {{ getFactoryName(row.factory_id) }}
+          </template>
+        </el-table-column>
         <el-table-column label="采购价格" width="100">
           <template #default="{ row }">
             ¥{{ row.purchase_price }}
@@ -106,6 +111,16 @@
         </el-form-item>
         <el-form-item label="单位" prop="unit">
           <el-input v-model="form.unit" placeholder="请输入单位，如：个、台、箱" />
+        </el-form-item>
+        <el-form-item label="所属工厂" prop="factory_id">
+          <el-select v-model="form.factory_id" placeholder="请选择所属工厂" clearable>
+            <el-option
+              v-for="factory in factories"
+              :key="factory.factory_id"
+              :label="factory.factory_name"
+              :value="factory.factory_id"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="采购价格" prop="purchase_price">
           <el-input v-model="form.purchase_price" placeholder="请输入采购价格">
@@ -242,7 +257,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Edit, Plus, Minus, Delete, Search, Tickets } from '@element-plus/icons-vue'
-import { productApi, inventoryApi, type ProductInfo, type InventoryInfo } from '../api'
+import { productApi, inventoryApi, factoryApi, type ProductInfo, type InventoryInfo, type FactoryInfo } from '../api'
 import Pagination from '../components/Pagination.vue'
 
 const searchKeyword = ref('')
@@ -265,11 +280,13 @@ const historyData = ref<InventoryInfo[]>([])
 const historyPage = ref(1)
 const historyPageSize = ref(10)
 const historyTotal = ref(0)
+const factories = ref<FactoryInfo[]>([])
 
 const form = reactive({
   product_id: '',
   product_name: '',
   unit: '',
+  factory_id: '',
   purchase_price: '',
   sale_price: '',
   current_stock: 0,
@@ -286,6 +303,7 @@ const stockForm = reactive({
 const rules = {
   product_name: [{ required: true, message: '请输入商品名称', trigger: 'blur' }],
   unit: [{ required: true, message: '请输入单位', trigger: 'blur' }],
+  factory_id: [{ required: true, message: '请选择所属工厂', trigger: 'change' }],
   purchase_price: [{ required: true, message: '请输入采购价格', trigger: 'blur' }],
   sale_price: [{ required: true, message: '请输入销售价格', trigger: 'blur' }],
   current_stock: [{ required: true, message: '请输入初始库存', trigger: 'blur' }],
@@ -300,6 +318,7 @@ const stockRules = {
 }
 
 onMounted(() => {
+  loadFactories()
   loadData()
 })
 
@@ -318,6 +337,15 @@ async function loadData() {
     ElMessage.error('加载数据失败')
   } finally {
     loading.value = false
+  }
+}
+
+async function loadFactories() {
+  try {
+    const res = await factoryApi.getList({ page: 1, page_size: 100 })
+    factories.value = res.list || []
+  } catch (error) {
+    ElMessage.error('加载工厂列表失败')
   }
 }
 
@@ -382,6 +410,7 @@ async function handleSubmit() {
       await productApi.update(form.product_id, {
         product_name: form.product_name,
         unit: form.unit,
+        factory_id: form.factory_id,
         purchase_price: form.purchase_price,
         sale_price: form.sale_price,
         min_stock: form.min_stock,
@@ -392,6 +421,7 @@ async function handleSubmit() {
       await productApi.create({
         product_name: form.product_name,
         unit: form.unit,
+        factory_id: form.factory_id,
         purchase_price: form.purchase_price,
         sale_price: form.sale_price,
         current_stock: form.current_stock,
@@ -442,6 +472,7 @@ function resetForm() {
     product_id: '',
     product_name: '',
     unit: '',
+    factory_id: '',
     purchase_price: '',
     sale_price: '',
     current_stock: 0,
@@ -462,6 +493,11 @@ function getStockType(row: ProductInfo) {
   if (row.current_stock <= row.min_stock) return 'danger'
   if (row.current_stock <= row.min_stock * 2) return 'warning'
   return 'success'
+}
+
+function getFactoryName(factoryId: string) {
+  const factory = factories.value.find((f) => f.factory_id === factoryId)
+  return factory ? factory.factory_name : '-'
 }
 
 // 查看操作记录
