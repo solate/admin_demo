@@ -41,6 +41,24 @@ func main() {
 			return err
 		}
 
+		// 初始化工厂
+		factoryIDs, err := initialize.InitFactory(ctx, tx, initialize.TenantCode)
+		if err != nil {
+			return err
+		}
+
+		// 初始化商品
+		productIDs, err := initialize.InitProduct(ctx, tx, initialize.TenantCode, factoryIDs)
+		if err != nil {
+			return err
+		}
+
+		// 初始化库存操作记录
+		err = initialize.InitInventory(ctx, tx, initialize.TenantCode, productIDs)
+		if err != nil {
+			return err
+		}
+
 		return nil
 	})
 
