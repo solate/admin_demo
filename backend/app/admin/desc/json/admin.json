@@ -4099,6 +4099,68 @@
         "created_at"
       ]
     },
+    "ProductDetailStats": {
+      "type": "object",
+      "properties": {
+        "product_id": {
+          "type": "string",
+          "description": " 商品ID"
+        },
+        "product_name": {
+          "type": "string",
+          "description": " 商品名称"
+        },
+        "unit": {
+          "type": "string",
+          "description": " 单位"
+        },
+        "current_stock": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 当前库存"
+        },
+        "total_in_quantity": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 累计入库数量"
+        },
+        "total_out_quantity": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 累计出库数量"
+        },
+        "purchase_price": {
+          "type": "string",
+          "description": " 采购价"
+        },
+        "sale_price": {
+          "type": "string",
+          "description": " 销售价"
+        },
+        "stock_value": {
+          "type": "string",
+          "description": " 库存价值"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": " 状态"
+        }
+      },
+      "title": "ProductDetailStats",
+      "required": [
+        "product_id",
+        "product_name",
+        "unit",
+        "current_stock",
+        "total_in_quantity",
+        "total_out_quantity",
+        "purchase_price",
+        "sale_price",
+        "stock_value",
+        "status"
+      ]
+    },
     "ProductInReq": {
       "type": "object",
       "properties": {
@@ -4615,11 +4677,6 @@
           "format": "int32",
           "description": " 商品总数"
         },
-        "active_products": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 启用商品数"
-        },
         "total_stock": {
           "type": "integer",
           "format": "int32",
@@ -4627,7 +4684,11 @@
         },
         "total_stock_value": {
           "type": "string",
-          "description": " 总库存价值"
+          "description": " 总库存价值（按采购价）"
+        },
+        "total_sales_value": {
+          "type": "string",
+          "description": " 总销售价值（按销售价）"
         },
         "low_stock_products": {
           "type": "integer",
@@ -4652,29 +4713,26 @@
           "type": "string",
           "description": " 总出库金额"
         },
-        "total_sales_amount": {
-          "type": "string",
-          "description": " 总销售金额"
-        },
-        "total_sales_quantity": {
-          "type": "integer",
-          "format": "int32",
-          "description": " 总销售数量"
+        "product_detail_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProductDetailStats"
+          },
+          "description": " 商品明细列表"
         }
       },
       "title": "StatisticsResp",
       "required": [
         "total_products",
-        "active_products",
         "total_stock",
         "total_stock_value",
+        "total_sales_value",
         "low_stock_products",
         "total_in_quantity",
         "total_in_amount",
         "total_out_quantity",
         "total_out_amount",
-        "total_sales_amount",
-        "total_sales_quantity"
+        "product_detail_list"
       ]
     },
     "StatusRequest": {

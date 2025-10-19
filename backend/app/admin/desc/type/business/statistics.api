@@ -17,19 +17,33 @@ type (
         // 无需参数，直接获取实时统计
     }
 
+    // 商品明细统计
+    ProductDetailStats {
+        ProductID        string `json:"product_id"`         // 商品ID
+        ProductName      string `json:"product_name"`       // 商品名称
+        Unit             string `json:"unit"`               // 单位
+        CurrentStock     int    `json:"current_stock"`      // 当前库存
+        MinStock         int    `json:"min_stock"`          // 最低库存
+        TotalInQuantity  int    `json:"total_in_quantity"`  // 累计入库数量
+        TotalOutQuantity int    `json:"total_out_quantity"` // 累计出库数量
+        PurchasePrice    string `json:"purchase_price"`     // 采购价
+        SalePrice        string `json:"sale_price"`         // 销售价
+        StockValue       string `json:"stock_value"`        // 库存价值
+        Status           int    `json:"status"`             // 状态
+    }
+
     // 实时统计响应
     StatisticsResp {
-        TotalProducts      int    `json:"total_products"`                 // 商品总数
-        ActiveProducts     int    `json:"active_products"`                // 启用商品数
-        TotalStock         int    `json:"total_stock"`                    // 总库存数量
-        TotalStockValue    string `json:"total_stock_value"`              // 总库存价值
-        LowStockProducts   int    `json:"low_stock_products"`             // 低库存商品数
-        TotalInQuantity    int    `json:"total_in_quantity"`              // 总入库数量
-        TotalInAmount      string `json:"total_in_amount"`                // 总入库金额
-        TotalOutQuantity   int    `json:"total_out_quantity"`             // 总出库数量
-        TotalOutAmount     string `json:"total_out_amount"`               // 总出库金额
-        TotalSalesAmount   string `json:"total_sales_amount"`             // 总销售金额
-        TotalSalesQuantity int    `json:"total_sales_quantity"`           // 总销售数量
+        TotalProducts      int                   `json:"total_products"`       // 商品总数
+        TotalStock         int                   `json:"total_stock"`          // 总库存数量
+        TotalStockValue    string                `json:"total_stock_value"`    // 总库存价值（按采购价）
+        TotalSalesValue    string                `json:"total_sales_value"`    // 总销售价值（按销售价）
+        LowStockProducts   int                   `json:"low_stock_products"`   // 低库存商品数
+        TotalInQuantity    int                   `json:"total_in_quantity"`    // 总入库数量
+        TotalInAmount      string                `json:"total_in_amount"`      // 总入库金额
+        TotalOutQuantity   int                   `json:"total_out_quantity"`   // 总出库数量
+        TotalOutAmount     string                `json:"total_out_amount"`     // 总出库金额
+        ProductDetailList  []*ProductDetailStats  `json:"product_detail_list"`  // 商品明细列表
     }
 )
 

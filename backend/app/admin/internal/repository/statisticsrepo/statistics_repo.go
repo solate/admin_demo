@@ -105,6 +105,35 @@ func (r *StatisticsRepo) UpdateStatistics(ctx context.Context) (*generated.Produ
 func (r *StatisticsRepo) IncrementProductCount(ctx context.Context, tx *generated.Tx, isActive bool) error {
 	tenantCode := contextutil.GetTenantCodeFromCtx(ctx)
 
+	// 先检查统计记录是否存在，不存在则创建
+	exists, err := tx.ProductStatistics.Query().
+		Where(productstatistics.TenantCode(tenantCode)).
+		Exist(ctx)
+	if err != nil {
+		return err
+	}
+
+	if !exists {
+		// 创建初始统计记录
+		_, err = tx.ProductStatistics.Create().
+			SetTenantCode(tenantCode).
+			SetTotalProducts(0).
+			SetActiveProducts(0).
+			SetTotalStock(0).
+			SetTotalStockValue(decimal.Zero).
+			SetLowStockProducts(0).
+			SetTotalInQuantity(0).
+			SetTotalInAmount(decimal.Zero).
+			SetTotalOutQuantity(0).
+			SetTotalOutAmount(decimal.Zero).
+			SetTotalSalesAmount(decimal.Zero).
+			SetTotalSalesQuantity(0).
+			Save(ctx)
+		if err != nil {
+			return err
+		}
+	}
+
 	update := tx.ProductStatistics.Update().
 		Where(productstatistics.TenantCode(tenantCode)).
 		AddTotalProducts(1)
@@ -113,13 +142,42 @@ func (r *StatisticsRepo) IncrementProductCount(ctx context.Context, tx *generate
 		update = update.AddActiveProducts(1)
 	}
 
-	_, err := update.Save(ctx)
+	_, err = update.Save(ctx)
 	return err
 }
 
 // DecrementProductCount 减少商品数量（在事务中调用）
 func (r *StatisticsRepo) DecrementProductCount(ctx context.Context, tx *generated.Tx, isActive bool) error {
 	tenantCode := contextutil.GetTenantCodeFromCtx(ctx)
+
+	// 先检查统计记录是否存在，不存在则创建
+	exists, err := tx.ProductStatistics.Query().
+		Where(productstatistics.TenantCode(tenantCode)).
+		Exist(ctx)
+	if err != nil {
+		return err
+	}
+
+	if !exists {
+		// 创建初始统计记录
+		_, err = tx.ProductStatistics.Create().
+			SetTenantCode(tenantCode).
+			SetTotalProducts(0).
+			SetActiveProducts(0).
+			SetTotalStock(0).
+			SetTotalStockValue(decimal.Zero).
+			SetLowStockProducts(0).
+			SetTotalInQuantity(0).
+			SetTotalInAmount(decimal.Zero).
+			SetTotalOutQuantity(0).
+			SetTotalOutAmount(decimal.Zero).
+			SetTotalSalesAmount(decimal.Zero).
+			SetTotalSalesQuantity(0).
+			Save(ctx)
+		if err != nil {
+			return err
+		}
+	}
 
 	update := tx.ProductStatistics.Update().
 		Where(productstatistics.TenantCode(tenantCode)).
@@ -129,13 +187,42 @@ func (r *StatisticsRepo) DecrementProductCount(ctx context.Context, tx *generate
 		update = update.AddActiveProducts(-1)
 	}
 
-	_, err := update.Save(ctx)
+	_, err = update.Save(ctx)
 	return err
 }
 
 // UpdateProductStatus 更新商品状态（在事务中调用）
 func (r *StatisticsRepo) UpdateProductStatus(ctx context.Context, tx *generated.Tx, isActive bool) error {
 	tenantCode := contextutil.GetTenantCodeFromCtx(ctx)
+
+	// 先检查统计记录是否存在，不存在则创建
+	exists, err := tx.ProductStatistics.Query().
+		Where(productstatistics.TenantCode(tenantCode)).
+		Exist(ctx)
+	if err != nil {
+		return err
+	}
+
+	if !exists {
+		// 创建初始统计记录
+		_, err = tx.ProductStatistics.Create().
+			SetTenantCode(tenantCode).
+			SetTotalProducts(0).
+			SetActiveProducts(0).
+			SetTotalStock(0).
+			SetTotalStockValue(decimal.Zero).
+			SetLowStockProducts(0).
+			SetTotalInQuantity(0).
+			SetTotalInAmount(decimal.Zero).
+			SetTotalOutQuantity(0).
+			SetTotalOutAmount(decimal.Zero).
+			SetTotalSalesAmount(decimal.Zero).
+			SetTotalSalesQuantity(0).
+			Save(ctx)
+		if err != nil {
+			return err
+		}
+	}
 
 	var delta int
 	if isActive {
@@ -144,7 +231,7 @@ func (r *StatisticsRepo) UpdateProductStatus(ctx context.Context, tx *generated.
 		delta = -1
 	}
 
-	_, err := tx.ProductStatistics.Update().
+	_, err = tx.ProductStatistics.Update().
 		Where(productstatistics.TenantCode(tenantCode)).
 		AddActiveProducts(delta).
 		Save(ctx)
@@ -154,6 +241,35 @@ func (r *StatisticsRepo) UpdateProductStatus(ctx context.Context, tx *generated.
 // UpdateStockStats 更新库存统计（在事务中调用）
 func (r *StatisticsRepo) UpdateStockStats(ctx context.Context, tx *generated.Tx, stockChange int, stockValueChange decimal.Decimal, lowStockChange int) error {
 	tenantCode := contextutil.GetTenantCodeFromCtx(ctx)
+
+	// 先检查统计记录是否存在，不存在则创建
+	exists, err := tx.ProductStatistics.Query().
+		Where(productstatistics.TenantCode(tenantCode)).
+		Exist(ctx)
+	if err != nil {
+		return err
+	}
+
+	if !exists {
+		// 创建初始统计记录
+		_, err = tx.ProductStatistics.Create().
+			SetTenantCode(tenantCode).
+			SetTotalProducts(0).
+			SetActiveProducts(0).
+			SetTotalStock(0).
+			SetTotalStockValue(decimal.Zero).
+			SetLowStockProducts(0).
+			SetTotalInQuantity(0).
+			SetTotalInAmount(decimal.Zero).
+			SetTotalOutQuantity(0).
+			SetTotalOutAmount(decimal.Zero).
+			SetTotalSalesAmount(decimal.Zero).
+			SetTotalSalesQuantity(0).
+			Save(ctx)
+		if err != nil {
+			return err
+		}
+	}
 
 	// 先获取当前统计记录
 	currentStats, err := tx.ProductStatistics.Query().
@@ -180,6 +296,35 @@ func (r *StatisticsRepo) UpdateStockStats(ctx context.Context, tx *generated.Tx,
 // IncrementInventoryStats 增加库存操作统计（在事务中调用）
 func (r *StatisticsRepo) IncrementInventoryStats(ctx context.Context, tx *generated.Tx, operationType string, quantity int, amount decimal.Decimal) error {
 	tenantCode := contextutil.GetTenantCodeFromCtx(ctx)
+
+	// 先检查统计记录是否存在，不存在则创建
+	exists, err := tx.ProductStatistics.Query().
+		Where(productstatistics.TenantCode(tenantCode)).
+		Exist(ctx)
+	if err != nil {
+		return err
+	}
+
+	if !exists {
+		// 创建初始统计记录
+		_, err = tx.ProductStatistics.Create().
+			SetTenantCode(tenantCode).
+			SetTotalProducts(0).
+			SetActiveProducts(0).
+			SetTotalStock(0).
+			SetTotalStockValue(decimal.Zero).
+			SetLowStockProducts(0).
+			SetTotalInQuantity(0).
+			SetTotalInAmount(decimal.Zero).
+			SetTotalOutQuantity(0).
+			SetTotalOutAmount(decimal.Zero).
+			SetTotalSalesAmount(decimal.Zero).
+			SetTotalSalesQuantity(0).
+			Save(ctx)
+		if err != nil {
+			return err
+		}
+	}
 
 	// 先获取当前统计记录
 	currentStats, err := tx.ProductStatistics.Query().
@@ -221,56 +366,26 @@ func (r *StatisticsRepo) IncrementInventoryStats(ctx context.Context, tx *genera
 	return err
 }
 
+// ProductDetailStat 商品明细统计结构
+type ProductDetailStat struct {
+	ProductID        string
+	ProductName      string
+	Unit             string
+	CurrentStock     int
+	MinStock         int
+	TotalInQuantity  int
+	TotalOutQuantity int
+	PurchasePrice    decimal.Decimal
+	SalePrice        decimal.Decimal
+	StockValue       decimal.Decimal
+	Status           int
+}
+
 // CalculateProductStatistics 计算商品统计
 func (r *StatisticsRepo) CalculateProductStatistics(ctx context.Context) (map[string]interface{}, error) {
 	tenantCode := contextutil.GetTenantCodeFromCtx(ctx)
 
-	// 1. 获取商品统计
-	productStats, err := r.calculateProductStats(ctx, tenantCode)
-	if err != nil {
-		return nil, err
-	}
-
-	// 2. 获取库存操作统计
-	inventoryStats, err := r.calculateInventoryStats(ctx, tenantCode)
-	if err != nil {
-		return nil, err
-	}
-
-	// 合并统计结果
-	result := make(map[string]interface{})
-	for k, v := range productStats {
-		result[k] = v
-	}
-	for k, v := range inventoryStats {
-		result[k] = v
-	}
-
-	return result, nil
-}
-
-// calculateProductStats 计算商品相关统计
-func (r *StatisticsRepo) calculateProductStats(ctx context.Context, tenantCode string) (map[string]interface{}, error) {
-	// 获取商品总数
-	totalProducts, err := r.db.Product.Query().
-		Where(product.DeletedAtIsNil()).
-		Where(product.TenantCode(tenantCode)).
-		Count(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	// 获取启用商品数
-	activeProducts, err := r.db.Product.Query().
-		Where(product.DeletedAtIsNil()).
-		Where(product.TenantCode(tenantCode)).
-		Where(product.Status(1)).
-		Count(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	// 获取所有商品进行库存统计
+	// 1. 获取所有商品
 	products, err := r.db.Product.Query().
 		Where(product.DeletedAtIsNil()).
 		Where(product.TenantCode(tenantCode)).
@@ -279,73 +394,101 @@ func (r *StatisticsRepo) calculateProductStats(ctx context.Context, tenantCode s
 		return nil, err
 	}
 
+	totalProducts := len(products)
 	var totalStock int
-	var totalStockValue decimal.Decimal
-	var lowStockProducts int
+	var totalStockValue decimal.Decimal // 按采购价计算
+	var totalSalesValue decimal.Decimal // 按销售价计算
+	var lowStockProducts int            // 低库存商品数
+	var totalInQuantity int             // 总入库数量
+	var totalInAmount decimal.Decimal   // 总入库金额
+	var totalOutQuantity int            // 总出库数量
+	var totalOutAmount decimal.Decimal  // 总出库金额
+	productDetails := make([]*ProductDetailStat, 0, len(products))
 
-	for _, product := range products {
-		totalStock += product.CurrentStock
-		stockValue := product.PurchasePrice.Mul(decimal.NewFromInt(int64(product.CurrentStock)))
+	// 2. 遍历商品，计算统计数据
+	for _, p := range products {
+		// 计算该商品的入库和出库数量及金额
+		inQuantity, inAmount, outQuantity, outAmount, err := r.calculateProductInventoryStats(ctx, tenantCode, p.ProductID)
+		if err != nil {
+			return nil, err
+		}
+
+		// 累计总库存
+		totalStock += p.CurrentStock
+
+		// 计算库存价值（采购价 * 当前库存）
+		stockValue := p.PurchasePrice.Mul(decimal.NewFromInt(int64(p.CurrentStock)))
 		totalStockValue = totalStockValue.Add(stockValue)
 
-		if product.CurrentStock <= product.MinStock {
+		// 累计销售价值（销售价 * 当前库存）
+		salesValue := p.SalePrice.Mul(decimal.NewFromInt(int64(p.CurrentStock)))
+		totalSalesValue = totalSalesValue.Add(salesValue)
+
+		// 统计低库存商品
+		if p.CurrentStock <= p.MinStock {
 			lowStockProducts++
 		}
+
+		// 累计总入库和出库
+		totalInQuantity += inQuantity
+		totalInAmount = totalInAmount.Add(inAmount)
+		totalOutQuantity += outQuantity
+		totalOutAmount = totalOutAmount.Add(outAmount)
+
+		// 添加到商品明细列表
+		productDetails = append(productDetails, &ProductDetailStat{
+			ProductID:        p.ProductID,
+			ProductName:      p.ProductName,
+			Unit:             p.Unit,
+			CurrentStock:     p.CurrentStock,
+			MinStock:         p.MinStock,
+			TotalInQuantity:  inQuantity,
+			TotalOutQuantity: outQuantity,
+			PurchasePrice:    p.PurchasePrice,
+			SalePrice:        p.SalePrice,
+			StockValue:       stockValue,
+			Status:           p.Status,
+		})
 	}
 
 	return map[string]interface{}{
-		"total_products":     totalProducts,
-		"active_products":    activeProducts,
-		"total_stock":        totalStock,
-		"total_stock_value":  totalStockValue,
-		"low_stock_products": lowStockProducts,
+		"total_products":      totalProducts,
+		"total_stock":         totalStock,
+		"total_stock_value":   totalStockValue,
+		"total_sales_value":   totalSalesValue,
+		"low_stock_products":  lowStockProducts,
+		"total_in_quantity":   totalInQuantity,
+		"total_in_amount":     totalInAmount,
+		"total_out_quantity":  totalOutQuantity,
+		"total_out_amount":    totalOutAmount,
+		"product_detail_list": productDetails,
 	}, nil
 }
 
-// calculateInventoryStats 计算库存操作统计
-func (r *StatisticsRepo) calculateInventoryStats(ctx context.Context, tenantCode string) (map[string]interface{}, error) {
-	// 获取入库统计
-	inRecords, err := r.db.Inventory.Query().
+// calculateProductInventoryStats 计算单个商品的入库和出库统计
+func (r *StatisticsRepo) calculateProductInventoryStats(ctx context.Context, tenantCode, productID string) (
+	inQuantity int, inAmount decimal.Decimal, outQuantity int, outAmount decimal.Decimal, err error) {
+
+	// 查询该商品的所有库存操作记录
+	inventories, err := r.db.Inventory.Query().
 		Where(inventory.TenantCode(tenantCode)).
-		Where(inventory.OperationType("in")).
+		Where(inventory.ProductID(productID)).
+		Where(inventory.DeletedAtIsNil()).
 		All(ctx)
 	if err != nil {
-		return nil, err
+		return 0, decimal.Zero, 0, decimal.Zero, err
 	}
 
-	var totalInQuantity int
-	var totalInAmount decimal.Decimal
-	for _, record := range inRecords {
-		totalInQuantity += record.Quantity
-		totalInAmount = totalInAmount.Add(record.TotalAmount)
+	// 统计入库和出库数量及金额
+	for _, inv := range inventories {
+		if inv.OperationType == "in" {
+			inQuantity += inv.Quantity
+			inAmount = inAmount.Add(inv.TotalAmount)
+		} else if inv.OperationType == "out" {
+			outQuantity += inv.Quantity
+			outAmount = outAmount.Add(inv.TotalAmount)
+		}
 	}
 
-	// 获取出库统计
-	outRecords, err := r.db.Inventory.Query().
-		Where(inventory.TenantCode(tenantCode)).
-		Where(inventory.OperationType("out")).
-		All(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	var totalOutQuantity int
-	var totalOutAmount decimal.Decimal
-	for _, record := range outRecords {
-		totalOutQuantity += record.Quantity
-		totalOutAmount = totalOutAmount.Add(record.TotalAmount)
-	}
-
-	// 销售统计（出库即销售）
-	totalSalesAmount := totalOutAmount
-	totalSalesQuantity := totalOutQuantity
-
-	return map[string]interface{}{
-		"total_in_quantity":    totalInQuantity,
-		"total_in_amount":      totalInAmount,
-		"total_out_quantity":   totalOutQuantity,
-		"total_out_amount":     totalOutAmount,
-		"total_sales_amount":   totalSalesAmount,
-		"total_sales_quantity": totalSalesQuantity,
-	}, nil
+	return inQuantity, inAmount, outQuantity, outAmount, nil
 }
