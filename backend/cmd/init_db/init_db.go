@@ -36,7 +36,7 @@ func main() {
 		}
 
 		// 初始化用户
-		_, err = initialize.InitUser(ctx, tx, initialize.TenantCode)
+		userID, err := initialize.InitUser(ctx, tx, initialize.TenantCode)
 		if err != nil {
 			return err
 		}
@@ -54,7 +54,7 @@ func main() {
 		}
 
 		// 初始化库存操作记录
-		err = initialize.InitInventory(ctx, tx, initialize.TenantCode, productIDs)
+		err = initialize.InitInventory(ctx, tx, initialize.TenantCode, userID, productIDs)
 		if err != nil {
 			return err
 		}

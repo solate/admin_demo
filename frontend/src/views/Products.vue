@@ -218,6 +218,7 @@
             </el-tag>
           </template>
         </el-table-column>
+        <el-table-column prop="operator_name" label="操作人" width="100" />
         <el-table-column prop="quantity" label="数量" width="80" />
         <el-table-column label="单价" width="100">
           <template #default="{ row }">

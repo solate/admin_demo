@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"admin_backend/app/admin/internal/repository/inventoryrepo"
+	"admin_backend/app/admin/internal/repository/sysuserrepo"
 	"admin_backend/app/admin/internal/svc"
 	"admin_backend/app/admin/internal/types"
 	"admin_backend/pkg/common/xerr"
@@ -19,6 +20,7 @@ type GetInventoryHistoryLogic struct {
 	ctx           context.Context
 	svcCtx        *svc.ServiceContext
 	inventoryRepo *inventoryrepo.InventoryRepo
+	userRepo      *sysuserrepo.SysUserRepo
 }
 
 // 获取库存操作历史
@@ -28,6 +30,7 @@ func NewGetInventoryHistoryLogic(ctx context.Context, svcCtx *svc.ServiceContext
 		ctx:           ctx,
 		svcCtx:        svcCtx,
 		inventoryRepo: inventoryrepo.NewInventoryRepo(svcCtx.DB),
+		userRepo:      sysuserrepo.NewSysUserRepo(svcCtx.DB),
 	}
 }
 
@@ -67,14 +70,19 @@ func (l *GetInventoryHistoryLogic) GetInventoryHistory(req *types.InventoryListR
 	// 构建响应数据
 	inventoryList := make([]*types.InventoryInfo, 0)
 	for _, item := range list {
-		// 获取商品名称和操作人姓名
-		productName := ""  // 这里应该查询商品信息
-		operatorName := "" // 这里应该查询用户信息
+		// 获取操作人名称
+		operatorName := ""
+		if item.OperatorID != "" {
+			user, err := l.userRepo.GetByUserID(l.ctx, item.OperatorID)
+			if err == nil {
+				operatorName = user.UserName
+			}
+		}
 
 		inventoryList = append(inventoryList, &types.InventoryInfo{
 			InventoryID:   item.InventoryID,
 			ProductID:     item.ProductID,
-			ProductName:   productName,
+			ProductName:   "",
 			OperationType: item.OperationType,
 			Quantity:      item.Quantity,
 			UnitPrice:     item.UnitPrice.String(),
