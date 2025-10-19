@@ -23,10 +23,13 @@ func NewFactoryRepo(db *ent.Client) *FactoryRepo {
 
 func (r *FactoryRepo) Create(ctx context.Context, factory *generated.Factory) (*generated.Factory, error) {
 	now := time.Now().UnixMilli()
+	// 自动从上下文获取租户代码
+	tenantCode := contextutil.GetTenantCodeFromCtx(ctx)
+
 	return r.db.Factory.Create().
 		SetCreatedAt(now).
 		SetUpdatedAt(now).
-		SetTenantCode(factory.TenantCode).
+		SetTenantCode(tenantCode). // 使用上下文中的租户代码
 		SetFactoryID(factory.FactoryID).
 		SetFactoryName(factory.FactoryName).
 		SetAddress(factory.Address).
@@ -38,9 +41,16 @@ func (r *FactoryRepo) Create(ctx context.Context, factory *generated.Factory) (*
 func (r *FactoryRepo) Update(ctx context.Context, update *generated.Factory) (int, error) {
 	now := time.Now().UnixMilli()
 	update.UpdatedAt = now
+
+	// 添加租户过滤，确保只能更新当前租户的数据
+	tenantCode := contextutil.GetTenantCodeFromCtx(ctx)
 	query := r.db.Factory.Update().
 		SetUpdatedAt(now).
-		Where(factory.FactoryID(update.FactoryID))
+		Where(
+			factory.FactoryID(update.FactoryID),
+			factory.TenantCode(tenantCode), // 租户隔离，不允许跨租户更新
+		)
+	// 注意：不设置 TenantCode，防止租户被修改
 
 	if update.FactoryName != "" {
 		query = query.SetFactoryName(update.FactoryName)

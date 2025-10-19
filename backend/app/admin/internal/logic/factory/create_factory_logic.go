@@ -40,7 +40,7 @@ func (l *CreateFactoryLogic) CreateFactory(req *types.CreateFactoryReq) (*types.
 		req.Status = 1 // 默认启用
 	}
 
-	// 创建工厂
+	// 创建工厂（租户信息由 Repository 层自动处理）
 	newFactory := &generated.Factory{
 		FactoryID:    factoryID,
 		FactoryName:  req.FactoryName,

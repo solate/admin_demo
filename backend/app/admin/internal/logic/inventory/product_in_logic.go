@@ -73,7 +73,7 @@ func (l *ProductInLogic) ProductIn(req *types.ProductInReq) (*types.InventoryOpe
 	beforeStock := productInfo.CurrentStock
 	afterStock := beforeStock + req.Quantity
 
-	// 创建库存记录
+	// 创建库存记录（租户信息由 Repository 层自动处理）
 	inventoryRecord := &generated.Inventory{
 		InventoryID:   inventoryID,
 		ProductID:     req.ProductID,

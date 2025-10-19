@@ -37,7 +37,7 @@ func (l *UpdateFactoryLogic) UpdateFactory(req *types.UpdateFactoryReq) (bool, e
 		return false, xerr.NewErrCodeMsg(xerr.ServerError, "工厂不存在")
 	}
 
-	// 构建更新数据
+	// 构建更新数据（租户信息由 Repository 层自动处理）
 	updateFactory := &generated.Factory{
 		FactoryID:    req.FactoryID,
 		FactoryName:  req.FactoryName,

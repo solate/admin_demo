@@ -25,10 +25,13 @@ func NewInventoryRepo(db *ent.Client) *InventoryRepo {
 
 func (r *InventoryRepo) Create(ctx context.Context, inventory *generated.Inventory) (*generated.Inventory, error) {
 	now := time.Now().UnixMilli()
+	// 自动从上下文获取租户代码
+	tenantCode := contextutil.GetTenantCodeFromCtx(ctx)
+
 	return r.db.Inventory.Create().
 		SetCreatedAt(now).
 		SetUpdatedAt(now).
-		SetTenantCode(inventory.TenantCode).
+		SetTenantCode(tenantCode). // 使用上下文中的租户代码
 		SetInventoryID(inventory.InventoryID).
 		SetProductID(inventory.ProductID).
 		SetOperationType(inventory.OperationType).
@@ -46,10 +49,13 @@ func (r *InventoryRepo) Create(ctx context.Context, inventory *generated.Invento
 // CreateWithTx 在事务中创建库存记录
 func (r *InventoryRepo) CreateWithTx(ctx context.Context, tx *generated.Tx, inventory *generated.Inventory) (*generated.Inventory, error) {
 	now := time.Now().UnixMilli()
+	// 自动从上下文获取租户代码
+	tenantCode := contextutil.GetTenantCodeFromCtx(ctx)
+
 	return tx.Inventory.Create().
 		SetCreatedAt(now).
 		SetUpdatedAt(now).
-		SetTenantCode(inventory.TenantCode).
+		SetTenantCode(tenantCode). // 使用上下文中的租户代码
 		SetInventoryID(inventory.InventoryID).
 		SetProductID(inventory.ProductID).
 		SetOperationType(inventory.OperationType).

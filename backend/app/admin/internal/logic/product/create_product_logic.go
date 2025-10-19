@@ -56,7 +56,7 @@ func (l *CreateProductLogic) CreateProduct(req *types.CreateProductReq) (*types.
 		return nil, xerr.NewErrCodeMsg(xerr.ServerError, "销售价格格式错误")
 	}
 
-	// 创建商品
+	// 创建商品（租户信息由 Repository 层自动处理）
 	newProduct := &generated.Product{
 		ProductID:     productID,
 		ProductName:   req.ProductName,

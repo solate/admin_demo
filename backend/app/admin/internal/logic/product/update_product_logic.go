@@ -42,7 +42,7 @@ func (l *UpdateProductLogic) UpdateProduct(req *types.UpdateProductReq) (bool, e
 		return false, xerr.NewErrCodeMsg(xerr.ServerError, "商品不存在")
 	}
 
-	// 构建更新数据
+	// 构建更新数据（租户信息由 Repository 层自动处理）
 	updateProduct := &generated.Product{
 		ProductID:    req.ProductID,
 		ProductName:  req.ProductName,

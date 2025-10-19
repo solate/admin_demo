@@ -23,10 +23,13 @@ func NewProductRepo(db *ent.Client) *ProductRepo {
 
 func (r *ProductRepo) Create(ctx context.Context, product *generated.Product) (*generated.Product, error) {
 	now := time.Now().UnixMilli()
+	// 自动从上下文获取租户代码
+	tenantCode := contextutil.GetTenantCodeFromCtx(ctx)
+
 	return r.db.Product.Create().
 		SetCreatedAt(now).
 		SetUpdatedAt(now).
-		SetTenantCode(product.TenantCode).
+		SetTenantCode(tenantCode). // 使用上下文中的租户代码
 		SetProductID(product.ProductID).
 		SetProductName(product.ProductName).
 		SetUnit(product.Unit).
@@ -42,10 +45,13 @@ func (r *ProductRepo) Create(ctx context.Context, product *generated.Product) (*
 // CreateWithTx 在事务中创建商品
 func (r *ProductRepo) CreateWithTx(ctx context.Context, tx *generated.Tx, product *generated.Product) (*generated.Product, error) {
 	now := time.Now().UnixMilli()
+	// 自动从上下文获取租户代码
+	tenantCode := contextutil.GetTenantCodeFromCtx(ctx)
+
 	return tx.Product.Create().
 		SetCreatedAt(now).
 		SetUpdatedAt(now).
-		SetTenantCode(product.TenantCode).
+		SetTenantCode(tenantCode). // 使用上下文中的租户代码
 		SetProductID(product.ProductID).
 		SetProductName(product.ProductName).
 		SetUnit(product.Unit).
@@ -61,9 +67,16 @@ func (r *ProductRepo) CreateWithTx(ctx context.Context, tx *generated.Tx, produc
 func (r *ProductRepo) Update(ctx context.Context, update *generated.Product) (int, error) {
 	now := time.Now().UnixMilli()
 	update.UpdatedAt = now
+
+	// 添加租户过滤，确保只能更新当前租户的数据
+	tenantCode := contextutil.GetTenantCodeFromCtx(ctx)
 	query := r.db.Product.Update().
 		SetUpdatedAt(now).
-		Where(product.ProductID(update.ProductID))
+		Where(
+			product.ProductID(update.ProductID),
+			product.TenantCode(tenantCode), // 租户隔离，不允许跨租户更新
+		)
+	// 注意：不设置 TenantCode，防止租户被修改
 
 	if update.ProductName != "" {
 		query = query.SetProductName(update.ProductName)
@@ -97,9 +110,16 @@ func (r *ProductRepo) Update(ctx context.Context, update *generated.Product) (in
 func (r *ProductRepo) UpdateWithTx(ctx context.Context, tx *generated.Tx, update *generated.Product) (int, error) {
 	now := time.Now().UnixMilli()
 	update.UpdatedAt = now
+
+	// 添加租户过滤，确保只能更新当前租户的数据
+	tenantCode := contextutil.GetTenantCodeFromCtx(ctx)
 	query := tx.Product.Update().
 		SetUpdatedAt(now).
-		Where(product.ProductID(update.ProductID))
+		Where(
+			product.ProductID(update.ProductID),
+			product.TenantCode(tenantCode), // 租户隔离，不允许跨租户更新
+		)
+	// 注意：不设置 TenantCode，防止租户被修改
 
 	if update.ProductName != "" {
 		query = query.SetProductName(update.ProductName)
